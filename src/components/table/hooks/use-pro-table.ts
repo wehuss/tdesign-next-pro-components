@@ -1,11 +1,11 @@
+import type { TableRowData } from 'tdesign-vue-next'
 import { computed, onMounted, ref, watch } from 'vue'
 import type { ActionRef, ProTableProps, RequestData } from '../types'
 import { transformColumns } from '../utils/column-utils'
 
-export function useProTable<
-  T = Record<string, unknown>,
-  P = Record<string, unknown>,
->(props: ProTableProps<T, P>) {
+export function useProTable<T extends TableRowData = TableRowData>(
+  props: ProTableProps<T>
+) {
   // 数据状态
   const tableData = ref<T[]>([])
   const tableLoading = ref(false)
@@ -41,7 +41,7 @@ export function useProTable<
       }
 
       const response: RequestData<T> = await props.request(
-        requestParams as P & {
+        requestParams as T & {
           current: number
           pageSize: number
         }

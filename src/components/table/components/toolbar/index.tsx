@@ -1,7 +1,7 @@
 import { RefreshIcon, SettingIcon } from 'tdesign-icons-vue-next'
 import { Button, Space, Tooltip } from 'tdesign-vue-next'
 import type { PropType } from 'vue'
-import { defineComponent, ref } from 'vue'
+import { defineComponent, useModel } from 'vue'
 import type { ActionRef, ProColumn, ToolbarConfig } from '../../types'
 
 export default defineComponent({
@@ -21,19 +21,19 @@ export default defineComponent({
     onColumnControllerVisibleChange: Function as PropType<
       (visible: boolean) => void
     >,
+    columnControllerVisible: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup(props) {
-    const columnControllerVisible = ref(false)
-
+    const columnControllerVisible = useModel(props, 'columnControllerVisible')
+    const toggleColumnControllerVisible = () => {
+      columnControllerVisible.value = !columnControllerVisible.value
+    }
     // 处理刷新
     const handleReload = () => {
       props.actionRef?.value?.reload()
-    }
-
-    // 处理列设置
-    const handleColumnSetting = () => {
-      columnControllerVisible.value = !columnControllerVisible.value
-      props.onColumnControllerVisibleChange?.(columnControllerVisible.value)
     }
 
     return () => {
@@ -63,7 +63,7 @@ export default defineComponent({
             variant="text"
             shape="square"
             icon={() => <SettingIcon />}
-            onClick={handleColumnSetting}
+            onClick={toggleColumnControllerVisible}
           />
         </Tooltip>,
       ]

@@ -137,7 +137,7 @@ export default defineComponent({
           ref={actionRef}
           columns={columns}
           request={request}
-          headerTitle="用户管理"
+          headerTitle={() => <Button>删除所有用户</Button>}
           rowKey="id"
           search={{
             labelWidth: 'auto',
@@ -145,10 +145,7 @@ export default defineComponent({
             resetText: '重置',
           }}
           toolbarRender={toolbarRender}
-          pagination={{
-            showJumper: true,
-            showSizeChanger: true,
-          }}
+          pagination={false}
         />
       </div>
     )

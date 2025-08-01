@@ -1,7 +1,7 @@
 import useListeners from '@/hooks/listeners'
 import { Card, Table } from 'tdesign-vue-next'
 import type { App } from 'vue'
-import { defineComponent, ref } from 'vue'
+import { defineComponent, useModel } from 'vue'
 import TableAlert from './components/alert'
 import SearchForm from './components/search-form'
 import TableToolBar from './components/toolbar'
@@ -71,7 +71,7 @@ const ProTable = defineComponent({
 
   setup(props, { slots, attrs, expose, emit }) {
     const { listeners } = useListeners()
-    const columnControllerVisible = ref(props.columnControllerVisible)
+    const columnControllerVisible = useModel(props, 'columnControllerVisible')
 
     console.log('columns', props.columns, props)
     // 使用核心 hook
@@ -109,11 +109,6 @@ const ProTable = defineComponent({
           />
         ) : null
 
-      // 处理列配置显示状态变化
-      const handleColumnControllerVisibleChange = (visible: boolean) => {
-        columnControllerVisible.value = visible
-      }
-
       // 工具栏节点
       const toolbarNode =
         toolbar !== false ? (
@@ -123,9 +118,7 @@ const ProTable = defineComponent({
             toolbarRender={props.toolbarRender}
             columns={props.columns}
             actionRef={actionRef}
-            onColumnControllerVisibleChange={
-              handleColumnControllerVisibleChange
-            }
+            v-model:columnControllerVisible={columnControllerVisible.value}
           />
         ) : null
 

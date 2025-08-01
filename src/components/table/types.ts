@@ -1,4 +1,10 @@
-import type { PaginationProps } from 'tdesign-vue-next'
+import type {
+  FormItemProps,
+  PaginationProps,
+  PrimaryTableCol,
+  PrimaryTableProps,
+  TableRowData,
+} from 'tdesign-vue-next'
 import type { Ref, VNode } from 'vue'
 
 // 基础数据类型
@@ -17,41 +23,39 @@ export interface RequestParams extends PaginationParams {
   [key: string]: unknown
 }
 
-// 列配置类型
-export interface ProColumn<T = Record<string, unknown>> {
-  // 基础 Table 列属性
-  colKey?: string
-  title?: string | (() => VNode)
-  width?: string | number
-  minWidth?: string | number
-  fixed?: 'left' | 'right'
-  align?: 'left' | 'center' | 'right'
-  ellipsis?: boolean
+export interface ProColumnFormItem extends FormItemProps {
+  valueType: ValueType
+  valueEnum?: ValueEnum
+  components?: VNode
+  fieldProps?: Record<string, unknown>
+  defaultValue?: unknown | (() => unknown)
+  transform?: (value: unknown) => unknown
+  order?: number
+}
 
+// 列配置类型
+export interface ProColumn<T extends TableRowData = TableRowData>
+  extends PrimaryTableCol<T> {
   // ProTable 扩展属性
   valueType?: ValueType
-  valueEnum?: Record<string, ValueEnumItem>
+  valueEnum?: ValueEnum
 
   // 显示控制
   hideInTable?: boolean
-  hideInForm?: boolean
-  hideInSearch?: boolean
+  // hideInForm?: boolean
+  // hideInSearch?: boolean
+  form?: ProColumnFormItem & {
+    searchForm?: boolean | ProColumnFormItem
+    updateForm?: boolean | ProColumnFormItem
+    createForm?: boolean | ProColumnFormItem
+  }
 
   // 搜索相关
-  search?: boolean | SearchColumnConfig
+  // search?: boolean | SearchColumnConfig
 
   // 表单相关
-  formItemProps?: Record<string, unknown>
-  fieldProps?: Record<string, unknown>
-
-  // 渲染函数
-  render?: (context: RenderContext<T>) => VNode
-  renderText?: (value: unknown, record: T, index: number) => string
-
-  // 其他
-  order?: number
-  colSize?: number
-  tooltip?: string
+  // formItemProps?: Record<string, unknown>
+  // fieldProps?: Record<string, unknown>
 }
 
 // 值类型
@@ -84,6 +88,10 @@ export interface ValueEnumItem {
   disabled?: boolean
 }
 
+export type ValueEnumMap = Map<string | number | boolean, ValueEnumItem>
+export type valueEnumObj = Record<string, ValueEnumItem>
+export type ValueEnum = ValueEnumMap | valueEnumObj
+
 // 搜索配置
 export interface SearchConfig {
   labelWidth?: number | 'auto'
@@ -103,11 +111,6 @@ export interface SearchConfig {
         dom: VNode[]
       ) => VNode[])
   onCollapse?: (collapsed: boolean) => void
-}
-
-export interface SearchColumnConfig {
-  transform?: (value: unknown) => unknown
-  order?: number
 }
 
 // 工具栏配置
@@ -143,23 +146,13 @@ export interface ActionRef {
   setPageInfo: (pageInfo: Partial<PaginationParams>) => void
 }
 
-// 渲染上下文
-export interface RenderContext<T = Record<string, unknown>> {
-  value: unknown
-  record: T
-  index: number
-  column: ProColumn<T>
-}
-
 // ProTable 主要属性类型
-export interface ProTableProps<
-  T = Record<string, unknown>,
-  P = Record<string, unknown>,
-> {
+export interface ProTableProps<T extends TableRowData = TableRowData>
+  extends Omit<PrimaryTableProps, 'columns' | 'pagination'> {
   // 数据相关
-  request?: (params: P & RequestParams) => Promise<RequestData<T>>
+  request?: (params: T & RequestParams) => Promise<RequestData<T>>
   dataSource?: T[]
-  params?: Partial<P>
+  params?: Partial<T>
 
   // 列配置
   columns: ProColumn<T>[]
@@ -184,8 +177,7 @@ export interface ProTableProps<
 
   // 其他属性
   loading?: boolean
-  rowKey?: string | ((record: T) => string)
-
+  rowKey: string
   // 继承 Table 的其他属性
   [key: string]: unknown
 }

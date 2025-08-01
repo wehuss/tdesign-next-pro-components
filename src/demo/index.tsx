@@ -49,7 +49,6 @@ export default defineComponent({
         colKey: 'id',
         title: 'ID',
         width: 80,
-        hideInSearch: true,
       },
       {
         colKey: 'name',
@@ -60,13 +59,11 @@ export default defineComponent({
         colKey: 'age',
         title: '年龄',
         valueType: 'digit',
-        hideInSearch: true,
       },
       {
         colKey: 'email',
         title: '邮箱',
         valueType: 'text',
-        hideInSearch: true,
       },
       {
         colKey: 'status',
@@ -94,12 +91,16 @@ export default defineComponent({
         hideInSearch: true,
         render: () => (
           <div>
-            <Button variant="text" size="small" onClick={() => MessagePlugin.info('编辑')}>
+            <Button
+              variant="text"
+              size="small"
+              onClick={() => MessagePlugin.info('编辑')}
+            >
               编辑
             </Button>
-            <Button 
-              variant="text" 
-              size="small" 
+            <Button
+              variant="text"
+              size="small"
               theme="danger"
               onClick={() => MessagePlugin.warning('删除')}
             >
@@ -113,10 +114,10 @@ export default defineComponent({
     // 模拟请求
     const request = async (params: Record<string, unknown>) => {
       console.log('Request params:', params)
-      
+
       // 模拟网络延迟
       await new Promise(resolve => setTimeout(resolve, 500))
-      
+
       return {
         data: mockData,
         success: true,
@@ -129,9 +130,7 @@ export default defineComponent({
       <Button theme="primary" onClick={() => MessagePlugin.success('新建用户')}>
         新建用户
       </Button>,
-      <Button onClick={() => MessagePlugin.info('批量导出')}>
-        批量导出
-      </Button>,
+      <Button onClick={() => MessagePlugin.info('批量导出')}>批量导出</Button>,
     ]
 
     return () => (
