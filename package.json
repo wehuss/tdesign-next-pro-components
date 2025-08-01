@@ -1,0 +1,92 @@
+{
+  "name": "tdesign-pro-components",
+  "version": "0.1.0",
+  "description": "Enhanced components based on TDesign Vue Next",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.js"
+    },
+    "./style": "./dist/style.css"
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "README.md"
+  ],
+  "scripts": {
+    "dev": "vite --config playground/vite.config.ts playground",
+    "dev:docs": "vitepress dev docs",
+    "build": "pnpm run build:lib && pnpm run build:types",
+    "build:lib": "vite build --config vite.config.lib.ts",
+    "build:types": "vue-tsc --declaration --emitDeclarationOnly --outDir dist",
+    "build:docs": "vitepress build docs",
+    "preview": "vite preview",
+    "preview:docs": "vitepress preview docs",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
+    "lint:prettier": "prettier --write .",
+    "format": "pnpm run lint:prettier && pnpm run lint",
+    "type-check": "vue-tsc --noEmit",
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
+    "changeset:publish": "changeset publish",
+    "release": "pnpm run build && pnpm run changeset:publish"
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "tdesign",
+    "component",
+    "ui",
+    "library"
+  ],
+  "author": "TDesign Pro Components Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/tdesign-pro-components.git"
+  },
+  "homepage": "https://github.com/your-org/tdesign-pro-components#readme",
+  "bugs": {
+    "url": "https://github.com/your-org/tdesign-pro-components/issues"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  },
+  "dependencies": {
+    "tdesign-icons-vue-next": "^0.3.6",
+    "tdesign-vue-next": "^1.15.2",
+    "vue": "^3.5.17"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.29.5",
+    "@eslint/js": "^9.32.0",
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "@typescript-eslint/parser": "^8.38.0",
+    "@vitejs/plugin-vue": "^6.0.0",
+    "@vitejs/plugin-vue-jsx": "^5.0.1",
+    "@vue/eslint-config-typescript": "^14.6.0",
+    "@vue/tsconfig": "^0.7.0",
+    "eslint": "^9.32.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.3",
+    "eslint-plugin-vue": "^10.4.0",
+    "less": "^4.4.0",
+    "prettier": "^3.6.2",
+    "prettier-plugin-organize-imports": "^4.2.0",
+    "rollup-plugin-copy": "^3.5.0",
+    "rollup-plugin-dts": "^6.2.1",
+    "rollup-plugin-esbuild": "^6.2.1",
+    "typescript": "~5.8.3",
+    "vite": "^7.0.4",
+    "vitepress": "^1.6.3",
+    "vue-tsc": "^2.2.12"
+  }
+}

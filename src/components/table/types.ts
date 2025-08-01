@@ -1,0 +1,191 @@
+import type { PaginationProps } from 'tdesign-vue-next'
+import type { Ref, VNode } from 'vue'
+
+// 基础数据类型
+export interface RequestData<T = Record<string, unknown>> {
+  data: T[]
+  success?: boolean
+  total?: number
+}
+
+export interface PaginationParams {
+  current: number
+  pageSize: number
+}
+
+export interface RequestParams extends PaginationParams {
+  [key: string]: unknown
+}
+
+// 列配置类型
+export interface ProColumn<T = Record<string, unknown>> {
+  // 基础 Table 列属性
+  colKey?: string
+  title?: string | (() => VNode)
+  width?: string | number
+  minWidth?: string | number
+  fixed?: 'left' | 'right'
+  align?: 'left' | 'center' | 'right'
+  ellipsis?: boolean
+
+  // ProTable 扩展属性
+  valueType?: ValueType
+  valueEnum?: Record<string, ValueEnumItem>
+
+  // 显示控制
+  hideInTable?: boolean
+  hideInForm?: boolean
+  hideInSearch?: boolean
+
+  // 搜索相关
+  search?: boolean | SearchColumnConfig
+
+  // 表单相关
+  formItemProps?: Record<string, unknown>
+  fieldProps?: Record<string, unknown>
+
+  // 渲染函数
+  render?: (context: RenderContext<T>) => VNode
+  renderText?: (value: unknown, record: T, index: number) => string
+
+  // 其他
+  order?: number
+  colSize?: number
+  tooltip?: string
+}
+
+// 值类型
+export type ValueType =
+  | 'text'
+  | 'textarea'
+  | 'select'
+  | 'radio'
+  | 'checkbox'
+  | 'switch'
+  | 'date'
+  | 'dateRange'
+  | 'dateTime'
+  | 'dateTimeRange'
+  | 'time'
+  | 'timeRange'
+  | 'digit'
+  | 'money'
+  | 'percent'
+  | 'tag'
+  | 'badge'
+  | 'avatar'
+  | 'image'
+  | 'color'
+
+export interface ValueEnumItem {
+  text: string
+  status?: 'success' | 'error' | 'warning' | 'default'
+  color?: string
+  disabled?: boolean
+}
+
+// 搜索配置
+export interface SearchConfig {
+  labelWidth?: number | 'auto'
+  span?: number
+  collapsed?: boolean
+  defaultCollapsed?: boolean
+  collapseRender?: boolean | ((collapsed: boolean) => VNode)
+  searchText?: string
+  resetText?: string
+  submitText?: string
+  showHiddenNum?: boolean
+  optionRender?:
+    | boolean
+    | ((
+        searchConfig: SearchConfig,
+        formProps: unknown,
+        dom: VNode[]
+      ) => VNode[])
+  onCollapse?: (collapsed: boolean) => void
+}
+
+export interface SearchColumnConfig {
+  transform?: (value: unknown) => unknown
+  order?: number
+}
+
+// 工具栏配置
+export interface ToolbarConfig {
+  title?: string
+  subTitle?: string
+  tooltip?: string
+  search?: boolean | SearchProps
+  actions?: VNode[]
+  settings?: ToolbarSetting[]
+  filter?: VNode
+  multipleLine?: boolean
+}
+
+export interface SearchProps {
+  placeholder?: string
+  onSearch?: (value: string) => void
+}
+
+export interface ToolbarSetting {
+  icon?: VNode
+  tooltip?: string
+  key?: string
+  onClick?: (key?: string) => void
+}
+
+// 操作引用类型
+export interface ActionRef {
+  reload: (resetPageIndex?: boolean) => Promise<void>
+  reloadAndRest: () => Promise<void>
+  reset: () => void
+  clearSelected?: () => void
+  setPageInfo: (pageInfo: Partial<PaginationParams>) => void
+}
+
+// 渲染上下文
+export interface RenderContext<T = Record<string, unknown>> {
+  value: unknown
+  record: T
+  index: number
+  column: ProColumn<T>
+}
+
+// ProTable 主要属性类型
+export interface ProTableProps<
+  T = Record<string, unknown>,
+  P = Record<string, unknown>,
+> {
+  // 数据相关
+  request?: (params: P & RequestParams) => Promise<RequestData<T>>
+  dataSource?: T[]
+  params?: Partial<P>
+
+  // 列配置
+  columns: ProColumn<T>[]
+
+  // 搜索表单
+  search?: boolean | SearchConfig
+
+  // 工具栏
+  toolbar?: boolean | ToolbarConfig
+  toolbarRender?: (actionRef: Ref<ActionRef>) => VNode[]
+
+  // 卡片配置
+  cardBordered?: boolean
+  ghost?: boolean
+
+  // 标题相关
+  headerTitle?: string
+  tooltip?: string
+
+  // 分页
+  pagination?: boolean | PaginationProps
+
+  // 其他属性
+  loading?: boolean
+  rowKey?: string | ((record: T) => string)
+
+  // 继承 Table 的其他属性
+  [key: string]: unknown
+}

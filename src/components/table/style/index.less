@@ -1,0 +1,218 @@
+@import 'tdesign-vue-next/es/style/index.css';
+
+// ProTable 主要样式
+.t-pro-table {
+  .t-pro-table-search {
+    margin-bottom: 16px;
+
+    .t-pro-table-search-form {
+      .t-form-item {
+        margin-bottom: 16px;
+        margin-right: 16px;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+
+      .t-pro-table-search-actions {
+        margin-left: auto;
+
+        .t-form__controls {
+          .t-space {
+            margin-left: 0;
+          }
+        }
+      }
+    }
+  }
+
+  .t-pro-table-content {
+    .t-pro-table-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--td-border-level-1-color);
+      margin-bottom: 16px;
+
+      .t-pro-table-toolbar-left {
+        display: flex;
+        align-items: center;
+
+        .t-pro-table-toolbar-title {
+          font-size: 16px;
+          font-weight: 500;
+          color: var(--td-text-color-primary);
+          line-height: 24px;
+        }
+      }
+
+      .t-pro-table-toolbar-right {
+        display: flex;
+        align-items: center;
+
+        .t-space {
+          .t-button {
+            &.t-button--variant-text {
+              padding: 4px;
+              min-width: 32px;
+              height: 32px;
+
+              &:hover {
+                background-color: var(--td-bg-color-container-hover);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .t-pro-table-alert {
+      margin-bottom: 16px;
+
+      .t-alert {
+        .t-alert__content {
+          .t-space {
+            align-items: center;
+
+            .t-button {
+              &.t-button--variant-text {
+                color: var(--td-brand-color);
+
+                &:hover {
+                  color: var(--td-brand-color-hover);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Ghost 模式样式
+.t-pro-table-ghost {
+  .t-pro-table-search,
+  .t-pro-table-content {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+
+    .t-card__body {
+      padding: 0;
+    }
+  }
+
+  .t-pro-table-toolbar {
+    border-bottom: 1px solid var(--td-border-level-1-color);
+  }
+}
+
+// 响应式布局
+@media (max-width: 768px) {
+  .t-pro-table {
+    .t-pro-table-search {
+      .t-pro-table-search-form {
+        .t-form-item {
+          width: 100%;
+          margin-right: 0;
+
+          .t-form__controls {
+            width: 100%;
+
+            .t-input,
+            .t-select,
+            .t-date-picker {
+              width: 100%;
+            }
+          }
+        }
+
+        .t-pro-table-search-actions {
+          margin-left: 0;
+          width: 100%;
+
+          .t-form__controls {
+            width: 100%;
+
+            .t-space {
+              width: 100%;
+              justify-content: center;
+
+              .t-button {
+                flex: 1;
+                min-width: 80px;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .t-pro-table-content {
+      .t-pro-table-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+
+        .t-pro-table-toolbar-left {
+          margin-bottom: 12px;
+        }
+
+        .t-pro-table-toolbar-right {
+          justify-content: center;
+        }
+      }
+    }
+  }
+}
+
+// 深色主题适配
+[theme-mode='dark'] {
+  .t-pro-table {
+    .t-pro-table-toolbar {
+      border-bottom-color: var(--td-border-level-1-color);
+    }
+
+    .t-pro-table-toolbar-title {
+      color: var(--td-text-color-primary);
+    }
+  }
+}
+
+// 工具栏图标按钮状态
+.t-pro-table-toolbar-right {
+  .t-button {
+    &.t-button--variant-text {
+      transition: all 0.2s ease;
+
+      &:hover {
+        transform: translateY(-1px);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
+}
+
+// 搜索表单动画
+.t-pro-table-search-form {
+  .t-form-item {
+    transition: all 0.3s ease;
+
+    &.form-item-enter-active,
+    &.form-item-leave-active {
+      transition: all 0.3s ease;
+    }
+
+    &.form-item-enter-from,
+    &.form-item-leave-to {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+}

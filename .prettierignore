@@ -1,0 +1,42 @@
+# Dependencies
+node_modules
+.pnpm
+
+# Build outputs
+dist
+es
+lib
+*.tsbuildinfo
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# Coverage directory
+coverage
+.nyc_output
+
+# VitePress
+docs/.vitepress/cache
+docs/.vitepress/dist
+
+# Temporary folders
+tmp/
+temp/
+
+# Generated files
+.changeset/
+public/
+
+# Lock files
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# VS Code
+.vscode/settings.json
