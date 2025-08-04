@@ -1,11 +1,11 @@
 import type { PrimaryTableCol, TableRowData } from 'tdesign-vue-next'
-import type { ProColumn } from '../types'
+import type { ProTableColumn } from '../types'
 
 /**
- * 将 ProColumn 转换为 TDesign Table 的列配置
+ * 将 ProTableColumn 转换为 TDesign Table 的列配置
  */
 export function transformColumns<T = Record<string, unknown>>(
-  columns: ProColumn<T>[]
+  columns: ProTableColumn<T>[]
 ): PrimaryTableCol<TableRowData>[] {
   return columns
     ?.filter(column => !column.hideInTable)
@@ -18,7 +18,7 @@ export function transformColumns<T = Record<string, unknown>>(
         fixed,
         align,
         ellipsis,
-        render,
+        cell,
         ...rest
       } = column
 
@@ -35,10 +35,10 @@ export function transformColumns<T = Record<string, unknown>>(
       }
 
       // 处理自定义渲染
-      if (render) {
+      if (cell) {
         tableColumn.cell = (_h, { row, col, rowIndex }) => {
           const columnKey = col.colKey || column.colKey
-          return render({
+          return cell({
             value: row[columnKey as string],
             record: row as T,
             index: rowIndex,
@@ -55,8 +55,8 @@ export function transformColumns<T = Record<string, unknown>>(
  * 获取搜索表单需要的列
  */
 export function getSearchColumns<T = Record<string, unknown>>(
-  columns: ProColumn<T>[]
-): ProColumn<T>[] {
+  columns: ProTableColumn<T>[]
+): ProTableColumn<T>[] {
   return columns
     .filter(column => !column.hideInSearch && column.search !== false)
     .sort((a, b) => (b.order || 0) - (a.order || 0))

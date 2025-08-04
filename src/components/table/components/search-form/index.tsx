@@ -2,13 +2,13 @@ import { RefreshIcon, SearchIcon } from 'tdesign-icons-vue-next'
 import { Button, Form, Space } from 'tdesign-vue-next'
 import type { PropType } from 'vue'
 import { computed, defineComponent, ref } from 'vue'
-import type { ProColumn, SearchConfig } from '../../types'
+import type { ProTableColumn, SearchConfig } from '../../types'
 
 export default defineComponent({
   name: 'SearchForm',
   props: {
     columns: {
-      type: Array as PropType<ProColumn[]>,
+      type: Array as PropType<ProTableColumn[]>,
       required: true,
     },
     search: {

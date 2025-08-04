@@ -1,15 +1,18 @@
 import useListeners from '@/hooks/listeners'
-import { Card, Table } from 'tdesign-vue-next'
-import type { App } from 'vue'
-import { defineComponent, useModel } from 'vue'
+import { Card, EnhancedTable, type PaginationProps } from 'tdesign-vue-next'
+import type { App, PropType, Ref, VNode } from 'vue'
+import { computed, defineComponent, useModel } from 'vue'
 import TableAlert from './components/alert'
 import SearchForm from './components/search-form'
 import TableToolBar from './components/toolbar'
 import { useProTable } from './hooks/use-pro-table'
 import './style/index.less'
+import type { ActionRef, ProNode, ProTableColumn } from './types'
+import { mergePagination } from './utils/pagination-utils'
 
 const ProTable = defineComponent({
-  name: 'TProTable',
+  name: 'ProTable',
+  extends: EnhancedTable,
   props: {
     // 数据相关
     request: Function,
@@ -18,7 +21,7 @@ const ProTable = defineComponent({
 
     // 列配置
     columns: {
-      type: Array,
+      type: Array as PropType<ProTableColumn[]>,
       required: true,
     },
 
@@ -33,7 +36,7 @@ const ProTable = defineComponent({
       type: [Boolean, Object],
       default: true,
     },
-    toolbarRender: Function,
+    toolbarRender: Function as PropType<(actionRef: ActionRef) => VNode>,
 
     // 卡片配置
     cardBordered: {
@@ -46,13 +49,12 @@ const ProTable = defineComponent({
     },
 
     // 标题相关
-    headerTitle: String,
-    tooltip: String,
+    headerTitle: [String, Function] as PropType<ProNode>,
+    tooltip: [String, Function] as PropType<ProNode>,
 
     // 分页
     pagination: {
-      type: [Boolean, Object],
-      default: true,
+      type: [Boolean, Object] as PropType<false | PaginationProps>,
     },
 
     // 列配置控制
@@ -69,11 +71,10 @@ const ProTable = defineComponent({
     },
   },
 
-  setup(props, { slots, attrs, expose, emit }) {
+  setup(props, { slots, attrs, expose }) {
     const { listeners } = useListeners()
     const columnControllerVisible = useModel(props, 'columnControllerVisible')
 
-    console.log('columns', props.columns, props)
     // 使用核心 hook
     const {
       tableData,
@@ -81,10 +82,19 @@ const ProTable = defineComponent({
       tableLoading,
       searchFormRef,
       actionRef,
+      pageInfo,
       onSearch,
       onReset,
       reload,
-    } = useProTable(props)
+      setPageInfo,
+    } = useProTable(props as any)
+
+    // 合并分页配置
+    const paginationConfig = computed(() => {
+      return mergePagination(props.pagination, pageInfo.value, newPageInfo => {
+        setPageInfo(newPageInfo)
+      })
+    })
 
     // 暴露方法给父组件
     expose({
@@ -117,7 +127,7 @@ const ProTable = defineComponent({
             toolbar={toolbar}
             toolbarRender={props.toolbarRender}
             columns={props.columns}
-            actionRef={actionRef}
+            actionRef={actionRef as Ref<ActionRef>}
             v-model:columnControllerVisible={columnControllerVisible.value}
           />
         ) : null
@@ -127,14 +137,15 @@ const ProTable = defineComponent({
 
       // 表格节点
       const tableNode = (
-        <Table
+        <EnhancedTable
           {...attrs}
           {...listeners}
+          {...props}
           data={tableData.value}
           columns={tableColumns.value}
           loading={tableLoading.value}
           rowKey={props.rowKey}
-          pagination={props.pagination}
+          pagination={paginationConfig.value || undefined}
           v-model:columnControllerVisible={columnControllerVisible.value}
           v-slots={slots}
         />

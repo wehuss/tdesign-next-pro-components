@@ -11,13 +11,13 @@ import {
 } from 'tdesign-vue-next'
 import type { PropType } from 'vue'
 import { defineComponent } from 'vue'
-import type { ProColumn } from '../../types'
+import type { ProTableColumn } from '../../types'
 
 export default defineComponent({
   name: 'FormItem',
   props: {
     column: {
-      type: Object as PropType<ProColumn>,
+      type: Object as PropType<ProTableColumn>,
       required: true,
     },
     modelValue: {

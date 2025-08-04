@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.17.21
       tdesign-icons-vue-next:
         specifier: ^0.3.6
         version: 0.3.6(vue@3.5.18(typescript@5.8.3))

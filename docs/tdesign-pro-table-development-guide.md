@@ -106,7 +106,7 @@ interface ProTableProps<T = any, P = Record<string, any>> {
   params?: Partial<P>
 
   // 列配置
-  columns: ProColumn<T>[]
+  columns: ProTableColumn<T>[]
 
   // 搜索表单
   search?: false | SearchConfig
@@ -124,7 +124,7 @@ interface ProTableProps<T = any, P = Record<string, any>> {
   rowSelection?: RowSelectionProps<T>
 }
 
-interface ProColumn<T = any> extends TableColumn<T> {
+interface ProTableColumn<T = any> extends TableColumn<T> {
   // 值类型
   valueType?: ValueType
   valueEnum?: Record<string, ValueEnumItem>

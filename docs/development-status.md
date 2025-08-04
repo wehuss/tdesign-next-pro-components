@@ -17,7 +17,7 @@
 - [x] **工具栏组件**: 基础工具栏布局，支持自定义按钮
 - [x] **搜索表单组件**: 基础搜索表单结构
 - [x] **批量操作提示**: 选中行提示组件
-- [x] **列转换工具**: ProColumn 到 TDesign Table 列的转换
+- [x] **列转换工具**: ProTableColumn 到 TDesign Table 列的转换
 
 #### 3. 数据管理 (90%)
 
@@ -114,7 +114,7 @@ interface ProTableProps<
   P = Record<string, unknown>,
 > {
   request?: (params: P & RequestParams) => Promise<RequestData<T>>
-  columns: ProColumn<T>[]
+  columns: ProTableColumn<T>[]
   // ...其他属性
 }
 ```

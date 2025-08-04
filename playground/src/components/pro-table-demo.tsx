@@ -1,5 +1,5 @@
 import ProTable from '@/components/table'
-import type { ProColumn } from '@/components/table/types'
+import type { ProTableColumn } from '@/components/table/types'
 import { Button } from 'tdesign-vue-next'
 import { defineComponent, ref } from 'vue'
 
@@ -47,7 +47,7 @@ export default defineComponent({
     ]
 
     // 列配置
-    const columns: ProColumn<TableData>[] = [
+    const columns: ProTableColumn<TableData>[] = [
       {
         colKey: 'id',
         title: 'ID',
@@ -94,8 +94,7 @@ export default defineComponent({
       {
         colKey: 'actions',
         title: '操作',
-        hideInSearch: true,
-        render: () => (
+        cell: () => (
           <div>
             <Button variant="text" size="small">
               编辑

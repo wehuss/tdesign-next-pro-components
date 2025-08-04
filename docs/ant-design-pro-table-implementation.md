@@ -69,7 +69,7 @@ function ProTable<T, U, ValueType>(props: ProTableProps<T, U, ValueType>) {
 
   // 3. 列处理
   const tableColumn = useMemo(() => {
-    return genProColumnToColumn({
+    return genProTableColumnToColumn({
       columns: propsColumns,
       counter,
       columnEmptyText,
@@ -164,13 +164,13 @@ export function useFetchData<T>(
 }
 ```
 
-### 3. 列处理 (genProColumnToColumn)
+### 3. 列处理 (genProTableColumnToColumn)
 
 #### 列转换逻辑
 
 ```tsx
-export function genProColumnToColumn<T>(options: {
-  columns: ProColumns<T, any>[]
+export function genProTableColumnToColumn<T>(options: {
+  columns: ProTableColumns<T, any>[]
   counter: ReturnType<typeof useContainer>
   columnEmptyText: ProTableProps<any, any, any>['columnEmptyText']
   type: ProSchemaComponentTypes
@@ -541,7 +541,7 @@ function useBreakpoint() {
 ```tsx
 // 列计算优化
 const tableColumn = useMemo(() => {
-  return genProColumnToColumn({
+  return genProTableColumnToColumn({
     columns: propsColumns,
     counter,
     columnEmptyText,
@@ -580,7 +580,7 @@ export interface ProTableProps<
     TableProps<DataType>,
     'columns' | 'pagination' | 'loading' | 'dataSource'
   > {
-  columns?: ProColumns<DataType, ValueType>[]
+  columns?: ProTableColumns<DataType, ValueType>[]
   params?: Partial<Params>
   request?: (
     params: Params & {
@@ -595,7 +595,7 @@ export interface ProTableProps<
   // 其他属性...
 }
 
-export interface ProColumns<T = any, ValueType = 'text'>
+export interface ProTableColumns<T = any, ValueType = 'text'>
   extends Omit<ColumnType<T>, 'render' | 'children' | 'title'> {
   // ProTable 特有属性
   valueType?: ValueType
@@ -610,7 +610,7 @@ export interface ProColumns<T = any, ValueType = 'text'>
     entity: T,
     index: number,
     action: UseFetchDataAction<T>,
-    schema: ProColumns<T, ValueType> & {
+    schema: ProTableColumns<T, ValueType> & {
       type: ProSchemaComponentTypes
     }
   ) => ReactNode

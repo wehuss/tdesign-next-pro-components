@@ -81,7 +81,7 @@ interface ProTableProps<T, U, ValueType> {
   params?: Partial<U>
 
   // 列配置
-  columns: ProColumns<T, ValueType>[]
+  columns: ProTableColumns<T, ValueType>[]
 
   // 搜索表单
   search?: false | SearchConfig
@@ -103,10 +103,10 @@ interface ProTableProps<T, U, ValueType> {
 }
 ```
 
-#### 列配置 (ProColumns)
+#### 列配置 (ProTableColumns)
 
 ```typescript
-interface ProColumns<T, ValueType> extends ColumnType<T> {
+interface ProTableColumns<T, ValueType> extends ColumnType<T> {
   // 值类型
   valueType?: ValueType
   valueEnum?: Record<string, any>

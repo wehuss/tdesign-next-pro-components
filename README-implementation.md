@@ -152,11 +152,11 @@ const columns = [
 ```tsx
 import { defineComponent } from 'vue'
 import ProTable from '@/components/table'
-import type { ProColumn } from '@/components/table/types'
+import type { ProTableColumn } from '@/components/table/types'
 
 export default defineComponent({
   setup() {
-    const columns: ProColumn[] = [
+    const columns: ProTableColumn[] = [
       {
         colKey: 'name',
         title: '姓名',

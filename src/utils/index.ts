@@ -2,6 +2,8 @@
  * 通用工具函数
  */
 
+import { ref, watch, type Ref } from 'vue'
+
 // 检查是否为空值
 export const isEmpty = (value: unknown): boolean => {
   if (value === null || value === undefined) return true
@@ -53,4 +55,40 @@ export const throttle = <T extends (...args: unknown[]) => unknown>(
       func(...args)
     }
   }
+}
+
+// 防抖 ref
+export const useDebouncedRef = <T>(source: Ref<T>, delay: number): Ref<T> => {
+  const debouncedRef = ref(source.value) as Ref<T>
+
+  let timer: number | null = null
+  watch(
+    source,
+    newValue => {
+      if (timer) {
+        clearTimeout(timer)
+      }
+      timer = setTimeout(() => {
+        debouncedRef.value = newValue
+      }, delay) as unknown as number
+    },
+    { immediate: true }
+  )
+
+  return debouncedRef
+}
+
+// 获取最新值的 ref
+export const useLatest = <T>(value: T): Ref<T> => {
+  const latestRef = ref(value) as Ref<T>
+
+  watch(
+    () => value,
+    newValue => {
+      latestRef.value = newValue
+    },
+    { immediate: true, deep: true }
+  )
+
+  return latestRef
 }

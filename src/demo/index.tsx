@@ -1,7 +1,7 @@
 import { Button, MessagePlugin } from 'tdesign-vue-next'
 import { defineComponent } from 'vue'
 import ProTable from '../components/table'
-import type { ProColumn } from '../components/table/types'
+import type { ProTableColumn } from '../components/table/types'
 
 interface UserData {
   id: number
@@ -44,7 +44,7 @@ export default defineComponent({
     ]
 
     // 列配置
-    const columns: ProColumn<UserData>[] = [
+    const columns: ProTableColumn<UserData>[] = [
       {
         colKey: 'id',
         title: 'ID',

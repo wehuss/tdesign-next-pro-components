@@ -14,7 +14,7 @@ npm install tdesign-icons-vue-next
 ```tsx
 import { defineComponent } from 'vue'
 import ProTable from '@/components/table'
-import type { ProColumn } from '@/components/table/types'
+import type { ProTableColumn } from '@/components/table/types'
 
 interface TableData {
   id: number
@@ -25,7 +25,7 @@ interface TableData {
 
 export default defineComponent({
   setup() {
-    const columns: ProColumn<TableData>[] = [
+    const columns: ProTableColumn<TableData>[] = [
       {
         colKey: 'name',
         title: '姓名',
@@ -101,7 +101,7 @@ export default defineComponent({
 
 | 属性        | 说明         | 类型                               | 默认值 |
 | ----------- | ------------ | ---------------------------------- | ------ |
-| columns     | 列配置       | `ProColumn[]`                      | `[]`   |
+| columns     | 列配置       | `ProTableColumn[]`                 | `[]`   |
 | request     | 数据请求函数 | `(params) => Promise<RequestData>` | -      |
 | dataSource  | 静态数据源   | `T[]`                              | -      |
 | search      | 搜索表单配置 | `boolean \| SearchConfig`          | `true` |
@@ -110,7 +110,7 @@ export default defineComponent({
 | rowKey      | 行 key       | `string \| function`               | `'id'` |
 | pagination  | 分页配置     | `boolean \| PaginationProps`       | `true` |
 
-### ProColumn
+### ProTableColumn
 
 | 属性         | 说明         | 类型                            | 默认值   |
 | ------------ | ------------ | ------------------------------- | -------- |
