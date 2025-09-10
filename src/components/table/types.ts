@@ -6,7 +6,7 @@ import type {
   TableRowData,
 } from 'tdesign-vue-next'
 import type { Ref, VNode } from 'vue'
-import type { ProFieldValueType } from '../field/types'
+import type { ProFieldValueEnumType, ProFieldValueType } from '../field/types'
 
 export type ProNode = string | ((...args: unknown[]) => VNode)
 
@@ -41,7 +41,7 @@ export interface FilterInfo {
 
 export interface ProTableColumnFormItem extends FormItemProps {
   valueType: ProFieldValueType
-  valueEnum?: ValueEnum
+  valueEnum?: ProFieldValueEnumType
   render?: VNode
   fieldProps?: Record<string, unknown>
   defaultValue?: unknown | (() => unknown)
@@ -51,10 +51,12 @@ export interface ProTableColumnFormItem extends FormItemProps {
 
 // 列配置类型
 export interface ProTableColumn<T extends TableRowData = TableRowData>
-  extends PrimaryTableCol<T> {
+  extends Omit<PrimaryTableCol<T>, 'render'> {
   // ProTable 扩展属性
-  valueType?: ProFieldValueType
-  valueEnum?: ValueEnum
+  valueType?:
+    | ProFieldValueType
+    | ((record?: T, type?: string) => ProFieldValueType)
+  valueEnum?: ProFieldValueEnumType
 
   // 显示控制
   hideInTable?: boolean
@@ -66,6 +68,43 @@ export interface ProTableColumn<T extends TableRowData = TableRowData>
     createForm?: boolean | ProTableColumnFormItem
   }
 
+  // 编辑相关
+  editable?: boolean | ((text: unknown, record: T, index: number) => boolean)
+
+  // 文本渲染处理
+  renderText?: (
+    text: unknown,
+    record: T,
+    index: number,
+    action?: unknown
+  ) => unknown
+
+  // 自定义渲染 - 重新定义与 PrimaryTableCol 不同的签名
+  render?: (
+    dom: VNode,
+    record: T,
+    index: number,
+    action?: unknown,
+    schema?: unknown
+  ) => VNode | null
+
+  // 表单项渲染
+  formItemRender?: (
+    schema: unknown,
+    config: {
+      defaultRender: () => VNode
+      type: string
+      recordKey?: string | number
+      record?: T
+      isEditable?: boolean
+    },
+    form?: unknown,
+    editableUtils?: unknown
+  ) => VNode | false | null
+
+  // 索引标识
+  index?: number
+
   // 搜索相关
   // search?: boolean | SearchColumnConfig
 
@@ -74,16 +113,13 @@ export interface ProTableColumn<T extends TableRowData = TableRowData>
   // fieldProps?: Record<string, unknown>
 }
 
-export interface ValueEnumItem {
-  text: string
-  status?: 'success' | 'error' | 'warning' | 'default'
-  color?: string
-  disabled?: boolean
+// 列状态配置
+export interface ColumnsState {
+  show?: boolean
+  fixed?: 'left' | 'right'
+  order?: number
+  disable?: boolean
 }
-
-export type ValueEnumMap = Map<string | number | boolean, ValueEnumItem>
-export type valueEnumObj = Record<string, ValueEnumItem>
-export type ValueEnum = ValueEnumMap | valueEnumObj
 
 // 搜索配置
 export interface SearchConfig {

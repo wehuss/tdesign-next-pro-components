@@ -1,10 +1,7 @@
+import { objectToMap, proFieldParsingText } from '@/utils'
 import { Select } from 'tdesign-vue-next'
 import { computed, defineComponent, useModel } from 'vue'
-import type {
-  ProFieldMode,
-  ProFieldValueEnumMap,
-  ProFieldValueEnumObj,
-} from '../../types'
+import type { ProFieldMode, ProFieldValueEnumType } from '../../types'
 
 /**
  * Select 组件 - 选择字段
@@ -48,55 +45,33 @@ export const FieldSelect = defineComponent({
 
     // 转换 valueEnum 为选项列表
     const options = computed(() => {
-      const valueEnum = props.valueEnum as
-        | ProFieldValueEnumObj
-        | ProFieldValueEnumMap
+      const valueEnum = objectToMap(props.valueEnum as ProFieldValueEnumType)
 
-      if (
-        !valueEnum ||
-        (typeof valueEnum === 'object' && Object.keys(valueEnum).length === 0)
-      ) {
+      if (!valueEnum || valueEnum.size === 0) {
         return []
       }
 
-      if (valueEnum instanceof Map) {
-        return Array.from(valueEnum.entries()).map(([value, config]) => ({
+      return Array.from(valueEnum.entries()).map(entry => {
+        const [value, config] = entry as any[]
+        return {
           value,
-          label: typeof config === 'string' ? config : config.text,
-          disabled: typeof config === 'object' ? config.disabled : false,
-        }))
-      }
-
-      return Object.entries(valueEnum).map(([value, config]) => ({
-        value,
-        label: config.text,
-        disabled: config.disabled,
-      }))
+          label:
+            typeof config === 'string'
+              ? config
+              : (config as any)?.text || value,
+          disabled:
+            typeof config === 'object' ? (config as any)?.disabled : false,
+        }
+      })
     })
-
-    // 获取显示文本
-    const getDisplayText = (value: any) => {
-      if (value === null || value === undefined) return '-'
-
-      const valueEnum = props.valueEnum as
-        | ProFieldValueEnumObj
-        | ProFieldValueEnumMap
-
-      if (!valueEnum) return String(value)
-
-      if (valueEnum instanceof Map) {
-        const config = valueEnum.get(value)
-        return typeof config === 'string' ? config : config?.text || value
-      }
-
-      const config = (valueEnum as ProFieldValueEnumObj)[String(value)]
-      return config?.text || value
-    }
 
     return () => {
       // 只读模式显示选项文本
       if (props.mode === 'read' || props.readonly) {
-        return <span>{getDisplayText(modelValue.value)}</span>
+        return proFieldParsingText(
+          modelValue.value,
+          props.valueEnum as ProFieldValueEnumType
+        )
       }
 
       // 编辑模式显示下拉选择框

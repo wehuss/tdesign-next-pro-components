@@ -10,6 +10,7 @@ import FieldRadio from './components/radio/index.tsx'
 import FieldRate from './components/rate/index.tsx'
 import FieldSelect from './components/select/index.tsx'
 import FieldSlider from './components/slider/index.tsx'
+import FieldStatus from './components/status/index.tsx'
 import FieldSwitch from './components/switch/index.tsx'
 import FieldText from './components/text/index.tsx'
 import FieldTextArea from './components/textarea/index.tsx'
@@ -172,6 +173,15 @@ export const valueTypeToComponentMap: Record<string, ProRenderFieldPropsType> =
           mode="edit"
           {...props}
         />
+      ),
+    },
+
+    status: {
+      render: (modelValue, props) => (
+        <FieldStatus v-model={modelValue} {...props} />
+      ),
+      formItemRender: (modelValue, props) => (
+        <FieldSelect v-model={modelValue} mode="edit" {...props} />
       ),
     },
   }

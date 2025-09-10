@@ -1,33 +1,35 @@
 import type { App } from 'vue'
 
-// 组件导入
+import ProField from './components/field/component'
 import ProTable from './components/table'
 
-// 样式导入
-import 'tdesign-vue-next/es/style/index.css'
+// 导出工具函数
+export * from './components/field/component'
+export * from './components/table/utils'
+export * from './types'
+
+// 导出组件
+export { ProField, ProTable }
 
 // 组件列表
-const components = [ProTable]
+const components = [ProField, ProTable]
 
-// 全量安装
-const install = (app: App): void => {
+// 全量安装函数
+function install(app: App): void {
   components.forEach(component => {
-    // app.use(component)
+    if (component.install) {
+      component.install(app)
+    } else if (component.name) {
+      app.component(component.name, component)
+    }
   })
 }
 
-// 按需导出
-export { install, ProTable }
-
-// 全量导出
+// 默认导出
 export default {
   install,
-  version: '__VERSION__',
+  version: '0.1.0',
 }
 
-// 全局类型声明
-declare module 'vue' {
-  export interface GlobalComponents {
-    TProTable: typeof ProTable
-  }
-}
+// 单独导出安装函数
+export { install }

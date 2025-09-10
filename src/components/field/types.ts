@@ -42,7 +42,16 @@ export type ProFieldValueType =
   | 'code'
   | 'progress'
   | 'tag'
+  | 'status'
   | 'option'
+  | 'index'
+  | 'indexBorder'
+
+/** Field 的值类型函数版本 */
+export type ProFieldValueTypeFunction = (
+  record?: unknown,
+  type?: string
+) => ProFieldValueType
 
 /** 空文本配置 */
 export type ProFieldEmptyText = string | false
@@ -51,7 +60,8 @@ export type ProFieldEmptyText = string | false
 export type ProFieldValueEnumObj = {
   [key: string]: {
     text: string
-    status?: 'success' | 'error' | 'processing' | 'warning' | 'default'
+    theme?: 'success' | 'danger' | 'primary' | 'warning' | 'default'
+    variant?: 'dark' | 'light' | 'outline' | 'light-outline'
     color?: string
     disabled?: boolean
   }
@@ -62,11 +72,14 @@ export type ProFieldValueEnumMap = Map<
   | string
   | {
       text: string
-      status?: 'success' | 'error' | 'processing' | 'warning' | 'default'
+      theme?: 'success' | 'danger' | 'primary' | 'warning' | 'default'
+      variant?: 'dark' | 'light' | 'outline' | 'light-outline'
       color?: string
       disabled?: boolean
     }
 >
+
+export type ProFieldValueEnumType = ProFieldValueEnumObj | ProFieldValueEnumMap
 
 /** 渲染函数的props类型 */
 export interface ProFieldRenderProps {

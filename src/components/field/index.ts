@@ -1,8 +1,8 @@
 // Field 组件的类型定义
-export * from './types'
+export * from './types.ts'
 
 // 主 ProField 组件
-export { default as ProField, defaultRenderText } from './index.tsx'
+export { default as ProField, defaultRenderText } from './component.tsx'
 
 // Value Type 映射
 export { valueTypeToComponentMap } from './value-type-map.tsx'

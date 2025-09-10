@@ -52,7 +52,6 @@ export default defineComponent({
         colKey: 'id',
         title: 'ID',
         width: 80,
-        hideInSearch: true,
       },
       {
         colKey: 'name',
@@ -63,13 +62,11 @@ export default defineComponent({
         colKey: 'age',
         title: '年龄',
         valueType: 'digit',
-        hideInSearch: true,
       },
       {
         colKey: 'email',
         title: '邮箱',
         valueType: 'text',
-        hideInSearch: true,
       },
       {
         colKey: 'status',
@@ -78,11 +75,11 @@ export default defineComponent({
         valueEnum: {
           active: {
             text: '激活',
-            status: 'success',
+            theme: 'success',
           },
           inactive: {
             text: '禁用',
-            status: 'error',
+            theme: 'danger',
           },
         },
       },

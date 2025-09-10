@@ -13,6 +13,11 @@ export const isEmpty = (value: unknown): boolean => {
   return false
 }
 
+// 检查是否为null或undefined
+export const isNil = (value: unknown): value is null | undefined => {
+  return value === null || value === undefined
+}
+
 // 深度克隆
 export const deepClone = <T>(obj: T): T => {
   if (obj === null || typeof obj !== 'object') return obj
@@ -92,3 +97,10 @@ export const useLatest = <T>(value: T): Ref<T> => {
 
   return latestRef
 }
+
+// 导出 proFieldParsingText 相关函数
+export {
+  objectToMap,
+  proFieldParsingText,
+  ProFieldTagColor,
+} from './proFieldParsingText'

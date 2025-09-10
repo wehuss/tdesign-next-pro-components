@@ -1,18 +1,20 @@
+/**
+ * ProTable 表格组件
+ * 基于 ant-design/pro-components 的 Table.tsx 移植
+ */
+
 import useListeners from '@/hooks/listeners'
 import { Card, EnhancedTable, type PaginationProps } from 'tdesign-vue-next'
 import type { App, PropType, Ref, VNode } from 'vue'
 import { computed, defineComponent, useModel } from 'vue'
 import TableAlert from './components/alert'
-import SearchForm from './components/search-form'
 import TableToolBar from './components/toolbar'
 import { useProTable } from './hooks/use-pro-table'
 import './style/index.less'
 import type { ActionRef, ProNode, ProTableColumn } from './types'
-import { mergePagination } from './utils/pagination-utils'
 
 const ProTable = defineComponent({
   name: 'ProTable',
-  extends: EnhancedTable,
   props: {
     // 数据相关
     request: Function,
@@ -69,6 +71,16 @@ const ProTable = defineComponent({
       type: String,
       default: 'id',
     },
+
+    // 请求相关
+    manual: {
+      type: Boolean,
+      default: false,
+    },
+    polling: [Number, Boolean] as PropType<number | boolean>,
+    onLoad: Function,
+    onRequestError: Function,
+    postData: Function,
   },
 
   setup(props, { slots, attrs, expose }) {
@@ -87,37 +99,67 @@ const ProTable = defineComponent({
       onReset,
       reload,
       setPageInfo,
-    } = useProTable(props as any)
+    } = useProTable({
+      columns: props.columns as any,
+      request: props.request as any,
+      dataSource: props.dataSource as any,
+      params: props.params,
+      manual: props.manual,
+      polling: props.polling,
+      onLoad: props.onLoad as any,
+      onRequestError: props.onRequestError as any,
+      postData: props.postData as any,
+      pagination: props.pagination as any,
+    })
 
     // 合并分页配置
     const paginationConfig = computed(() => {
-      return mergePagination(props.pagination, pageInfo.value, newPageInfo => {
-        setPageInfo(newPageInfo)
-      })
+      if (props.pagination === false) {
+        return false
+      }
+
+      const defaultPagination =
+        typeof props.pagination === 'object' ? props.pagination : {}
+
+      return {
+        ...defaultPagination,
+        current: pageInfo.value.current,
+        pageSize: pageInfo.value.pageSize,
+        total: pageInfo.value.total,
+        onChange: (pageNumber: any) => {
+          // 调用用户的 onChange 回调
+          defaultPagination.onChange?.(pageNumber)
+
+          // 更新内部状态
+          setPageInfo({
+            current: pageNumber.current,
+            pageSize: pageNumber.pageSize,
+          })
+        },
+        onPageSizeChange: (pageSize: number, pageInfo: any) => {
+          // 调用用户的 onPageSizeChange 回调
+          defaultPagination.onPageSizeChange?.(pageSize, pageInfo)
+
+          // 页面大小改变时重置到第一页
+          setPageInfo({
+            current: 1,
+            pageSize,
+          })
+        },
+      }
     })
 
     // 暴露方法给父组件
     expose({
-      reload,
-      reset: onReset,
-      getSearchForm: () => searchFormRef.value,
       ...actionRef.value,
+      getSearchForm: () => searchFormRef.value,
     })
 
     return () => {
-      const { ghost, cardBordered, search, toolbar, headerTitle } = props
+      const { ghost, cardBordered, toolbar, headerTitle } = props
 
-      // 搜索表单节点
-      const searchNode =
-        search !== false ? (
-          <SearchForm
-            ref={searchFormRef}
-            columns={props.columns}
-            search={search}
-            onSubmit={onSearch}
-            onReset={onReset}
-          />
-        ) : null
+      // 搜索表单节点（暂时为空，稍后实现）
+      const searchNode = null
 
       // 工具栏节点
       const toolbarNode =
@@ -135,7 +177,7 @@ const ProTable = defineComponent({
       // 批量操作提示
       const alertNode = <TableAlert />
 
-      // 表格节点
+      // 表格节点 - 使用转换后的列配置
       const tableNode = (
         <EnhancedTable
           {...attrs}

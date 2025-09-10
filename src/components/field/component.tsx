@@ -5,7 +5,7 @@ import type {
   ProFieldRenderProps,
   ProFieldTextType,
   ProFieldValueType,
-} from './types'
+} from './types.ts'
 import { valueTypeToComponentMap } from './value-type-map.tsx'
 
 /**

@@ -67,16 +67,16 @@ export default defineComponent({
       },
       {
         colKey: 'status',
-        title: '状态',
+        title: '状态1',
         valueType: 'select',
         valueEnum: {
           active: {
             text: '激活',
-            status: 'success',
+            theme: 'success',
           },
           inactive: {
             text: '禁用',
-            status: 'error',
+            theme: 'error',
           },
         },
       },
@@ -88,7 +88,6 @@ export default defineComponent({
       {
         colKey: 'actions',
         title: '操作',
-        hideInSearch: true,
         render: () => (
           <div>
             <Button
