@@ -6,6 +6,7 @@ import type {
   TableRowData,
 } from 'tdesign-vue-next'
 import type { Ref, VNode } from 'vue'
+import type { ProFieldValueType } from '../field/types'
 
 export type ProNode = string | ((...args: unknown[]) => VNode)
 
@@ -39,9 +40,9 @@ export interface FilterInfo {
 }
 
 export interface ProTableColumnFormItem extends FormItemProps {
-  valueType: ValueType
+  valueType: ProFieldValueType
   valueEnum?: ValueEnum
-  components?: VNode
+  render?: VNode
   fieldProps?: Record<string, unknown>
   defaultValue?: unknown | (() => unknown)
   transform?: (value: unknown) => unknown
@@ -52,7 +53,7 @@ export interface ProTableColumnFormItem extends FormItemProps {
 export interface ProTableColumn<T extends TableRowData = TableRowData>
   extends PrimaryTableCol<T> {
   // ProTable 扩展属性
-  valueType?: ValueType
+  valueType?: ProFieldValueType
   valueEnum?: ValueEnum
 
   // 显示控制
@@ -72,29 +73,6 @@ export interface ProTableColumn<T extends TableRowData = TableRowData>
   // formItemProps?: Record<string, unknown>
   // fieldProps?: Record<string, unknown>
 }
-
-// 值类型
-export type ValueType =
-  | 'text'
-  | 'textarea'
-  | 'select'
-  | 'radio'
-  | 'checkbox'
-  | 'switch'
-  | 'date'
-  | 'dateRange'
-  | 'dateTime'
-  | 'dateTimeRange'
-  | 'time'
-  | 'timeRange'
-  | 'digit'
-  | 'money'
-  | 'percent'
-  | 'tag'
-  | 'badge'
-  | 'avatar'
-  | 'image'
-  | 'color'
 
 export interface ValueEnumItem {
   text: string

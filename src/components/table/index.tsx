@@ -141,6 +141,7 @@ const ProTable = defineComponent({
           {...attrs}
           {...listeners}
           {...props}
+          bordered
           data={tableData.value}
           columns={tableColumns.value}
           loading={tableLoading.value}

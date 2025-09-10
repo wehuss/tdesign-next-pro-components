@@ -1,6 +1,6 @@
-import { createApp } from 'vue'
 import TDesign from 'tdesign-vue-next'
 import 'tdesign-vue-next/es/style/index.css'
+import { createApp } from 'vue'
 
 // 导入组件
 import ProTable from './components/table'

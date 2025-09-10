@@ -7,6 +7,7 @@ import {
   Tag,
 } from 'tdesign-vue-next'
 import { defineComponent } from 'vue'
+import ProFieldDemo from '../../src/demo/field-demo'
 import ProTableDemo from './components/pro-table-demo'
 
 export default defineComponent({
@@ -36,9 +37,15 @@ export default defineComponent({
             <ProTableDemo />
           </Card>
 
+          <Card title="Pro Field 组件" bordered>
+            <p>TDesign Pro Field 组件演示：</p>
+            <ProFieldDemo />
+          </Card>
+
           <Card title="组件列表" bordered>
             <p>当前可用的组件：</p>
             <Tag theme="success">Pro Table</Tag>
+            <Tag theme="success">Pro Field</Tag>
             <Tag>Pro Form (开发中)</Tag>
             <Tag>Pro Select (开发中)</Tag>
           </Card>

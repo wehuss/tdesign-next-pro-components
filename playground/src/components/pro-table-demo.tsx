@@ -144,7 +144,7 @@ export default defineComponent({
             resetText: '重置',
           }}
           toolbarRender={toolbarRender}
-          pagination={false}
+          // pagination={false}
         />
       </div>
     )

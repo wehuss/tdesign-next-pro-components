@@ -1,0 +1,90 @@
+import { InputNumber } from 'tdesign-vue-next'
+import { defineComponent, useModel } from 'vue'
+import type { ProFieldMode } from '../../types'
+
+/**
+ * Money 组件 - 金额字段
+ * 只读模式显示格式化金额，编辑模式显示数字输入框
+ */
+export const FieldMoney = defineComponent({
+  name: 'ProFieldMoney',
+  props: {
+    modelValue: {
+      type: [String, Number] as any,
+      default: 0,
+    },
+    mode: {
+      type: String as () => ProFieldMode,
+      default: 'read' as ProFieldMode,
+    },
+    currency: {
+      type: String,
+      default: '¥',
+    },
+    locale: {
+      type: String,
+      default: 'zh-CN',
+    },
+    precision: {
+      type: Number,
+      default: 2,
+    },
+    fieldProps: {
+      type: Object as any,
+      default: () => ({}),
+    },
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    placeholder: {
+      type: [String, Array] as any,
+      default: '请输入金额',
+    },
+  },
+  emits: ['update:modelValue', 'change'],
+  setup(props) {
+    const modelValue = useModel(props, 'modelValue')
+
+    // 格式化金额显示
+    const formatMoney = (value: string | number | null | undefined) => {
+      if (value === null || value === undefined || value === '') return '-'
+
+      const num = Number(value)
+      if (isNaN(num)) return '-'
+
+      try {
+        return `${props.currency} ${num.toLocaleString(props.locale, {
+          minimumFractionDigits: props.precision,
+          maximumFractionDigits: props.precision,
+        })}`
+      } catch {
+        return `${props.currency} ${num.toFixed(props.precision)}`
+      }
+    }
+
+    return () => {
+      // 只读模式显示格式化金额
+      if (props.mode === 'read' || props.readonly) {
+        return <span>{formatMoney(modelValue.value)}</span>
+      }
+
+      // 编辑模式显示数字输入框
+      return (
+        <InputNumber
+          v-model={modelValue.value}
+          placeholder={props.placeholder}
+          disabled={props.disabled}
+          decimalPlaces={props.precision}
+          {...props.fieldProps}
+        />
+      )
+    }
+  },
+})
+
+export default FieldMoney
