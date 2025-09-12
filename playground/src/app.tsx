@@ -9,6 +9,7 @@ import {
 import { defineComponent } from 'vue'
 import ProFieldDemo from '../../src/demo/field-demo'
 import ProTableDemo from './components/pro-table-demo'
+import TestApp from './TestApp.vue'
 
 export default defineComponent({
   name: 'PlaygroundApp',
@@ -21,7 +22,7 @@ export default defineComponent({
       <div class="playground">
         <h1>TDesign Pro Components Playground</h1>
         <p>This is a development playground for testing components.</p>
-
+<TestApp />
         <Divider>基础组件测试</Divider>
 
         <Space direction="vertical" size="large">
