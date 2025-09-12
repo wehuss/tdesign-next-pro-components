@@ -1,5 +1,5 @@
 import { InputNumber } from 'tdesign-vue-next'
-import { defineComponent, useModel } from 'vue'
+import { defineComponent, ref, useModel } from 'vue'
 import type { ProFieldMode } from '../../types'
 
 /**
@@ -47,8 +47,15 @@ export const FieldMoney = defineComponent({
     },
   },
   emits: ['update:modelValue', 'change'],
-  setup(props) {
+  setup(props, { expose }) {
     const modelValue = useModel(props, 'modelValue')
+    const dataEntryRef = ref<InstanceType<typeof InputNumber>>()
+    const getDataEntryRef = () => dataEntryRef.value
+
+    expose({
+      getDataEntryRef,
+      dataEntryRef
+    })
 
     // 格式化金额显示
     const formatMoney = (value: string | number | null | undefined) => {
@@ -76,6 +83,7 @@ export const FieldMoney = defineComponent({
       // 编辑模式显示数字输入框
       return (
         <InputNumber
+          ref={dataEntryRef}
           v-model={modelValue.value}
           placeholder={props.placeholder}
           disabled={props.disabled}

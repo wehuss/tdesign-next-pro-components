@@ -1,5 +1,5 @@
 import { Rate } from 'tdesign-vue-next'
-import { defineComponent, useModel } from 'vue'
+import { defineComponent, ref, useModel } from 'vue'
 import type { ProFieldMode } from '../../types'
 
 /**
@@ -46,8 +46,15 @@ export const FieldRate = defineComponent({
       default: false,
     },
   },
-  setup(props) {
+  setup(props, { expose }) {
     const modelValue = useModel(props, 'modelValue')
+    const dataEntryRef = ref<InstanceType<typeof Rate>>()
+    const getDataEntryRef = () => dataEntryRef.value
+
+    expose({
+      getDataEntryRef,
+      dataEntryRef
+    })
     return () => {
       // 只读模式和编辑模式都显示评分组件，但只读模式不可交互
       const isReadonly = props.mode === 'read' || props.readonly
@@ -55,6 +62,7 @@ export const FieldRate = defineComponent({
       return (
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Rate
+            ref={dataEntryRef}
             v-model={modelValue.value}
             count={props.count}
             allowHalf={props.allowHalf}

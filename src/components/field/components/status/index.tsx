@@ -1,5 +1,5 @@
 import { proFieldParsingText } from '@/utils'
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import type { ProFieldMode, ProFieldValueEnumType } from '../../types'
 
 /**
@@ -26,7 +26,14 @@ export const FieldStatus = defineComponent({
       default: () => ({}),
     },
   },
-  setup(props) {
+  setup(props, { expose }) {
+    const dataEntryRef = ref()
+    const getDataEntryRef = () => dataEntryRef.value
+
+    expose({
+      getDataEntryRef,
+      dataEntryRef
+    })
     return () => {
       // 使用 proFieldParsingText 来处理 valueEnum 并显示状态
       return proFieldParsingText(

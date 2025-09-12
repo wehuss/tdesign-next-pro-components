@@ -1,5 +1,5 @@
 import { TimePicker } from 'tdesign-vue-next'
-import { defineComponent, useModel } from 'vue'
+import { defineComponent, ref, useModel } from 'vue'
 import type { ProFieldMode } from '../../types'
 
 /**
@@ -39,8 +39,15 @@ export const FieldTime = defineComponent({
     },
   },
   emits: ['update:modelValue', 'change'],
-  setup(props) {
+  setup(props, { expose }) {
     const modelValue = useModel(props, 'modelValue')
+    const dataEntryRef = ref<InstanceType<typeof TimePicker>>()
+    const getDataEntryRef = () => dataEntryRef.value
+
+    expose({
+      getDataEntryRef,
+      dataEntryRef
+    })
 
     // 格式化时间显示
     const formatTime = (value: any) => {
@@ -96,6 +103,7 @@ export const FieldTime = defineComponent({
       // 编辑模式显示时间选择器
       return (
         <TimePicker
+          ref={dataEntryRef}
           v-model={modelValue.value}
           format={props.format}
           placeholder={

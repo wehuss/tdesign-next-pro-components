@@ -1,6 +1,6 @@
 import { objectToMap, proFieldParsingText } from '@/utils'
 import { Checkbox, CheckboxGroup } from 'tdesign-vue-next'
-import { computed, defineComponent, useModel } from 'vue'
+import { computed, defineComponent, ref, useModel } from 'vue'
 import type { ProFieldMode, ProFieldValueEnumType } from '../../types'
 
 /**
@@ -35,8 +35,15 @@ export const FieldCheckbox = defineComponent({
       default: false,
     },
   },
-  setup(props) {
+  setup(props, { expose }) {
     const modelValue = useModel(props, 'modelValue')
+    const dataEntryRef = ref<InstanceType<typeof CheckboxGroup | typeof Checkbox>>()
+    const getDataEntryRef = () => dataEntryRef.value
+
+    expose({
+      getDataEntryRef,
+      dataEntryRef
+    })
 
     // 转换 valueEnum 为选项列表
     const options = computed(() => {
@@ -84,6 +91,7 @@ export const FieldCheckbox = defineComponent({
         // 有选项的情况，显示复选框组
         return (
           <CheckboxGroup
+            ref={dataEntryRef}
             v-model={modelValue.value}
             options={options.value}
             disabled={props.disabled}
@@ -94,6 +102,7 @@ export const FieldCheckbox = defineComponent({
         // 没有选项的情况，显示单个复选框
         return (
           <Checkbox
+            ref={dataEntryRef}
             v-model={modelValue.value}
             disabled={props.disabled}
             {...props.fieldProps}

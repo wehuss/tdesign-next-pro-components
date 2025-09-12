@@ -1,5 +1,5 @@
 import { Slider } from 'tdesign-vue-next'
-import { defineComponent, useModel } from 'vue'
+import { defineComponent, ref, useModel } from 'vue'
 import type { ProFieldMode } from '../../types'
 
 /**
@@ -55,8 +55,15 @@ export const FieldSlider = defineComponent({
     },
   },
   emits: ['update:modelValue', 'change'],
-  setup(props) {
+  setup(props, { expose }) {
     const modelValue = useModel(props, 'modelValue')
+    const dataEntryRef = ref<InstanceType<typeof Slider>>()
+    const getDataEntryRef = () => dataEntryRef.value
+
+    expose({
+      getDataEntryRef,
+      dataEntryRef
+    })
 
     // 格式化滑块值显示
     const formatSliderValue = (value: any) => {
@@ -79,6 +86,7 @@ export const FieldSlider = defineComponent({
       return (
         <div style={{ padding: '0 8px' }}>
           <Slider
+            ref={dataEntryRef}
             v-model={modelValue.value}
             min={props.min}
             max={props.max}

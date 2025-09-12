@@ -1,5 +1,5 @@
 import { InputNumber } from 'tdesign-vue-next'
-import { defineComponent, useModel } from 'vue'
+import { defineComponent, ref, useModel } from 'vue'
 import type { ProFieldMode } from '../../types'
 
 /**
@@ -51,8 +51,15 @@ export const FieldDigit = defineComponent({
     },
   },
   emits: ['update:modelValue', 'change'],
-  setup(props) {
+  setup(props, { expose }) {
     const modelValue = useModel(props, 'modelValue')
+    const dataEntryRef = ref<InstanceType<typeof InputNumber>>()
+    const getDataEntryRef = () => dataEntryRef.value
+
+    expose({
+      getDataEntryRef,
+      dataEntryRef
+    })
 
     // 格式化数字显示
     const formatDigit = (value: any) => {
@@ -73,6 +80,7 @@ export const FieldDigit = defineComponent({
       // 编辑模式显示数字输入框
       return (
         <InputNumber
+          ref={dataEntryRef}
           v-model={modelValue.value}
           placeholder={
             Array.isArray(props.placeholder)

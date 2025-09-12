@@ -1,5 +1,5 @@
 import { DatePicker } from 'tdesign-vue-next'
-import { defineComponent, useModel } from 'vue'
+import { defineComponent, ref, useModel } from 'vue'
 import type { ProFieldMode } from '../../types'
 
 /**
@@ -43,8 +43,15 @@ export const FieldDate = defineComponent({
     },
   },
   emits: ['update:modelValue', 'change'],
-  setup(props) {
+  setup(props, { expose }) {
     const modelValue = useModel(props, 'modelValue')
+    const dataEntryRef = ref<InstanceType<typeof DatePicker>>()
+    const getDataEntryRef = () => dataEntryRef.value
+
+    expose({
+      getDataEntryRef,
+      dataEntryRef
+    })
 
     // 格式化日期显示
     const formatDate = (value: any) => {
@@ -85,6 +92,7 @@ export const FieldDate = defineComponent({
       // 编辑模式显示日期选择器
       return (
         <DatePicker
+          ref={dataEntryRef}
           v-model={modelValue.value}
           format={props.format}
           valueFormat={props.valueFormat}

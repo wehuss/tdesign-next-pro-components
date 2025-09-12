@@ -1,5 +1,5 @@
 import { DateRangePicker } from 'tdesign-vue-next'
-import { defineComponent, useModel, type PropType } from 'vue'
+import { defineComponent, ref, useModel, type PropType } from 'vue'
 import type { ProFieldMode } from '../../types'
 
 /**
@@ -47,8 +47,15 @@ export const FieldDateRange = defineComponent({
     },
   },
   emits: ['update:modelValue', 'change'],
-  setup(props) {
+  setup(props, { expose }) {
     const modelValue = useModel(props, 'modelValue')
+    const dataEntryRef = ref<InstanceType<typeof DateRangePicker>>()
+    const getDataEntryRef = () => dataEntryRef.value
+
+    expose({
+      getDataEntryRef,
+      dataEntryRef
+    })
 
     // 格式化单个日期
     const formatSingleDate = (value: any) => {
@@ -101,6 +108,7 @@ export const FieldDateRange = defineComponent({
       // 编辑模式显示日期范围选择器
       return (
         <DateRangePicker
+          ref={dataEntryRef}
           v-model={modelValue.value}
           format={props.format}
           valueFormat={props.valueFormat}

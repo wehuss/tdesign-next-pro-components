@@ -1,5 +1,5 @@
 import { RadioGroup } from 'tdesign-vue-next'
-import { computed, defineComponent, useModel } from 'vue'
+import { computed, defineComponent, ref, useModel } from 'vue'
 import type {
   ProFieldMode,
   ProFieldValueEnumMap,
@@ -43,8 +43,15 @@ export const FieldRadio = defineComponent({
     },
   },
   emits: ['update:modelValue', 'change'],
-  setup(props) {
+  setup(props, { expose }) {
     const modelValue = useModel(props, 'modelValue')
+    const dataEntryRef = ref<InstanceType<typeof RadioGroup>>()
+    const getDataEntryRef = () => dataEntryRef.value
+
+    expose({
+      getDataEntryRef,
+      dataEntryRef
+    })
 
     // 转换 valueEnum 为选项列表
     const options = computed(() => {
@@ -102,6 +109,7 @@ export const FieldRadio = defineComponent({
       // 编辑模式显示单选框组
       return (
         <RadioGroup
+          ref={dataEntryRef}
           v-model={modelValue.value}
           options={options.value}
           variant={props.radioType === 'button' ? 'default-filled' : 'outline'}

@@ -1,5 +1,5 @@
 import { Switch } from 'tdesign-vue-next'
-import { defineComponent, useModel } from 'vue'
+import { defineComponent, ref, useModel } from 'vue'
 import type { ProFieldMode } from '../../types'
 
 /**
@@ -31,8 +31,15 @@ export const FieldSwitch = defineComponent({
     },
   },
   emits: ['update:modelValue', 'change'],
-  setup(props) {
+  setup(props, { expose }) {
     const modelValue = useModel(props, 'modelValue')
+    const dataEntryRef = ref<InstanceType<typeof Switch>>()
+    const getDataEntryRef = () => dataEntryRef.value
+
+    expose({
+      getDataEntryRef,
+      dataEntryRef
+    })
 
     return () => {
       const value = Boolean(modelValue.value)
@@ -45,6 +52,7 @@ export const FieldSwitch = defineComponent({
       // 编辑模式显示开关
       return (
         <Switch
+          ref={dataEntryRef}
           v-model={modelValue.value}
           disabled={props.disabled}
           {...props.fieldProps}

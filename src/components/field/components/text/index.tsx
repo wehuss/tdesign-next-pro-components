@@ -1,5 +1,5 @@
 import { Input } from 'tdesign-vue-next'
-import { defineComponent, useModel } from 'vue'
+import { defineComponent, ref, useModel } from 'vue'
 import type { ProFieldMode } from '../../types'
 
 /**
@@ -35,8 +35,16 @@ export const FieldText = defineComponent({
     },
   },
   emits: ['update:modelValue', 'change'],
-  setup(props) {
+  setup(props, {
+    expose
+  }) {
     const modelValue = useModel(props, 'modelValue')
+    const dataEntryRef = ref<InstanceType<typeof Input>>()
+    const getDataEntryRef = () => dataEntryRef.value
+    expose({
+      getDataEntryRef,
+      dataEntryRef
+    })
 
     return () => {
       const displayValue = String(props.modelValue ?? '')
@@ -49,6 +57,7 @@ export const FieldText = defineComponent({
       // 编辑模式显示输入框
       return (
         <Input
+          ref={dataEntryRef}
           v-model={modelValue.value}
           placeholder={
             Array.isArray(props.placeholder)

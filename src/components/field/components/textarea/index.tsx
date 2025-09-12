@@ -1,5 +1,5 @@
 import { Textarea } from 'tdesign-vue-next'
-import { defineComponent, useModel } from 'vue'
+import { defineComponent, ref, useModel } from 'vue'
 import type { ProFieldMode } from '../../types'
 
 /**
@@ -47,8 +47,15 @@ export const FieldTextArea = defineComponent({
     },
   },
   emits: ['update:modelValue', 'change'],
-  setup(props) {
+  setup(props, { expose }) {
     const modelValue = useModel(props, 'modelValue')
+    const dataEntryRef = ref<InstanceType<typeof Textarea>>()
+    const getDataEntryRef = () => dataEntryRef.value
+
+    expose({
+      getDataEntryRef,
+      dataEntryRef
+    })
 
     return () => {
       const textValue = String(modelValue.value ?? '')
@@ -65,6 +72,7 @@ export const FieldTextArea = defineComponent({
       // 编辑模式显示多行文本输入框
       return (
         <Textarea
+          ref={dataEntryRef}
           v-model={modelValue.value}
           placeholder={
             Array.isArray(props.placeholder)

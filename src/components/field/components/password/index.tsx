@@ -1,5 +1,5 @@
 import { Input } from 'tdesign-vue-next'
-import { defineComponent, useModel } from 'vue'
+import { defineComponent, ref, useModel } from 'vue'
 import type { ProFieldMode } from '../../types'
 
 /**
@@ -39,8 +39,15 @@ export const FieldPassword = defineComponent({
     },
   },
   emits: ['update:modelValue', 'change'],
-  setup(props) {
+  setup(props, { expose }) {
     const modelValue = useModel(props, 'modelValue')
+    const dataEntryRef = ref<InstanceType<typeof Input>>()
+    const getDataEntryRef = () => dataEntryRef.value
+
+    expose({
+      getDataEntryRef,
+      dataEntryRef
+    })
 
     return () => {
       const textValue = String(modelValue.value ?? '')
@@ -54,6 +61,7 @@ export const FieldPassword = defineComponent({
       // 编辑模式显示密码输入框
       return (
         <Input
+          ref={dataEntryRef}
           type="password"
           v-model={modelValue.value}
           placeholder={
