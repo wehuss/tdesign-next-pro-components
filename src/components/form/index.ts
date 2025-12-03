@@ -1,7 +1,7 @@
 // 基础组件
 export { BaseForm, LightWrapper } from './BaseForm'
 export { Submitter } from './BaseForm/Submitter'
-export { FormItem } from './components/FormItem'
+// export { FormItem } from './components/FormItem'
 
 // 高级布局组件
 export { DrawerForm } from './DrawerForm'

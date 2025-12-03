@@ -40,12 +40,18 @@ export type ProFieldValueType =
   | 'avatar'
   | 'image'
   | 'code'
+  | 'jsonCode'
   | 'progress'
   | 'tag'
   | 'status'
   | 'option'
   | 'index'
   | 'indexBorder'
+  | 'cascader'
+  | 'treeSelect'
+  | 'fromNow'
+  | 'second'
+  | 'segmented'
 
 /** Field 的值类型函数版本 */
 export type ProFieldValueTypeFunction = (

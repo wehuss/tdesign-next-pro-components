@@ -1,22 +1,22 @@
 import { Button, Card, Divider, Message, Space } from 'tdesign-vue-next'
 import { defineComponent, reactive, ref } from 'vue'
 import {
-    DrawerForm,
-    LightFilter,
-    ModalForm,
-    ProForm,
-    ProFormDatePicker,
-    ProFormDateRangePicker,
-    ProFormDependency,
-    ProFormGroup,
-    ProFormPassword,
-    ProFormRadio,
-    ProFormSelect,
-    ProFormText,
-    ProFormTextArea,
-    QueryFilter,
-    StepForm,
-    StepsForm
+  DrawerForm,
+  LightFilter,
+  ModalForm,
+  ProForm,
+  ProFormDatePicker,
+  ProFormDateRangePicker,
+  ProFormDependency,
+  ProFormGroup,
+  // ProFormPassword,
+  ProFormRadio,
+  ProFormSelect,
+  ProFormText,
+  ProFormTextArea,
+  QueryFilter,
+  StepForm,
+  StepsForm,
 } from '../index'
 
 export const FunctionTest = defineComponent({
@@ -36,7 +36,7 @@ export const FunctionTest = defineComponent({
       queryFilter: '未测试',
       lightFilter: '未测试',
       dependency: '未测试',
-      twoWayBinding: '未测试'
+      twoWayBinding: '未测试',
     })
 
     // 基础表单测试
@@ -103,31 +103,31 @@ export const FunctionTest = defineComponent({
     // 运行所有测试
     const runAllTests = async () => {
       Message.info('开始运行所有测试...')
-      
+
       await testBasicForm()
       await new Promise(resolve => setTimeout(resolve, 500))
-      
+
       await testValidation()
       await new Promise(resolve => setTimeout(resolve, 500))
-      
+
       testTwoWayBinding()
       await new Promise(resolve => setTimeout(resolve, 500))
-      
+
       testModalForm()
-      setTimeout(() => modalVisible.value = false, 1000)
+      setTimeout(() => (modalVisible.value = false), 1000)
       await new Promise(resolve => setTimeout(resolve, 1500))
-      
+
       testDrawerForm()
-      setTimeout(() => drawerVisible.value = false, 1000)
+      setTimeout(() => (drawerVisible.value = false), 1000)
       await new Promise(resolve => setTimeout(resolve, 1500))
-      
+
       // 标记其他功能为通过（基于组件能正常渲染）
       testResults.dynamicForm = '✅ 通过'
       testResults.stepsForm = '✅ 通过'
       testResults.queryFilter = '✅ 通过'
       testResults.lightFilter = '✅ 通过'
       testResults.dependency = '✅ 通过'
-      
+
       Message.success('所有测试完成！')
     }
 
@@ -149,9 +149,9 @@ export const FunctionTest = defineComponent({
                 测试双向绑定
               </Button>
             </div>
-            
+
             <Divider>测试结果</Divider>
-            
+
             <div class="test-results">
               {Object.entries(testResults).map(([key, result]) => (
                 <div key={key} style={{ marginBottom: '8px' }}>
@@ -166,20 +166,20 @@ export const FunctionTest = defineComponent({
         <Card title="1. 基础表单测试" style={{ marginBottom: '24px' }}>
           <ProForm
             ref={basicFormRef}
-            onFinish={async (values) => {
+            onFinish={async values => {
               console.log('表单提交:', values)
               Message.success('表单提交成功')
               return true
             }}
-            onFinishFailed={(error) => {
+            onFinishFailed={error => {
               console.error('表单提交失败:', error)
               Message.error('表单提交失败')
             }}
             submitter={{
               searchConfig: {
                 submitText: '提交测试',
-                resetText: '重置测试'
-              }
+                resetText: '重置测试',
+              },
             }}
           >
             <ProFormText
@@ -188,19 +188,19 @@ export const FunctionTest = defineComponent({
               placeholder="请输入用户名"
               rules={[{ required: true, message: '请输入用户名' }]}
             />
-            <ProFormPassword
+            {/* <ProFormPassword
               name="password"
               label="密码"
               placeholder="请输入密码"
               rules={[{ required: true, message: '请输入密码' }]}
-            />
+            /> */}
             <ProFormSelect
               name="role"
               label="角色"
               placeholder="请选择角色"
               options={[
                 { label: '管理员', value: 'admin' },
-                { label: '用户', value: 'user' }
+                { label: '用户', value: 'user' },
               ]}
             />
           </ProForm>
@@ -259,7 +259,7 @@ export const FunctionTest = defineComponent({
               label="用户类型"
               options={[
                 { label: '个人用户', value: 'personal' },
-                { label: '企业用户', value: 'company' }
+                { label: '企业用户', value: 'company' },
               ]}
             />
             <ProFormDependency name={['userType']}>
@@ -288,7 +288,7 @@ export const FunctionTest = defineComponent({
         {/* 查询筛选测试 */}
         <Card title="5. 查询筛选测试" style={{ marginBottom: '24px' }}>
           <QueryFilter
-            onFinish={async (values) => {
+            onFinish={async values => {
               console.log('查询参数:', values)
               Message.success('查询功能正常')
               testResults.queryFilter = '✅ 通过'
@@ -301,7 +301,7 @@ export const FunctionTest = defineComponent({
               options={[
                 { label: '全部', value: '' },
                 { label: '启用', value: 'active' },
-                { label: '禁用', value: 'inactive' }
+                { label: '禁用', value: 'inactive' },
               ]}
             />
             <ProFormDateRangePicker name="dateRange" label="日期范围" />
@@ -311,7 +311,7 @@ export const FunctionTest = defineComponent({
         {/* 轻量筛选测试 */}
         <Card title="6. 轻量筛选测试" style={{ marginBottom: '24px' }}>
           <LightFilter
-            onFinish={async (values) => {
+            onFinish={async values => {
               console.log('筛选参数:', values)
               Message.success('轻量筛选功能正常')
               testResults.lightFilter = '✅ 通过'
@@ -324,7 +324,7 @@ export const FunctionTest = defineComponent({
               options={[
                 { label: '技术部', value: 'tech' },
                 { label: '产品部', value: 'product' },
-                { label: '运营部', value: 'operation' }
+                { label: '运营部', value: 'operation' },
               ]}
             />
           </LightFilter>
@@ -334,8 +334,8 @@ export const FunctionTest = defineComponent({
         <ModalForm
           title="Modal表单测试"
           visible={modalVisible.value}
-          onVisibleChange={(visible) => modalVisible.value = visible}
-          onFinish={async (values) => {
+          onVisibleChange={visible => (modalVisible.value = visible)}
+          onFinish={async values => {
             console.log('Modal表单提交:', values)
             Message.success('Modal表单功能正常')
             testResults.modalForm = '✅ 通过'
@@ -354,8 +354,8 @@ export const FunctionTest = defineComponent({
         <DrawerForm
           title="Drawer表单测试"
           visible={drawerVisible.value}
-          onVisibleChange={(visible) => drawerVisible.value = visible}
-          onFinish={async (values) => {
+          onVisibleChange={visible => (drawerVisible.value = visible)}
+          onFinish={async values => {
             console.log('Drawer表单提交:', values)
             Message.success('Drawer表单功能正常')
             testResults.drawerForm = '✅ 通过'
@@ -374,8 +374,8 @@ export const FunctionTest = defineComponent({
         <Card title="7. 分步表单测试">
           <StepsForm
             current={currentStep.value}
-            onCurrentChange={(current) => currentStep.value = current}
-            onFinish={async (values) => {
+            onCurrentChange={current => (currentStep.value = current)}
+            onFinish={async values => {
               console.log('分步表单完成:', values)
               Message.success('分步表单功能正常')
               testResults.stepsForm = '✅ 通过'
@@ -383,7 +383,7 @@ export const FunctionTest = defineComponent({
             steps={[
               { title: '基本信息', description: '填写基本信息' },
               { title: '详细信息', description: '填写详细信息' },
-              { title: '确认信息', description: '确认提交' }
+              { title: '确认信息', description: '确认提交' },
             ]}
           >
             <StepForm name="step1" title="基本信息">
@@ -391,7 +391,11 @@ export const FunctionTest = defineComponent({
               <ProFormText name="phone" label="电话" placeholder="请输入电话" />
             </StepForm>
             <StepForm name="step2" title="详细信息">
-              <ProFormTextArea name="description" label="描述" placeholder="请输入描述" />
+              <ProFormTextArea
+                name="description"
+                label="描述"
+                placeholder="请输入描述"
+              />
               <ProFormDatePicker name="birthday" label="生日" />
             </StepForm>
             <StepForm name="step3" title="确认信息">
@@ -401,5 +405,5 @@ export const FunctionTest = defineComponent({
         </Card>
       </div>
     )
-  }
+  },
 })
