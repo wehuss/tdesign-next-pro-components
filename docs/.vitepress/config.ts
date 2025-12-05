@@ -39,7 +39,7 @@ export default defineConfig({
           { text: '更新日志', link: '/changelog' },
           {
             text: 'GitHub',
-            link: 'https://github.com/your-org/tdesign-pro-components',
+            link: 'https://github.com/wehuss/tdesign-pro-components',
           },
         ],
       },
@@ -79,7 +79,7 @@ export default defineConfig({
     socialLinks: [
       {
         icon: 'github',
-        link: 'https://github.com/your-org/tdesign-pro-components',
+        link: 'https://github.com/wehuss/tdesign-pro-components',
       },
     ],
 

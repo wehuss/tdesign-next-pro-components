@@ -9,7 +9,7 @@
   <t-space direction="vertical" size="large" style="width: 100%">
     <t-space align="center">
       <span style="width: 120px; color: var(--td-text-color-secondary)"
-        >默认（人民币）!!!：</span
+        >默认（人民币）：</span
       >
       <ProField :modelValue="amount" valueType="money" mode="read" />
     </t-space>

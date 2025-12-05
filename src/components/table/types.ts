@@ -71,6 +71,9 @@ export interface ProTableColumn<T extends TableRowData = TableRowData>
   // 编辑相关
   editable?: boolean | ((text: unknown, record: T, index: number) => boolean)
 
+  // 复制功能
+  copyable?: boolean
+
   // 文本渲染处理
   renderText?: (
     text: unknown,

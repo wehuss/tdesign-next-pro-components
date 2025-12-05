@@ -1,0 +1,165 @@
+.t-pro-list-toolbar {
+  padding: 16px 0;
+
+  &-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  &-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    min-width: 0;
+
+    &-has-tabs,
+    &-has-dropdown,
+    &-has-inline-menu {
+      flex-wrap: wrap;
+    }
+  }
+
+  &-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+
+  &-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &-text {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--td-text-color-primary);
+    }
+
+    &-sub {
+      font-size: 14px;
+      color: var(--td-text-color-secondary);
+    }
+
+    &-tip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      font-size: 12px;
+      color: var(--td-text-color-secondary);
+      background-color: var(--td-bg-color-container-hover);
+      border-radius: 50%;
+      cursor: help;
+    }
+  }
+
+  &-search {
+    .t-input {
+      width: 200px;
+    }
+  }
+
+  &-filter {
+    display: flex;
+    align-items: center;
+  }
+
+  &-setting-items {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &-setting-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    color: var(--td-text-color-secondary);
+    border-radius: 4px;
+    transition: all 0.2s;
+
+    &:hover {
+      color: var(--td-brand-color);
+      background-color: var(--td-bg-color-container-hover);
+    }
+  }
+
+  &-extra-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--td-component-stroke);
+
+    .t-tabs {
+      flex: 1;
+    }
+  }
+
+  // 菜单样式
+  &-menu {
+    display: flex;
+    align-items: center;
+  }
+
+  &-inline-menu {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+
+    &-item {
+      position: relative;
+      padding: 8px 0;
+      font-size: 14px;
+      color: var(--td-text-color-secondary);
+      cursor: pointer;
+      transition: color 0.2s;
+
+      &:hover {
+        color: var(--td-text-color-primary);
+      }
+
+      &-active {
+        color: var(--td-brand-color);
+        font-weight: 500;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background-color: var(--td-brand-color);
+        }
+      }
+    }
+  }
+
+  &-dropdownmenu {
+    &-label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--td-text-color-primary);
+      cursor: pointer;
+
+      &:hover {
+        color: var(--td-brand-color);
+      }
+    }
+  }
+}

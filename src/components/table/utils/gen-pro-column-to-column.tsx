@@ -3,18 +3,33 @@
  * 移植自 ant-design/pro-components 适配 TDesign Vue Next
  */
 import type { PrimaryTableCol, TableRowData } from 'tdesign-vue-next'
-import type { ProTableColumn } from '../types'
+import type { ActionRef, ColumnsState, ProTableColumn } from '../types'
 import { columnRender } from './column-render'
 import { columnSort } from './column-sort'
 
-type ColumnToColumnReturnType<T extends TableRowData> = PrimaryTableCol<T>[]
+type ColumnToColumnReturnType<T extends TableRowData> = (PrimaryTableCol<T> & {
+  index?: number
+})[]
 
-interface ColumnToColumnParams<T extends TableRowData> {
+export interface ColumnToColumnParams<T extends TableRowData> {
   columns: ProTableColumn<T>[]
-  columnsMap: Record<string, { show?: boolean }>
+  columnsMap: Record<string, ColumnsState>
   columnEmptyText?: string
   type: 'table' | 'form'
-  rowKey?: string
+  rowKey?: string | ((record: T, index: number) => string | number)
+  childrenColumnName?: string
+  /** 可编辑工具类 */
+  editableUtils?: {
+    isEditable: (params: { index: number } & T) => {
+      isEditable: boolean
+      recordKey: string | number
+    }
+    actionRender?: (record: T & { index: number }) => any[]
+  }
+  /** 操作引用 */
+  actionRef?: ActionRef
+  /** 边距 */
+  marginSM?: number
 }
 
 /**
@@ -84,13 +99,77 @@ export const parseProSortOrder = <T extends TableRowData>(
 }
 
 /**
+ * 检查值是否存在 为了避开 0 和 false
+ * @param value 要检查的值
+ */
+export const checkUndefinedOrNull = (value: unknown): boolean =>
+  value !== undefined && value !== null
+
+/**
+ * 移除对象中的 undefined 和空数组
+ * @param obj 要处理的对象
+ */
+export const omitUndefinedAndEmptyArr = <T extends Record<string, unknown>>(
+  obj: T
+): T => {
+  const result = {} as T
+  Object.keys(obj).forEach(key => {
+    const value = obj[key]
+    if (value !== undefined) {
+      if (Array.isArray(value) && value.length === 0) {
+        return
+      }
+      ;(result as Record<string, unknown>)[key] = value
+    }
+  })
+  return result
+}
+
+/**
+ * 平铺所有columns, 用于判断是用的是本地筛选/排序
+ * @param data 列配置
+ * @returns 平铺后的列配置
+ */
+export const flattenColumns = <T extends TableRowData>(
+  data: ProTableColumn<T>[]
+): ProTableColumn<T>[] => {
+  const _columns: ProTableColumn<T>[] = []
+
+  for (let i = 0; i < data.length; i++) {
+    const _curItem = data[i]
+    if (_curItem.children) {
+      _columns.push(...flattenColumns(_curItem.children as ProTableColumn<T>[]))
+    } else {
+      _columns.push(_curItem)
+    }
+  }
+
+  return _columns
+}
+
+/**
  * 转化 columns 到 pro 的格式 主要是 render 方法的自行实现
  * @param params 转换参数
+ * @param parents 父列配置（用于嵌套列）
  */
 export function genProColumnToColumn<T extends TableRowData>(
-  params: ColumnToColumnParams<T>
+  params: ColumnToColumnParams<T>,
+  parents?: ProTableColumn<T>
 ): ColumnToColumnReturnType<T> {
-  const { columns, columnsMap, columnEmptyText = '-', type } = params
+  const {
+    columns,
+    columnsMap,
+    columnEmptyText = '-',
+    type,
+    rowKey = 'id',
+    childrenColumnName = 'children',
+    editableUtils,
+    actionRef,
+    marginSM = 8,
+  } = params
+
+  // 用于记录子行的名称路径
+  const subNameRecord = new Map<string | number, string[]>()
 
   return columns
     ?.map((columnProps, columnsIndex) => {
@@ -102,18 +181,25 @@ export function genProColumnToColumn<T extends TableRowData>(
         sorter,
       } = columnProps as ProTableColumn<T>
 
+      // 生成列的唯一 key
       const columnKey = genColumnKey(
         colKey?.toString(),
-        columnsIndex.toString()
+        [parents?.colKey, columnsIndex].filter(Boolean).join('-')
       )
 
       // 这些都没有，说明是普通的表格不需要 pro 管理
       const noNeedPro = !valueEnum && !valueType && !children
       if (noNeedPro) {
         return {
+          index: columnsIndex,
           ...columnProps,
           colKey: columnKey,
         }
+      }
+
+      // 获取列状态配置
+      const config = columnsMap[columnKey] || {
+        fixed: columnProps.fixed,
       }
 
       // 生成排序配置
@@ -131,13 +217,55 @@ export function genProColumnToColumn<T extends TableRowData>(
         }
       }
 
-      const tempColumns: PrimaryTableCol<T> = {
-        ...columnProps,
+      // 从 columnProps 中排除 render 属性，因为 ProTableColumn 的 render 签名与 PrimaryTableCol 不同
+      const { render: _render, ...restColumnProps } = columnProps
+
+      const tempColumns: PrimaryTableCol<T> & { index?: number } = {
+        index: columnsIndex,
+        ...restColumnProps,
         colKey: columnKey,
+        // 处理固定列
+        fixed: config.fixed || columnProps.fixed,
+        // 处理宽度
+        width: columnProps.width || (columnProps.fixed ? 200 : undefined),
         // 处理排序
         sorter: sorterConfig,
         // 自定义渲染
         cell: (_, { row, rowIndex }) => {
+          // 获取行的唯一 key
+          let keyName: string | number | symbol = rowKey as string
+          if (typeof rowKey === 'function') {
+            keyName = rowKey(row, rowIndex)
+          }
+
+          let uniqueKey: string | number | undefined
+          if (
+            typeof row === 'object' &&
+            row !== null &&
+            Reflect.has(row as object, keyName as string)
+          ) {
+            uniqueKey = (row as Record<string, unknown>)[keyName as string] as
+              | string
+              | number
+            const parentInfo = subNameRecord.get(uniqueKey) || []
+
+            // 记录子行的路径
+            const childrenData = (row as Record<string, unknown>)[
+              childrenColumnName
+            ] as T[] | undefined
+            childrenData?.forEach((item: T) => {
+              const itemUniqueKey = (item as Record<string, unknown>)[
+                keyName as string
+              ] as string | number
+              if (!subNameRecord.has(itemUniqueKey)) {
+                subNameRecord.set(
+                  itemUniqueKey,
+                  parentInfo.concat([String(rowIndex), childrenColumnName])
+                )
+              }
+            })
+          }
+
           return columnRender<T>({
             columnProps,
             text: row[colKey as keyof T],
@@ -146,25 +274,33 @@ export function genProColumnToColumn<T extends TableRowData>(
             columnEmptyText,
             type,
             mode: 'read',
+            actionRef,
+            editableUtils,
+            subName: uniqueKey ? subNameRecord.get(uniqueKey) : undefined,
+            marginSM,
           })
         },
         // 处理子列
         children: children
-          ? genProColumnToColumn({
-              columns: children as ProTableColumn<T>[],
-              columnsMap: params.columnsMap,
-              columnEmptyText: params.columnEmptyText,
-              type: params.type,
-              rowKey: params.rowKey,
-            })
+          ? genProColumnToColumn(
+              {
+                ...params,
+                columns: children as ProTableColumn<T>[],
+              },
+              { ...columnProps, colKey: columnKey } as ProTableColumn<T>
+            )
           : undefined,
       }
 
-      return tempColumns
+      return omitUndefinedAndEmptyArr(
+        tempColumns as Record<string, unknown>
+      ) as PrimaryTableCol<T> | { index?: number }
     })
     ?.filter(item => {
-      const config = columnsMap[item.colKey || ''] || { show: true }
-      return !(item as any).hideInTable && config.show !== false
+      const config = columnsMap[(item as PrimaryTableCol<T>).colKey || ''] || {
+        show: true,
+      }
+      return !(item as ProTableColumn<T>).hideInTable && config.show !== false
     })
     ?.sort(columnSort(columnsMap)) as ColumnToColumnReturnType<T>
 }

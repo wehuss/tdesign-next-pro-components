@@ -7,7 +7,7 @@ export const ProFormUploadDragger = createField<ProFormUploadDraggerProps>({
   renderFormItem: (props: any, { slots }: any) => {
     return (
       <Upload
-        v-model={props.modelValue}
+        v-model={props.modelValue.value}
         disabled={props.disabled}
         multiple={props.fieldProps?.multiple}
         accept={props.fieldProps?.accept}

@@ -1,12 +1,12 @@
-import type { VNode } from 'vue'
+import type { PropType, VNode } from 'vue'
 import { defineComponent, ref, watch } from 'vue'
 import { BaseForm } from '../BaseForm/BaseForm'
 import { EditOrReadOnlyContext } from '../BaseForm/EditOrReadOnlyContext'
 import { ProFormItem } from '../components/FormItem'
 import { ProFormGroup } from '../components/Group'
-import type { BaseFormProps } from '../typing'
+import type { ProFormGroupProps } from '../typing'
 
-export interface ProFormProps extends BaseFormProps {
+export interface ProFormProps {
   // ProForm 特有的属性
   title?: string
   description?: string
@@ -25,9 +25,8 @@ export interface ProFormProps extends BaseFormProps {
 
 export const ProForm = defineComponent({
   name: 'ProForm',
+  inheritAttrs: false,
   props: {
-    // 继承 BaseForm 的所有属性
-    ...BaseForm.props,
     // ProForm 特有属性
     title: {
       type: String,
@@ -40,24 +39,64 @@ export const ProForm = defineComponent({
       default: false,
     },
     submitter: {
-      type: [Object, Boolean],
+      type: [Object, Boolean] as PropType<any>,
       default: () => ({}),
     },
     onFinish: {
-      type: Function as () => (values: any) => Promise<boolean | void> | void,
+      type: [Function, Array] as PropType<
+        | ((values: any) => Promise<boolean | void> | void)
+        | Array<(values: any) => Promise<boolean | void> | void>
+      >,
     },
     onFinishFailed: {
-      type: Function as () => (errorInfo: any) => void,
+      type: [Function, Array] as PropType<
+        ((errorInfo: any) => void) | Array<(errorInfo: any) => void>
+      >,
     },
     onReset: {
-      type: Function as () => () => void,
+      type: [Function, Array] as PropType<(() => void) | Array<() => void>>,
     },
     contentRender: {
-      type: Function as () => (
-        items: VNode[],
-        submitter: VNode | null,
-        form: any
-      ) => VNode | VNode[],
+      type: Function as PropType<
+        (items: VNode[], submitter: VNode | null, form: any) => VNode | VNode[]
+      >,
+    },
+    // BaseForm 属性
+    layout: {
+      type: String as PropType<'vertical' | 'inline'>,
+      default: 'vertical',
+    },
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
+    grid: {
+      type: Boolean,
+      default: false,
+    },
+    colProps: {
+      type: Object,
+      default: () => ({}),
+    },
+    rowProps: {
+      type: Object,
+      default: () => ({}),
+    },
+    fieldProps: {
+      type: Object,
+      default: () => ({}),
+    },
+    proFieldProps: {
+      type: Object,
+      default: () => ({}),
+    },
+    formItemProps: {
+      type: Object,
+      default: () => ({}),
+    },
+    groupProps: {
+      type: Object as PropType<ProFormGroupProps>,
+      default: () => ({}),
     },
   },
   emits: ['finish', 'finishFailed', 'reset', 'valuesChange', 'init'],
@@ -78,7 +117,16 @@ export const ProForm = defineComponent({
       if (props.onFinish) {
         loading.value = true
         try {
-          const result = await props.onFinish(values)
+          // 支持 onFinish 为数组形式（Vue 事件监听器可能是数组）
+          const finishHandlers = Array.isArray(props.onFinish)
+            ? props.onFinish
+            : [props.onFinish]
+          let result: any
+          for (const handler of finishHandlers) {
+            if (typeof handler === 'function') {
+              result = await handler(values)
+            }
+          }
           if (result !== false) {
             emit('finish', values)
           }
@@ -97,7 +145,15 @@ export const ProForm = defineComponent({
     // 处理表单提交失败
     const handleFinishFailed = (errorInfo: any) => {
       if (props.onFinishFailed) {
-        props.onFinishFailed(errorInfo)
+        // 支持数组形式
+        const handlers = Array.isArray(props.onFinishFailed)
+          ? props.onFinishFailed
+          : [props.onFinishFailed]
+        for (const handler of handlers) {
+          if (typeof handler === 'function') {
+            handler(errorInfo)
+          }
+        }
       }
       emit('finishFailed', errorInfo)
     }
@@ -106,7 +162,15 @@ export const ProForm = defineComponent({
     const handleReset = () => {
       formRef.value?.reset()
       if (props.onReset) {
-        props.onReset()
+        // 支持数组形式
+        const handlers = Array.isArray(props.onReset)
+          ? props.onReset
+          : [props.onReset]
+        for (const handler of handlers) {
+          if (typeof handler === 'function') {
+            handler()
+          }
+        }
       }
       emit('reset')
     }
@@ -159,12 +223,20 @@ export const ProForm = defineComponent({
 
           <BaseForm
             ref={formRef}
-            {...props}
-            layout="vertical"
+            layout={props.layout}
+            readonly={props.readonly}
+            grid={props.grid}
+            colProps={props.colProps}
+            rowProps={props.rowProps}
+            fieldProps={props.fieldProps}
+            proFieldProps={props.proFieldProps}
+            formItemProps={props.formItemProps}
+            groupProps={props.groupProps}
             loading={loading.value}
             submitter={props.submitter}
             contentRender={contentRender}
             onFinish={handleFinish}
+            onFinishFailed={handleFinishFailed}
             onReset={handleReset}
             onInit={handleInit}
             onValuesChange={(changedValues: any, allValues: any) => {

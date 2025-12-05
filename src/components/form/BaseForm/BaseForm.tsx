@@ -1,8 +1,13 @@
-import type { FormInstanceFunctions } from 'tdesign-vue-next'
-import { Form, Loading } from 'tdesign-vue-next'
-import type { Ref } from 'vue'
+import type { FormInstanceFunctions, SubmitContext } from 'tdesign-vue-next'
+import { Form, FormItem, Loading } from 'tdesign-vue-next'
+import type { PropType, Ref } from 'vue'
 import { computed, defineComponent, onMounted, ref, watch } from 'vue'
-import { provideFieldContext } from '../FieldContext'
+import {
+  createFieldManager,
+  createFieldStore,
+  provideFieldContext,
+  type FieldStore,
+} from '../FieldContext'
 import { provideGridContext } from '../helpers/index.tsx'
 import type { ProFormGroupProps } from '../typing'
 import {
@@ -20,119 +25,60 @@ export interface ProFormInstance extends FormInstanceFunctions {
     omitNil?: boolean
   ) => Promise<any>
   nativeElement?: HTMLElement
+  /** 获取所有字段值（通过字段注册机制） */
+  getFieldsValue?: () => Record<string, any>
+  /** 获取单个字段值 */
+  getFieldValue?: (name: string | string[]) => any
+  /** 设置字段值 */
+  setFieldValue?: (name: string | string[], value: any) => void
+  /** 批量设置字段值 */
+  setFieldsValue?: (values: Record<string, any>) => void
+  /** 重置所有字段到初始值 */
+  resetFields?: () => void
+  /** 重置指定字段到初始值 */
+  resetFieldsToInitial?: (names?: (string | string[])[]) => void
 }
 
-// export interface CommonFormProps<T = Record<string, any>, U = Record<string, any>> {
-//   /**
-//    * @name 自定义提交的配置
-//    */
-//   submitter?: SubmitterProps | false
-//   /**
-//    * @name 表单结束后调用
-//    */
-//   onFinish?: (formData: T) => Promise<boolean | void> | void
-//   /**
-//    * @name 表单提交失败后调用
-//    */
-//   onFinishFailed?: (errorInfo: any) => void
-//   /**
-//    * @name 表单重置后调用
-//    */
-//   onReset?: () => void
-//   /**
-//    * @name 表单值变化时调用
-//    */
-//   onValuesChange?: (changedValues: any, allValues: any) => void
-//   /**
-//    * @name 表单按钮的 loading 状态
-//    */
-//   loading?: boolean
-//   /**
-//    * @name loading状态改变时的回调
-//    */
-//   onLoadingChange?: (loading: boolean) => void
-//   /**
-//    * @name 获取 ProFormInstance
-//    */
-//   formRef?: Ref<ProFormInstance | undefined>
-//   /**
-//    * @name 同步结果到 url 中
-//    */
-//   syncToUrl?: boolean | ((values: T, type: 'get' | 'set') => T)
-//   /**
-//    * @name 当 syncToUrl 为 true，在页面回显示时，以url上的参数为主，默认为false
-//    */
-//   syncToUrlAsImportant?: boolean
-//   /**
-//    * @name 额外的 url 参数
-//    */
-//   extraUrlParams?: Record<string, any>
-//   /**
-//    * @name 同步结果到 initialValues,默认为true如果为false，reset的时将会忽略从url上获取的数据
-//    */
-//   syncToInitialValues?: boolean
-//   /**
-//    * 如果为 false,会原样保存。
-//    * @default true
-//    * @param 要不要值中的 Null 和 undefined
-//    */
-//   omitNil?: boolean
-//   /**
-//    * 格式化 Date 的方式，默认转化为 string
-//    */
-//   dateFormatter?: string | ((value: any, valueType: string) => string | number) | false
-//   /**
-//    * @name 表单初始化成功，比如布局，label等计算完成
-//    */
-//   onInit?: (values: T, form: ProFormInstance) => void
-//   /**
-//    * @name 发起网络请求的参数
-//    */
-//   params?: U
-//   /**
-//    * @name 发起网络请求的参数,返回值会覆盖给 initialValues
-//    */
-//   request?: (params: U) => Promise<T>
-//   /** 是否回车提交 */
-//   isKeyPressSubmit?: boolean
-//   /** 用于控制form 是否相同的key，高阶用法 */
-//   formKey?: string
-//   /**
-//    * @name自动选中第一项
-//    * @description 只对有input的类型有效
-//    */
-//   autoFocusFirstInput?: boolean
-//   /**
-//    * @name 是否只读模式，对所有表单项生效
-//    * @description 优先低于表单项的 readonly
-//    */
-//   readonly?: boolean
-// } & ProFormGridConfig
+/**
+ * 从验证结果中提取错误字段信息
+ */
+function extractErrorFields(
+  validateResult: any
+): Array<{ name: string; errors: string[] }> {
+  if (validateResult === true) return []
+  if (!validateResult || typeof validateResult !== 'object') return []
 
-// export interface BaseFormProps<T = Record<string, any>, U = Record<string, any>> extends Omit<FormProps, 'onFinish'>, CommonFormProps<T, U> {
-//   contentRender?: (
-//     items: any[],
-//     submitter: any,
-//     form: ProFormInstance,
-//   ) => any
-//   fieldProps?: any
-//   proFieldProps?: any
-//   /** 表单初始化完成，form已经存在，可以进行赋值的操作了 */
-//   onInit?: (values: T, form: ProFormInstance) => void
-//   formItemProps?: any
-//   groupProps?: ProFormGroupProps
-//   /** 是否回车提交 */
-//   isKeyPressSubmit?: boolean
-//   /** Form 组件的类型，内部使用 */
-//   formComponentType?: 'DrawerForm' | 'ModalForm' | 'QueryFilter'
-// }
+  const errorFields: Array<{ name: string; errors: string[] }> = []
+
+  for (const [fieldName, fieldResult] of Object.entries(validateResult)) {
+    if (fieldResult === true) continue
+
+    const errors: string[] = []
+    if (Array.isArray(fieldResult)) {
+      fieldResult.forEach((item: any) => {
+        if (item && item.result === false && item.message) {
+          errors.push(item.message)
+        }
+      })
+    }
+
+    if (errors.length > 0) {
+      errorFields.push({ name: fieldName, errors })
+    }
+  }
+
+  return errorFields
+}
+
 export type BaseFormProps = any
+
 export const BaseForm = defineComponent({
   name: 'BaseForm',
+  inheritAttrs: false,
   props: {
     // 基础表单属性
     layout: {
-      type: String as () => 'vertical' | 'inline',
+      type: String as PropType<'vertical' | 'inline'>,
       default: 'vertical',
     },
     loading: {
@@ -144,26 +90,41 @@ export const BaseForm = defineComponent({
       default: false,
     },
     submitter: {
-      type: [Object, Boolean],
+      type: [Object, Boolean] as PropType<any>,
       default: () => ({}),
     },
+    // TDesign Form 的 data prop，用于表单数据绑定
+    data: {
+      type: Object as PropType<Record<string, any>>,
+      default: undefined,
+    },
+    // 初始值，用于重置表单
+    initialValues: {
+      type: Object as PropType<Record<string, any>>,
+      default: undefined,
+    },
     onFinish: {
-      type: Function as () => (formData: any) => Promise<boolean | void> | void,
+      type: [Function, Array] as PropType<
+        | ((formData: any) => Promise<boolean | void> | void)
+        | Array<(formData: any) => Promise<boolean | void> | void>
+      >,
     },
     onFinishFailed: {
-      type: Function as () => (errorInfo: any) => void,
+      type: [Function, Array] as PropType<
+        ((errorInfo: any) => void) | Array<(errorInfo: any) => void>
+      >,
     },
     onReset: {
-      type: Function as () => () => void,
+      type: [Function, Array] as PropType<(() => void) | Array<() => void>>,
     },
     onValuesChange: {
-      type: Function as () => (changedValues: any, allValues: any) => void,
+      type: Function as PropType<(changedValues: any, allValues: any) => void>,
     },
     onLoadingChange: {
-      type: Function as () => (loading: boolean) => void,
+      type: Function as PropType<(loading: boolean) => void>,
     },
     formRef: {
-      type: Object as () => Ref<ProFormInstance | undefined>,
+      type: Object as PropType<Ref<ProFormInstance | undefined>>,
     },
     // 网格布局
     grid: {
@@ -180,7 +141,9 @@ export const BaseForm = defineComponent({
     },
     // 其他属性
     contentRender: {
-      type: Function,
+      type: Function as PropType<
+        (items: any[], submitter: any, form: ProFormInstance) => any
+      >,
     },
     fieldProps: {
       type: Object,
@@ -195,11 +158,11 @@ export const BaseForm = defineComponent({
       default: () => ({}),
     },
     groupProps: {
-      type: Object as () => ProFormGroupProps,
+      type: Object as PropType<ProFormGroupProps>,
       default: () => ({}),
     },
     formComponentType: {
-      type: String as () => 'DrawerForm' | 'ModalForm' | 'QueryFilter',
+      type: String as PropType<'DrawerForm' | 'ModalForm' | 'QueryFilter'>,
     },
     isKeyPressSubmit: {
       type: Boolean,
@@ -214,30 +177,29 @@ export const BaseForm = defineComponent({
       default: true,
     },
     dateFormatter: {
-      type: [String, Function, Boolean] as () =>
-        | string
-        | ((value: any, valueType: string) => string | number)
-        | false,
+      type: [String, Function, Boolean] as PropType<
+        string | ((value: any, valueType: string) => string | number) | false
+      >,
       default: 'string',
     },
     onInit: {
-      type: Function as () => (values: any, form: ProFormInstance) => void,
+      type: Function as PropType<(values: any, form: ProFormInstance) => void>,
     },
     params: {
       type: Object,
       default: () => ({}),
     },
     request: {
-      type: Function as () => (params: any) => Promise<any>,
+      type: Function as PropType<(params: any) => Promise<any>>,
     },
     formKey: {
       type: String,
       default: '',
     },
     syncToUrl: {
-      type: [Boolean, Function] as () =>
-        | boolean
-        | ((values: any, type: 'get' | 'set') => any),
+      type: [Boolean, Function] as PropType<
+        boolean | ((values: any, type: 'get' | 'set') => any)
+      >,
       default: false,
     },
     syncToUrlAsImportant: {
@@ -253,12 +215,16 @@ export const BaseForm = defineComponent({
       default: true,
     },
   },
-  emits: ['finish', 'loadingChange', 'init'],
+  emits: ['finish', 'finishFailed', 'loadingChange', 'init', 'reset'],
   setup(props, { slots, emit, expose }) {
     const formRef = ref<ProFormInstance>()
     const loading = ref(props.loading)
-    const initialData = ref<any>({})
+    const initialData = ref<any>(props.initialValues || {})
     const initialDataLoading = ref(false)
+
+    // 创建字段存储和管理器
+    const fieldStore: FieldStore = createFieldStore()
+    const fieldManager = createFieldManager(fieldStore)
 
     // 监听loading变化
     watch(
@@ -273,17 +239,89 @@ export const BaseForm = defineComponent({
       emit('loadingChange', newLoading)
     })
 
-    // 处理表单提交
-    const handleFinish = async (values: any) => {
-      if (!props.onFinish) return
+    // 监听 initialValues 变化
+    watch(
+      () => props.initialValues,
+      newInitialValues => {
+        if (newInitialValues) {
+          initialData.value = newInitialValues
+        }
+      },
+      { deep: true }
+    )
 
+    /**
+     * 获取表单值
+     * 优先使用 data prop，其次使用字段注册机制收集值
+     */
+    const getFormValues = (): Record<string, any> => {
+      // 优先使用 data prop
+      if (props.data) {
+        return props.data
+      }
+      // 使用字段注册机制收集值
+      return fieldManager.getFieldsValue()
+    }
+
+    /**
+     * 处理表单提交 - 适配 TDesign Form 的 SubmitContext
+     * TDesign Form 的 onSubmit 事件接收 SubmitContext 对象，包含：
+     * - e: FormSubmitEvent
+     * - validateResult: 验证结果 (true 表示通过，对象表示有错误)
+     * - firstError: 第一个错误信息
+     * - fields: 字段信息
+     */
+    const handleSubmit = async (context: SubmitContext) => {
+      console.log('sub!')
+      const { validateResult, firstError } = context
+
+      // 验证失败 - 调用 onFinishFailed
+      if (validateResult !== true) {
+        const errorInfo = {
+          validateResult,
+          firstError,
+          errorFields: extractErrorFields(validateResult),
+        }
+
+        if (props.onFinishFailed) {
+          const handlers = Array.isArray(props.onFinishFailed)
+            ? props.onFinishFailed
+            : [props.onFinishFailed]
+          for (const handler of handlers) {
+            if (typeof handler === 'function') {
+              handler(errorInfo)
+            }
+          }
+        }
+        emit('finishFailed', errorInfo)
+        return
+      }
+
+      // 验证成功 - 获取表单值并调用 onFinish
       if (loading.value) return
 
       try {
         loading.value = true
-        const result = await props.onFinish(values)
-        emit('finish', values)
-        return result
+
+        // 获取表单值
+        const values = getFormValues()
+
+        if (props.onFinish) {
+          // 支持 onFinish 为数组形式（Vue 事件监听器可能是数组）
+          const finishHandlers = Array.isArray(props.onFinish)
+            ? props.onFinish
+            : [props.onFinish]
+          let result: any
+          for (const handler of finishHandlers) {
+            if (typeof handler === 'function') {
+              result = await handler(values)
+            }
+          }
+          emit('finish', values)
+          return result
+        } else {
+          emit('finish', values)
+        }
       } catch (error) {
         console.error('Form submit error:', error)
         throw error
@@ -292,9 +330,60 @@ export const BaseForm = defineComponent({
       }
     }
 
-    // 处理重置
+    // 保留旧的 handleFinish 方法用于直接调用（如 expose）
+    const handleFinish = async (values: any) => {
+      if (loading.value) return
+
+      try {
+        loading.value = true
+
+        if (props.onFinish) {
+          const finishHandlers = Array.isArray(props.onFinish)
+            ? props.onFinish
+            : [props.onFinish]
+          let result: any
+          for (const handler of finishHandlers) {
+            if (typeof handler === 'function') {
+              result = await handler(values)
+            }
+          }
+          emit('finish', values)
+          return result
+        } else {
+          emit('finish', values)
+        }
+      } catch (error) {
+        console.error('Form submit error:', error)
+        throw error
+      } finally {
+        loading.value = false
+      }
+    }
+
+    // 处理重置 - 支持重置到初始值
     const handleReset = () => {
+      console.log('reset!')
+      // 调用 TDesign Form 的 reset 方法
       formRef.value?.reset()
+
+      // 使用字段管理器重置到初始值
+      if (props.initialValues) {
+        fieldManager.setFieldsValue(props.initialValues)
+      } else {
+        fieldManager.resetFields()
+      }
+
+      if (props.onReset) {
+        const handlers = Array.isArray(props.onReset)
+          ? props.onReset
+          : [props.onReset]
+        for (const handler of handlers) {
+          if (typeof handler === 'function') {
+            handler()
+          }
+        }
+      }
+      emit('reset')
     }
 
     // 提供上下文 - 使用响应式模式以便在 readonly 变化时自动更新
@@ -313,9 +402,18 @@ export const BaseForm = defineComponent({
       groupProps: props.groupProps,
       formComponentType: props.formComponentType,
       formKey: props.formKey,
-      setFieldValueType: (name: any, config: any) => {
+      setFieldValueType: (_name: any, _config: any) => {
         // TODO: 实现字段类型设置逻辑
       },
+      // 字段注册和值收集方法
+      registerField: fieldManager.registerField,
+      unregisterField: fieldManager.unregisterField,
+      getFieldsValue: fieldManager.getFieldsValue,
+      getFieldValue: fieldManager.getFieldValue,
+      setFieldValue: fieldManager.setFieldValue,
+      setFieldsValue: fieldManager.setFieldsValue,
+      resetFields: fieldManager.resetFields,
+      resetFieldsToInitial: fieldManager.resetFieldsToInitial,
     })
 
     provideGridContext({
@@ -325,6 +423,11 @@ export const BaseForm = defineComponent({
 
     // 初始化
     onMounted(() => {
+      // 如果有初始值，设置到字段
+      if (props.initialValues) {
+        fieldManager.setFieldsValue(props.initialValues)
+      }
+
       if (props.onInit) {
         props.onInit(initialData.value, formRef.value!)
         emit('init', initialData.value, formRef.value)
@@ -336,35 +439,71 @@ export const BaseForm = defineComponent({
       props.formRef.value = formRef.value
     }
 
+    // 创建增强的表单实例
+    const enhancedFormInstance = computed(() => ({
+      ...formRef.value,
+      getFieldsValue: fieldManager.getFieldsValue,
+      getFieldValue: fieldManager.getFieldValue,
+      setFieldValue: fieldManager.setFieldValue,
+      setFieldsValue: fieldManager.setFieldsValue,
+      resetFields: fieldManager.resetFields,
+      resetFieldsToInitial: fieldManager.resetFieldsToInitial,
+    }))
+
     expose({
       formRef,
       handleFinish,
       handleReset,
+      // 暴露字段管理方法
+      getFieldsValue: fieldManager.getFieldsValue,
+      getFieldValue: fieldManager.getFieldValue,
+      setFieldValue: fieldManager.setFieldValue,
+      setFieldsValue: fieldManager.setFieldsValue,
+      resetFields: fieldManager.resetFields,
+      resetFieldsToInitial: fieldManager.resetFieldsToInitial,
     })
 
+    const test = () => {
+      console.log('test', formRef)
+    }
     return () => {
       const items = slots.default?.()
 
       // 渲染提交按钮
       const submitterNode =
         props.submitter !== false ? (
-          <Submitter
-            {...(typeof props.submitter === 'object' ? props.submitter : {})}
-            onSubmit={() => formRef.value?.submit()}
-            onReset={handleReset}
-            submitButtonProps={{
-              loading: loading.value,
-              ...(typeof props.submitter === 'object'
-                ? props.submitter.submitButtonProps
-                : {}),
-            }}
-          />
+          <FormItem>
+            <Submitter
+              {...(typeof props.submitter === 'object' ? props.submitter : {})}
+              onSubmit={() => {
+                formRef.value?.submit()
+                test()
+              }}
+              onReset={handleReset}
+              submitButtonProps={{
+                loading: loading.value,
+                ...(typeof props.submitter === 'object'
+                  ? props.submitter.submitButtonProps
+                  : {}),
+              }}
+            />
+          </FormItem>
         ) : null
 
-      // 自定义内容渲染
-      if (props.contentRender) {
-        return props.contentRender(items || [], submitterNode, formRef.value!)
-      }
+      const contentRender = props.contentRender
+        ? () =>
+            props.contentRender!(
+              items || [],
+              submitterNode,
+              enhancedFormInstance.value as ProFormInstance
+            )
+        : () => (
+            <>
+              {' '}
+              {items}
+              {submitterNode}
+            </>
+          )
 
       // 加载状态
       if (props.request && initialDataLoading.value) {
@@ -385,11 +524,11 @@ export const BaseForm = defineComponent({
         <Form
           ref={formRef}
           layout={props.layout}
-          onSubmit={handleFinish}
+          data={props.data}
+          onSubmit={handleSubmit}
           onReset={handleReset}
         >
-          {items}
-          {submitterNode}
+          {contentRender}
         </Form>
       )
     }

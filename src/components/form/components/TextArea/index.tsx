@@ -7,7 +7,7 @@ export const ProFormTextArea = createField<ProFormTextAreaProps>({
   renderFormItem: (props: any, { slots }: any) => {
     return (
       <Textarea
-        v-model={props.modelValue}
+        v-model={props.modelValue.value}
         placeholder={props.placeholder as string}
         disabled={props.disabled}
         readonly={props.readonly}

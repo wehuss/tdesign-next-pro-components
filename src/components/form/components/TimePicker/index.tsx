@@ -7,7 +7,7 @@ export const ProFormTimePicker = createField<ProFormTimePickerProps>({
   renderFormItem: (props: any, { slots }: any) => {
     return (
       <TimePicker
-        v-model={props.modelValue}
+        v-model={props.modelValue.value}
         placeholder={props.placeholder as string}
         disabled={props.disabled}
         readonly={props.readonly}

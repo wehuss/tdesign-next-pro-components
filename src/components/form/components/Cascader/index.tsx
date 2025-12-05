@@ -7,7 +7,7 @@ export const ProFormCascader = createField<ProFormCascaderProps>({
   renderFormItem: (props: any, { slots }: any) => {
     return (
       <Cascader
-        v-model={props.modelValue}
+        v-model={props.modelValue.value}
         options={props.options || props.fieldProps?.options}
         placeholder={props.placeholder as string}
         disabled={props.disabled}

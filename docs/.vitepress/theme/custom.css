@@ -1,6 +1,4 @@
-/* TDesign Pro Components 文档主题 */
-
-:root {
+TDesign Pro Components 文档主题 :root {
   --vp-c-brand-1: #0052d9;
   --vp-c-brand-2: #0077ff;
   --vp-c-brand-3: #0052d9;
@@ -37,8 +35,7 @@
   --vp-c-brand-soft: rgba(64, 128, 255, 0.14);
 }
 
-/* 首页样式优化 */
-.VPHero .name {
+首页样式优化 .VPHero .name {
   font-size: 48px !important;
 }
 
@@ -80,9 +77,9 @@
 }
 
 /* 侧边栏优化 */
-.VPSidebar {
+/* .VPSidebar {
   padding-top: 24px !important;
-}
+} */
 
 /* 文档内容区域 */
 .vp-doc h1 {

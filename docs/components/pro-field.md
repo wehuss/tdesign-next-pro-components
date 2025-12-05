@@ -58,7 +58,13 @@ ProField 会根据 `valueType` 自动渲染对应的组件：
 
 ## 支持的 valueType
 
-ProField 支持丰富的字段类型：
+ProField 支持丰富的字段类型，以下是所有类型的展示：
+
+<DemoContainer title="全部类型展示">
+  <ProFieldAllTypes />
+</DemoContainer>
+
+### valueType 列表
 
 | valueType     | 说明       | 编辑组件        |
 | ------------- | ---------- | --------------- |
@@ -187,6 +193,14 @@ ProField 支持丰富的字段类型：
       valueType="money"
       mode="read"
       :fieldProps="{ currency: '$' }"
+    />
+
+    <!-- 欧元 -->
+    <ProField
+      :value="amount"
+      valueType="money"
+      mode="read"
+      :fieldProps="{ currency: '€' }"
     />
   </t-space>
 </template>

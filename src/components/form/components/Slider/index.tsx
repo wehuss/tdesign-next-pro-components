@@ -7,7 +7,7 @@ export const ProFormSlider = createField<ProFormSliderProps>({
   renderFormItem: (props: any, { slots }: any) => {
     return (
       <Slider
-        v-model={props.modelValue}
+        v-model={props.modelValue.value}
         disabled={props.disabled}
         min={props.fieldProps?.min}
         max={props.fieldProps?.max}

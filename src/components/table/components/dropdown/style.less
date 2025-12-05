@@ -1,0 +1,42 @@
+.t-pro-table-dropdown {
+  &-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--td-brand-color);
+    cursor: pointer;
+    transition: color 0.2s;
+
+    &:hover {
+      color: var(--td-brand-color-hover);
+    }
+
+    .t-icon {
+      font-size: 16px;
+    }
+  }
+
+  &-item-danger {
+    color: var(--td-error-color) !important;
+
+    &:hover {
+      color: var(--td-error-color-hover) !important;
+      background-color: var(--td-error-color-1) !important;
+    }
+  }
+}
+
+// 下拉菜单样式
+.t-dropdown__menu {
+  .t-pro-table-dropdown-item-danger {
+    .t-dropdown__item-text {
+      color: var(--td-error-color);
+    }
+
+    &:hover {
+      .t-dropdown__item-text {
+        color: var(--td-error-color-hover);
+      }
+    }
+  }
+}

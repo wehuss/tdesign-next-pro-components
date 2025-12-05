@@ -7,7 +7,7 @@ export const ProFormColorPicker = createField<ProFormColorPickerProps>({
   renderFormItem: (props: any, { slots }: any) => {
     return (
       <ColorPicker
-        v-model={props.modelValue}
+        v-model={props.modelValue.value}
         disabled={props.disabled}
         clearable={props.fieldProps?.allowClear}
         format={props.fieldProps?.format}

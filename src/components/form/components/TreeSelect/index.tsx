@@ -7,7 +7,7 @@ export const ProFormTreeSelect = createField<ProFormTreeSelectProps>({
   renderFormItem: (props: any, { slots }: any) => {
     return (
       <TreeSelect
-        v-model={props.modelValue}
+        v-model={props.modelValue.value}
         data={props.fieldProps?.treeData || props.options}
         placeholder={props.placeholder as string}
         disabled={props.disabled}

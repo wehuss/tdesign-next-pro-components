@@ -7,7 +7,7 @@ export const ProFormRate = createField<ProFormRateProps>({
   renderFormItem: (props: any, { slots }: any) => {
     return (
       <Rate
-        v-model={props.modelValue}
+        v-model={props.modelValue.value}
         disabled={props.disabled}
         count={props.fieldProps?.count}
         allowHalf={props.fieldProps?.allowHalf}

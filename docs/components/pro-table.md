@@ -214,6 +214,12 @@ ProTable 内置了工具栏，支持标题、刷新、列设置等功能：
 
 ProTable 内置了分页功能，会自动处理分页参数：
 
+<DemoContainer title="分页配置">
+  <ProTablePagination />
+</DemoContainer>
+
+::: details 查看代码
+
 ```vue
 <script setup lang="ts">
   import { ProTable } from 'tdesign-pro-components'
@@ -221,6 +227,8 @@ ProTable 内置了分页功能，会自动处理分页参数：
   const columns = [
     { title: '姓名', colKey: 'name' },
     { title: '年龄', colKey: 'age' },
+    { title: '邮箱', colKey: 'email' },
+    { title: '地址', colKey: 'address' },
   ]
 
   // request 会自动接收分页参数
@@ -228,14 +236,23 @@ ProTable 内置了分页功能，会自动处理分页参数：
     console.log('当前页:', params.current)
     console.log('每页条数:', params.pageSize)
 
-    const response = await fetch(
-      `/api/users?page=${params.current}&size=${params.pageSize}`
-    )
-    const data = await response.json()
+    // 模拟生成数据
+    const data = []
+    const start = (params.current - 1) * params.pageSize
+    for (let i = 0; i < params.pageSize; i++) {
+      const index = start + i + 1
+      data.push({
+        id: index,
+        name: `用户${index}`,
+        age: 20 + (index % 30),
+        email: `user${index}@example.com`,
+        address: `地址${index}`,
+      })
+    }
 
     return {
-      data: data.list,
-      total: data.total,
+      data,
+      total: 100,
       success: true,
     }
   }
@@ -246,28 +263,44 @@ ProTable 内置了分页功能，会自动处理分页参数：
     :columns="columns"
     :request="request"
     row-key="id"
-    :pagination="{ pageSize: 10 }"
+    :pagination="{
+      pageSize: 10,
+      pageSizeOptions: [5, 10, 20, 50],
+      showJumper: true,
+    }"
   />
 </template>
 ```
+
+:::
 
 ## 操作列
 
 可以通过 `render` 自定义操作列：
 
+<DemoContainer title="操作列">
+  <ProTableActions />
+</DemoContainer>
+
+::: details 查看代码
+
 ```vue
 <script setup lang="ts">
   import { h } from 'vue'
-  import { Button, Space } from 'tdesign-vue-next'
+  import { Button, Space, MessagePlugin, Popconfirm } from 'tdesign-vue-next'
   import { ProTable } from 'tdesign-pro-components'
   import type { ProTableColumn } from 'tdesign-pro-components'
 
+  const handleView = (row: any) => {
+    MessagePlugin.info(`查看用户: ${row.name}`)
+  }
+
   const handleEdit = (row: any) => {
-    console.log('编辑', row)
+    MessagePlugin.info(`编辑用户: ${row.name}`)
   }
 
   const handleDelete = (row: any) => {
-    console.log('删除', row)
+    MessagePlugin.success(`删除用户: ${row.name}`)
   }
 
   const columns: ProTableColumn[] = [
@@ -278,24 +311,43 @@ ProTable 内置了分页功能，会自动处理分页参数：
       colKey: 'action',
       width: 200,
       render: ({ row }) =>
-        h(Space, null, () => [
+        h(Space, { size: 'small' }, () => [
           h(
             Button,
             {
               theme: 'primary',
               variant: 'text',
+              size: 'small',
+              onClick: () => handleView(row),
+            },
+            () => '查看'
+          ),
+          h(
+            Button,
+            {
+              theme: 'primary',
+              variant: 'text',
+              size: 'small',
               onClick: () => handleEdit(row),
             },
             () => '编辑'
           ),
           h(
-            Button,
+            Popconfirm,
             {
-              theme: 'danger',
-              variant: 'text',
-              onClick: () => handleDelete(row),
+              content: '确定删除该用户吗？',
+              onConfirm: () => handleDelete(row),
             },
-            () => '删除'
+            () =>
+              h(
+                Button,
+                {
+                  theme: 'danger',
+                  variant: 'text',
+                  size: 'small',
+                },
+                () => '删除'
+              )
           ),
         ]),
     },
@@ -307,9 +359,17 @@ ProTable 内置了分页功能，会自动处理分页参数：
 </template>
 ```
 
+:::
+
 ## ActionRef
 
 通过 ref 可以获取表格实例，调用内置方法：
+
+<DemoContainer title="ActionRef">
+  <ProTableActionRef />
+</DemoContainer>
+
+::: details 查看代码
 
 ```vue
 <script setup lang="ts">
@@ -346,6 +406,8 @@ ProTable 内置了分页功能，会自动处理分页参数：
   </t-space>
 </template>
 ```
+
+:::
 
 ## API
 

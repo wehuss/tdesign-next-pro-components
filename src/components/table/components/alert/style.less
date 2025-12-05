@@ -1,0 +1,62 @@
+/**
+ * TableAlert 样式
+ * 参考 ant-design/pro-components Alert 样式
+ */
+
+.t-pro-table-alert {
+  margin-bottom: 16px;
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 4px;
+  border: none;
+
+  &-container {
+    padding: 8px 16px;
+  }
+
+  &-info {
+    display: flex;
+    align-items: center;
+    transition: all 0.3s;
+    color: rgba(0, 0, 0, 0.45);
+
+    &-content {
+      flex: 1;
+      color: rgba(0, 0, 0, 0.65);
+    }
+
+    &-highlight {
+      color: var(--td-brand-color, #0052d9);
+      font-weight: 600;
+      padding: 0 4px;
+    }
+
+    &-option {
+      min-width: 48px;
+      padding-left: 16px;
+
+      a,
+      .t-link {
+        margin-left: 8px;
+
+        &:first-child {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+}
+
+// 暗色主题适配
+[theme-mode='dark'] {
+  .t-pro-table-alert {
+    background-color: rgba(255, 255, 255, 0.04);
+
+    &-info {
+      color: rgba(255, 255, 255, 0.45);
+
+      &-content {
+        color: rgba(255, 255, 255, 0.65);
+      }
+    }
+  }
+}

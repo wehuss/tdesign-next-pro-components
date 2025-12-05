@@ -225,26 +225,31 @@
 
 ## Phase 4: ProTable 核心功能重构 (P0 - 核心)
 
-- [ ] 10. 重构 ProTable 核心
-  - [ ] 10.1 重构 ProTable 主组件
+- [-] 10. 重构 ProTable 核心
+  - [x] 10.1 重构 ProTable 主组件
     - 重构 `src/components/table/index.tsx`
     - 参考 `raw/src/table/Table.tsx`
     - 实现 request 数据请求
     - 实现 columns 配置解析
+    - 需要保留ProCloumns的form属性
     - _Requirements: 6.1, 6.2_
-  - [ ] 10.2 实现 useFetchData Hook
+
+  - [x] 10.2 实现 useFetchData Hook
     - 创建 `src/components/table/hooks/useFetchData.ts`
     - 参考 `raw/src/table/useFetchData.tsx`
     - 实现分页、排序、筛选请求
     - _Requirements: 6.1, 6.5_
-  - [ ] 10.3 实现 ActionRef 功能
+
+  - [x] 10.3 实现 ActionRef 功能
     - 完善 actionRef 暴露的方法
     - 实现 reload、reset、setPageInfo 等
     - _Requirements: 6.7_
-  - [ ] 10.4 实现 Polling 轮询功能
+
+  - [x] 10.4 实现 Polling 轮询功能
     - 添加 polling 属性支持
     - 实现定时刷新数据
     - _Requirements: 6.8_
+
   - [ ]\* 10.5 编写 ProTable 请求分页属性测试
     - **Property 5: Table Request Pagination**
     - **Validates: Requirements 6.1, 6.5**
@@ -252,21 +257,25 @@
     - **Property 7: Table Action Ref Methods**
     - **Validates: Requirements 6.7**
 
-- [ ] 11. 完善 ProTable 工具函数
-  - [ ] 11.1 完善 genProColumnToColumn
+- [x] 11. 完善 ProTable 工具函数
+  - [x] 11.1 完善 genProColumnToColumn
     - 检查 `src/components/table/utils/`
     - 参考 `raw/src/table/utils/genProColumnToColumn.tsx`
     - _Requirements: 9.1_
-  - [ ] 11.2 完善 columnRender
+
+  - [x] 11.2 完善 columnRender
     - 参考 `raw/src/table/utils/columnRender.tsx`
     - 实现 valueType 渲染
     - _Requirements: 9.2_
-  - [ ] 11.3 完善 columnSort
+
+  - [x] 11.3 完善 columnSort
     - 参考 `raw/src/table/utils/columnSort.ts`
     - _Requirements: 9.3_
-  - [ ] 11.4 完善 cellRenderToFormItem
+
+  - [x] 11.4 完善 cellRenderToFormItem
     - 参考 `raw/src/table/utils/cellRenderToFromItem.tsx`
     - _Requirements: 9.4_
+
   - [ ]\* 11.5 编写列转换属性测试
     - **Property 8: Column Transformation**
     - **Validates: Requirements 9.1**
@@ -279,42 +288,50 @@
 
 ## Phase 5: ProTable 子组件完善 (P1 - 重要)
 
-- [ ] 13. 完善现有子组件
-  - [ ] 13.1 完善 TableAlert 组件
+- [x] 13. 完善现有子组件
+  - [x] 13.1 完善 TableAlert 组件
     - 检查 `src/components/table/components/alert/`
     - 参考 `raw/src/table/components/Alert/`
     - _Requirements: 7.1_
-  - [ ] 13.2 完善 TableToolbar 组件
+
+  - [x] 13.2 完善 TableToolbar 组件
     - 检查 `src/components/table/components/toolbar/`
     - 参考 `raw/src/table/components/ToolBar/`
     - _Requirements: 7.2_
 
-- [ ] 14. 创建缺失的子组件
-  - [ ] 14.1 创建 ColumnSetting 列设置组件
+- [-] 14. 创建缺失的子组件
+  - [x] 14.1 创建 ColumnSetting 列设置组件
     - 创建 `src/components/table/components/column-setting/index.tsx`
     - 参考 `raw/src/table/components/ColumnSetting/`
     - 实现列显示/隐藏控制
     - _Requirements: 7.3_
-  - [ ] 14.2 创建 DensityIcon 密度切换组件
+
+  - [x] 14.2 创建 DensityIcon 密度切换组件
     - 创建 `src/components/table/components/density-icon/index.tsx`
     - 参考 `raw/src/table/components/ToolBar/DensityIcon.tsx`
     - _Requirements: 7.4_
-  - [ ] 14.3 创建 FullscreenIcon 全屏切换组件
+
+  - [x] 14.3 创建 FullscreenIcon 全屏切换组件
     - 创建 `src/components/table/components/fullscreen-icon/index.tsx`
     - 参考 `raw/src/table/components/ToolBar/FullscreenIcon.tsx`
     - _Requirements: 7.5_
-  - [ ] 14.4 创建 ListToolBar 列表工具栏组件
+
+  - [-] 14.4 创建 ListToolBar 列表工具栏组件
     - 创建 `src/components/table/components/list-toolbar/index.tsx`
+
     - 参考 `raw/src/table/components/ListToolBar/`
     - _Requirements: 7.6_
-  - [ ] 14.5 创建 HeaderMenu 头部菜单组件
+
+  - [x] 14.5 创建 HeaderMenu 头部菜单组件
     - 创建 `src/components/table/components/header-menu/index.tsx`
     - 参考 `raw/src/table/components/ListToolBar/HeaderMenu.tsx`
     - _Requirements: 7.7_
-  - [ ] 14.6 创建 FormRender 搜索表单组件
+
+  - [x] 14.6 创建 FormRender 搜索表单组件
     - 创建 `src/components/table/components/form/index.tsx`
     - 参考 `raw/src/table/components/Form/`
     - _Requirements: 7.8_
+
   - [ ] 14.7 创建 Dropdown 操作下拉组件
     - 创建 `src/components/table/components/dropdown/index.tsx`
     - 参考 `raw/src/table/components/Dropdown/`

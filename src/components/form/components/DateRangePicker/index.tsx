@@ -7,7 +7,7 @@ export const ProFormDateRangePicker = createField<ProFormDateRangePickerProps>({
   renderFormItem: (props: any, { slots }: any) => {
     return (
       <DateRangePicker
-        v-model={props.modelValue}
+        v-model={props.modelValue.value}
         placeholder={props.placeholder as [string, string]}
         disabled={props.disabled}
         readonly={props.readonly}

@@ -1,0 +1,54 @@
+.t-pro-table-search {
+  margin-bottom: 16px;
+  padding: 16px 24px;
+  background-color: var(--td-bg-color-container);
+  border-radius: var(--td-radius-medium);
+
+  &-bordered {
+    border: 1px solid var(--td-component-stroke);
+  }
+
+  &-ghost {
+    padding: 0;
+    background-color: transparent;
+    border: none;
+  }
+
+  .pro-query-filter-container {
+    margin: 0;
+  }
+
+  .pro-query-filter {
+    .t-form__item {
+      margin-bottom: 16px;
+    }
+  }
+
+  &-form-item {
+    width: 100%;
+  }
+}
+
+// Light filter 样式调整
+.t-pro-table-search-light-filter {
+  .t-pro-light-filter {
+    padding: 0;
+  }
+}
+
+// Query filter 样式调整
+.t-pro-table-search-query-filter {
+  .pro-query-filter-row {
+    margin: 0 -12px;
+
+    >.t-col {
+      padding: 0 12px;
+    }
+  }
+
+  .pro-query-filter-actions {
+    .t-form__label {
+      visibility: hidden;
+    }
+  }
+}

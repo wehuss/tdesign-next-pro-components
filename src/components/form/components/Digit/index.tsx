@@ -7,7 +7,7 @@ export const ProFormDigit = createField<ProFormDigitProps>({
   renderFormItem: (props: any, { slots }: any) => {
     return (
       <InputNumber
-        v-model={props.modelValue}
+        v-model={props.modelValue.value}
         placeholder={props.placeholder as string}
         disabled={props.disabled}
         readonly={props.readonly}

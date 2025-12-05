@@ -1,25 +1,71 @@
 /**
  * ProTable 表格组件
  * 基于 ant-design/pro-components 的 Table.tsx 移植
+ * 适配 Vue 3 + TDesign
  */
 
 import useListeners from '@/hooks/listeners'
 import { Card, EnhancedTable, type PaginationProps } from 'tdesign-vue-next'
 import type { App, PropType, Ref, VNode } from 'vue'
-import { computed, defineComponent, useModel } from 'vue'
+import {
+  computed,
+  defineComponent,
+  onBeforeUnmount,
+  provide,
+  ref,
+  useModel,
+  watch,
+} from 'vue'
 import TableAlert from './components/alert'
 import TableToolBar from './components/toolbar'
-import { useProTable } from './hooks/use-pro-table'
+import { useFetchData } from './hooks/useFetchData'
 import './style/index.less'
-import type { ActionRef, ProNode, ProTableColumn } from './types'
+import type {
+  ActionRef,
+  FilterInfo,
+  PaginationParams,
+  ProNode,
+  ProTableColumn,
+  RequestData,
+  SortInfo,
+} from './types'
+import { genProColumnToColumn } from './utils'
+
+// ProTable 上下文 key
+export const ProTableContextKey = Symbol('ProTableContext')
+
+// ProTable 上下文类型
+export interface ProTableContext {
+  actionRef: Ref<ActionRef | undefined>
+  columnsMap: Ref<
+    Record<string, { show?: boolean; fixed?: 'left' | 'right'; order?: number }>
+  >
+  setColumnsMap: (
+    map: Record<
+      string,
+      { show?: boolean; fixed?: 'left' | 'right'; order?: number }
+    >
+  ) => void
+}
+
+// AlertRender 类型导入
+import type { AlertRenderType } from './components/alert'
 
 const ProTable = defineComponent({
   name: 'ProTable',
   props: {
     // 数据相关
-    request: Function,
-    dataSource: Array,
-    params: Object,
+    request: Function as PropType<
+      (
+        params: Record<string, any> & { current: number; pageSize: number },
+        sort?: SortInfo,
+        filter?: FilterInfo
+      ) => Promise<RequestData<any>>
+    >,
+    dataSource: Array as PropType<any[]>,
+    params: Object as PropType<Record<string, any>>,
+    defaultData: Array as PropType<any[]>,
+    postData: Function as PropType<(data: any[]) => any[]>,
 
     // 列配置
     columns: {
@@ -38,7 +84,7 @@ const ProTable = defineComponent({
       type: [Boolean, Object],
       default: true,
     },
-    toolbarRender: Function as PropType<(actionRef: ActionRef) => VNode>,
+    toolbarRender: Function as PropType<(actionRef: Ref<ActionRef>) => VNode>,
 
     // 卡片配置
     cardBordered: {
@@ -65,6 +111,26 @@ const ProTable = defineComponent({
       default: false,
     },
 
+    // 行选择相关
+    rowSelection: {
+      type: [Boolean, Object] as PropType<boolean | Record<string, any>>,
+      default: undefined,
+    },
+    selectedRowKeys: {
+      type: Array as PropType<(string | number)[]>,
+      default: undefined,
+    },
+
+    // Alert 相关
+    tableAlertRender: {
+      type: [Function, Boolean] as PropType<AlertRenderType<any>>,
+      default: undefined,
+    },
+    tableAlertOptionRender: {
+      type: [Function, Boolean] as PropType<AlertRenderType<any>>,
+      default: undefined,
+    },
+
     // 其他 Table 属性
     loading: Boolean,
     rowKey: {
@@ -77,39 +143,196 @@ const ProTable = defineComponent({
       type: Boolean,
       default: false,
     },
+    manualRequest: {
+      type: Boolean,
+      default: false,
+    },
     polling: [Number, Boolean] as PropType<number | boolean>,
-    onLoad: Function,
-    onRequestError: Function,
-    postData: Function,
+    debounceTime: {
+      type: Number,
+      default: 20,
+    },
+    revalidateOnFocus: {
+      type: Boolean,
+      default: false,
+    },
+
+    // 回调函数
+    onLoad: Function as PropType<(dataSource: any[], extra: any) => void>,
+    onRequestError: Function as PropType<(error: Error) => void>,
+    onLoadingChange: Function as PropType<(loading: boolean) => void>,
+    onDataSourceChange: Function as PropType<(dataSource: any[]) => void>,
+
+    // 空值文本
+    columnEmptyText: {
+      type: String,
+      default: '-',
+    },
   },
 
-  setup(props, { slots, attrs, expose }) {
+  emits: [
+    'update:columnControllerVisible',
+    'update:dataSource',
+    'update:selectedRowKeys',
+    'selectionChange',
+  ],
+
+  setup(props, { slots, attrs, expose, emit }) {
     const { listeners } = useListeners()
     const columnControllerVisible = useModel(props, 'columnControllerVisible')
 
-    // 使用核心 hook
-    const {
-      tableData,
-      tableColumns,
-      tableLoading,
-      searchFormRef,
-      actionRef,
-      pageInfo,
-      onSearch,
-      onReset,
-      reload,
-      setPageInfo,
-    } = useProTable({
-      columns: props.columns as any,
-      request: props.request as any,
-      dataSource: props.dataSource as any,
-      params: props.params,
-      manual: props.manual,
-      polling: props.polling,
-      onLoad: props.onLoad as any,
-      onRequestError: props.onRequestError as any,
-      postData: props.postData as any,
-      pagination: props.pagination as any,
+    // 列状态管理
+    const columnsMap = ref<
+      Record<
+        string,
+        { show?: boolean; fixed?: 'left' | 'right'; order?: number }
+      >
+    >({})
+
+    // 排序和筛选状态
+    const proSort = ref<SortInfo>({})
+    const proFilter = ref<FilterInfo>({})
+
+    // 行选择状态
+    const internalSelectedRowKeys = ref<(string | number)[]>([])
+    const selectedRows = ref<any[]>([])
+
+    // 计算实际使用的 selectedRowKeys（支持受控和非受控模式）
+    const selectedRowKeys = computed(() => {
+      return props.selectedRowKeys ?? internalSelectedRowKeys.value
+    })
+
+    // 处理选择变化
+    const handleSelectionChange = (
+      keys: (string | number)[],
+      context: { selectedRowData: any[] }
+    ) => {
+      internalSelectedRowKeys.value = keys
+      selectedRows.value = context.selectedRowData || []
+      emit('update:selectedRowKeys', keys)
+      emit('selectionChange', keys, context)
+    }
+
+    // 清空选择
+    const clearSelected = () => {
+      internalSelectedRowKeys.value = []
+      selectedRows.value = []
+      emit('update:selectedRowKeys', [])
+    }
+
+    // 搜索表单状态
+    const formSearch = ref<Record<string, any>>({})
+    const searchFormRef = ref<any>(null)
+
+    // 构建请求函数
+    const fetchData = computed(() => {
+      if (!props.request) return undefined
+
+      return async (pageParams?: { pageSize: number; current: number }) => {
+        const actionParams = {
+          ...(pageParams || {}),
+          ...formSearch.value,
+          ...props.params,
+        }
+
+        // 删除内部时间戳
+        delete (actionParams as any)._timestamp
+
+        const response = await props.request!(
+          actionParams as any,
+          proSort.value,
+          proFilter.value
+        )
+
+        return response
+      }
+    })
+
+    // 分页配置
+    const fetchPagination = computed(() => {
+      if (props.pagination === false) {
+        return false
+      }
+
+      const paginationConfig =
+        typeof props.pagination === 'object' ? props.pagination : {}
+
+      return {
+        defaultCurrent: 1,
+        defaultPageSize: 20,
+        pageSize: 20,
+        current: 1,
+        ...paginationConfig,
+      }
+    })
+
+    // 使用 useFetchData hook
+    const action = useFetchData(fetchData.value, props.defaultData, {
+      pageInfo: fetchPagination.value,
+      loading: props.loading,
+      dataSource: props.dataSource,
+      onDataSourceChange: data => {
+        props.onDataSourceChange?.(data)
+        emit('update:dataSource', data)
+      },
+      onLoad: props.onLoad,
+      onLoadingChange: props.onLoadingChange,
+      onRequestError: props.onRequestError,
+      postData: props.postData,
+      revalidateOnFocus: props.revalidateOnFocus,
+      manual:
+        props.manual || props.manualRequest || formSearch.value === undefined,
+      polling: props.polling as number | undefined,
+      effects: [
+        JSON.stringify(props.params),
+        JSON.stringify(formSearch.value),
+        JSON.stringify(proFilter.value),
+        JSON.stringify(proSort.value),
+      ],
+      debounceTime: props.debounceTime,
+      onPageInfoChange: pageInfo => {
+        if (!props.pagination || !fetchData.value) return
+
+        const paginationConfig =
+          typeof props.pagination === 'object' ? props.pagination : {}
+
+        // 触发分页回调
+        paginationConfig.onChange?.(pageInfo as any)
+        paginationConfig.onPageSizeChange?.(pageInfo.pageSize, pageInfo as any)
+      },
+    })
+
+    // 监听 request 变化，重新创建 fetchData
+    watch(
+      () => props.request,
+      () => {
+        if (props.request && !props.manual && !props.manualRequest) {
+          action.reload()
+        }
+      }
+    )
+
+    // 监听 params 变化
+    watch(
+      () => props.params,
+      () => {
+        if (!props.manual && !props.manualRequest) {
+          // 参数变化时重置到第一页
+          action.setPageInfo({ current: 1 })
+        }
+      },
+      { deep: true }
+    )
+
+    // 转换列配置
+    const tableColumns = computed(() => {
+      return genProColumnToColumn({
+        columns: props.columns as ProTableColumn[],
+        columnsMap: columnsMap.value,
+        columnEmptyText: props.columnEmptyText,
+        type: 'table',
+        rowKey: props.rowKey,
+      })
     })
 
     // 合并分页配置
@@ -123,15 +346,15 @@ const ProTable = defineComponent({
 
       return {
         ...defaultPagination,
-        current: pageInfo.value.current,
-        pageSize: pageInfo.value.pageSize,
-        total: pageInfo.value.total,
+        current: action.pageInfo.current,
+        pageSize: action.pageInfo.pageSize,
+        total: action.pageInfo.total,
         onChange: (pageNumber: any) => {
           // 调用用户的 onChange 回调
           defaultPagination.onChange?.(pageNumber)
 
           // 更新内部状态
-          setPageInfo({
+          action.setPageInfo({
             current: pageNumber.current,
             pageSize: pageNumber.pageSize,
           })
@@ -141,7 +364,7 @@ const ProTable = defineComponent({
           defaultPagination.onPageSizeChange?.(pageSize, pageInfo)
 
           // 页面大小改变时重置到第一页
-          setPageInfo({
+          action.setPageInfo({
             current: 1,
             pageSize,
           })
@@ -149,10 +372,98 @@ const ProTable = defineComponent({
       }
     })
 
+    // ActionRef 实现
+    const actionRef = computed<ActionRef>(() => ({
+      reload: async (resetPageIndex?: boolean) => {
+        await action.reload(resetPageIndex)
+      },
+      reloadAndReset: async () => {
+        // 清空搜索表单
+        formSearch.value = {}
+        searchFormRef.value?.reset?.()
+
+        // 重置排序和筛选
+        proSort.value = {}
+        proFilter.value = {}
+
+        // 清空选择
+        clearSelected()
+
+        // 重置分页并重新加载
+        action.reset()
+        await action.reload()
+      },
+      reset: () => {
+        // 清空搜索表单
+        formSearch.value = {}
+        searchFormRef.value?.reset?.()
+
+        // 重置排序和筛选
+        proSort.value = {}
+        proFilter.value = {}
+
+        // 清空选择
+        clearSelected()
+
+        // 重置分页
+        action.reset()
+      },
+      setPageInfo: (pageInfo: Partial<PaginationParams>) => {
+        action.setPageInfo(pageInfo)
+      },
+      clearSelected,
+      setSortInfo: (sortInfo: SortInfo) => {
+        proSort.value = sortInfo
+      },
+      setFilterInfo: (filterInfo: FilterInfo) => {
+        proFilter.value = filterInfo
+      },
+    }))
+
+    // 搜索表单提交
+    const onFormSearchSubmit = (values: Record<string, any>) => {
+      formSearch.value = values
+      action.setPageInfo({ current: 1 })
+    }
+
+    // 搜索表单重置
+    const onFormSearchReset = () => {
+      formSearch.value = {}
+      action.setPageInfo({ current: 1 })
+    }
+
+    // 排序变化处理
+    const onSortChange = (sortConfig: SortInfo | undefined) => {
+      if (JSON.stringify(sortConfig) === JSON.stringify(proSort.value)) return
+      proSort.value = sortConfig || {}
+    }
+
+    // 筛选变化处理
+    const onFilterChange = (filterConfig: FilterInfo) => {
+      if (JSON.stringify(filterConfig) === JSON.stringify(proFilter.value))
+        return
+      proFilter.value = filterConfig || {}
+    }
+
+    // 提供上下文
+    provide<ProTableContext>(ProTableContextKey, {
+      actionRef: actionRef as any,
+      columnsMap,
+      setColumnsMap: map => {
+        columnsMap.value = map
+      },
+    })
+
     // 暴露方法给父组件
     expose({
       ...actionRef.value,
       getSearchForm: () => searchFormRef.value,
+      getAction: () => action,
+    })
+
+    // 清理
+    onBeforeUnmount(() => {
+      // 清理工作由 useFetchData 内部处理
     })
 
     return () => {
@@ -167,29 +478,79 @@ const ProTable = defineComponent({
           <TableToolBar
             headerTitle={headerTitle}
             toolbar={toolbar}
-            toolbarRender={props.toolbarRender}
+            toolbarRender={
+              props.toolbarRender
+                ? (_ref: ActionRef) => props.toolbarRender!(actionRef as any)
+                : undefined
+            }
             columns={props.columns}
-            actionRef={actionRef as Ref<ActionRef>}
+            actionRef={{ value: actionRef.value }}
+            selectedRowKeys={selectedRowKeys.value}
+            selectedRows={selectedRows.value}
             v-model:columnControllerVisible={columnControllerVisible.value}
           />
         ) : null
 
       // 批量操作提示
-      const alertNode = <TableAlert />
+      const alertNode =
+        props.rowSelection !== false ? (
+          <TableAlert
+            selectedRowKeys={selectedRowKeys.value}
+            selectedRows={selectedRows.value}
+            onCleanSelected={clearSelected}
+            alertInfoRender={props.tableAlertRender}
+            alertOptionRender={props.tableAlertOptionRender}
+          />
+        ) : null
+
+      // 行选择配置
+      const rowSelectionConfig = computed(() => {
+        if (props.rowSelection === false || props.rowSelection === undefined) {
+          return undefined
+        }
+        const config =
+          typeof props.rowSelection === 'object' ? props.rowSelection : {}
+        return {
+          ...config,
+          selectedRowKeys: selectedRowKeys.value,
+        }
+      })
 
       // 表格节点 - 使用转换后的列配置
       const tableNode = (
         <EnhancedTable
           {...attrs}
           {...listeners}
-          {...props}
           bordered
-          data={tableData.value}
+          data={action._refs.dataSource.value}
           columns={tableColumns.value}
-          loading={tableLoading.value}
+          loading={action._refs.loading.value}
           rowKey={props.rowKey}
           pagination={paginationConfig.value || undefined}
+          selectedRowKeys={
+            rowSelectionConfig.value ? selectedRowKeys.value : undefined
+          }
           v-model:columnControllerVisible={columnControllerVisible.value}
+          onSelectChange={(
+            keys: (string | number)[],
+            context: { selectedRowData: any[] }
+          ) => {
+            handleSelectionChange(keys, context)
+          }}
+          onSortChange={(sort: any) => {
+            if (sort) {
+              const sortInfo: SortInfo = {}
+              if (sort.sortBy) {
+                sortInfo[sort.sortBy] = sort.descending ? 'desc' : 'asc'
+              }
+              onSortChange(sortInfo)
+            } else {
+              onSortChange(undefined)
+            }
+          }}
+          onFilterChange={(filters: any) => {
+            onFilterChange(filters || {})
+          }}
           v-slots={slots}
         />
       )

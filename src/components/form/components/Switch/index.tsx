@@ -1,16 +1,29 @@
 import { Switch } from 'tdesign-vue-next'
 import { createField } from '../../utils/createField'
-import type { ProFormSwitchProps } from '../types'
 
-export const ProFormSwitch = createField<ProFormSwitchProps>({
+/**
+ * ProFormSwitch 组件
+ * 开关表单字段，支持布尔值 v-model 双向绑定
+ */
+export const ProFormSwitch = createField({
   name: 'ProFormSwitch',
-  renderFormItem: (props: any, { slots }: any) => {
+  valueType: 'switch',
+  renderFormItem: (props: any) => {
+    const {
+      size,
+      label: switchLabel,
+      loading,
+      ...restFieldProps
+    } = props.fieldProps || {}
+
     return (
       <Switch
-        v-model={props.modelValue}
+        v-model={props.modelValue.value}
         disabled={props.disabled}
-        size={props.fieldProps?.size}
-        {...props.fieldProps}
+        size={size}
+        label={switchLabel}
+        loading={loading}
+        {...restFieldProps}
       />
     )
   },

@@ -1,0 +1,66 @@
+.t-pro-list-toolbar {
+  &-menu {
+    display: flex;
+    align-items: center;
+  }
+
+  &-inline-menu {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+
+    &-item {
+      position: relative;
+      padding: 8px 0;
+      font-size: 14px;
+      color: var(--td-text-color-secondary);
+      cursor: pointer;
+      transition: color 0.2s;
+
+      &:hover:not(&-disabled) {
+        color: var(--td-text-color-primary);
+      }
+
+      &-active {
+        color: var(--td-brand-color);
+        font-weight: 500;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background-color: var(--td-brand-color);
+        }
+      }
+
+      &-disabled {
+        color: var(--td-text-color-disabled);
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &-dropdownmenu {
+    &-label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--td-text-color-primary);
+      cursor: pointer;
+      transition: color 0.2s;
+
+      &:hover {
+        color: var(--td-brand-color);
+      }
+
+      .t-icon {
+        font-size: 14px;
+      }
+    }
+  }
+}

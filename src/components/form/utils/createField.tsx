@@ -1,4 +1,12 @@
-import { computed, defineComponent, inject, useModel } from 'vue'
+import {
+  computed,
+  defineComponent,
+  inject,
+  onBeforeUnmount,
+  onMounted,
+  useModel,
+  watch,
+} from 'vue'
 import type { ProFieldValueEnumType } from '../../field/types'
 import { EditOrReadOnlyContextKey } from '../BaseForm/EditOrReadOnlyContext'
 import { ProFormItem } from '../components/FormItem'
@@ -21,12 +29,59 @@ export interface CreateFieldConfig {
 }
 
 /**
+ * 需要从 attrs 中过滤掉的属性列表
+ * 这些属性通常来自 ProTable columns 配置，不应该传递给表单项
+ */
+const FILTERED_ATTRS = [
+  'title',
+  'description',
+  'dataIndex',
+  'key',
+  'hideInTable',
+  'hideInSearch',
+  'hideInForm',
+  'sorter',
+  'filters',
+  'ellipsis',
+  'copyable',
+  'order',
+  'search',
+  'editable',
+  'fixed',
+  'align',
+  'className',
+  'render',
+  'renderText',
+  'renderFormItem',
+  'children',
+  'onFilter',
+  'onCell',
+  'onHeaderCell',
+]
+
+/**
+ * 过滤掉不需要传递给表单项的属性
+ */
+function filterAttrs(attrs: Record<string, any>): Record<string, any> {
+  const result: Record<string, any> = {}
+  for (const key of Object.keys(attrs)) {
+    if (!FILTERED_ATTRS.includes(key)) {
+      result[key] = attrs[key]
+    }
+  }
+  return result
+}
+
+/**
  * 创建表单字段组件的工厂函数
  * 支持 valueType、valueEnum、表单上下文集成
+ *
+ * 注意：Vue 组件不支持将泛型作为 props 传递，因此这里不使用泛型参数
  */
-export function createField<T = any>(config: CreateFieldConfig) {
+export function createField(config: CreateFieldConfig) {
   return defineComponent({
     name: config.name,
+    inheritAttrs: false,
     props: {
       // 基础属性
       'name': [String, Array],
@@ -91,6 +146,8 @@ export function createField<T = any>(config: CreateFieldConfig) {
       'onChange': Function,
       'onBlur': Function,
       'onFocus': Function,
+      // 初始值（用于重置）
+      'initialValue': null,
     },
     emits: ['update:modelValue', 'change', 'blur', 'focus'],
     setup(props: any, { slots, emit, attrs }) {
@@ -138,10 +195,45 @@ export function createField<T = any>(config: CreateFieldConfig) {
         })
       }
 
+      // 注册字段到表单上下文
+      let unregisterField: (() => void) | undefined
+
+      onMounted(() => {
+        if (fieldContext.registerField && props.name) {
+          unregisterField = fieldContext.registerField({
+            name: props.name,
+            getValue: () => modelValue.value,
+            setValue: (value: any) => {
+              modelValue.value = value
+            },
+            initialValue: props.initialValue,
+            valueType: props.valueType,
+            dateFormat: props.dataFormat,
+            transform: props.transform,
+          })
+        }
+      })
+
+      // 组件卸载时注销字段
+      onBeforeUnmount(() => {
+        if (unregisterField) {
+          unregisterField()
+        }
+      })
+
+      // 监听值变化，通知表单上下文
+      watch(
+        () => modelValue.value,
+        newValue => {
+          // 触发 change 事件
+          emit('change', newValue)
+        }
+      )
+
       return () => {
         const renderProps = {
           ...props,
-          modelValue: modelValue.value,
+          modelValue,
           mode: currentMode.value,
           fieldProps: mergedFieldProps.value,
         }
@@ -150,6 +242,10 @@ export function createField<T = any>(config: CreateFieldConfig) {
         if (props.ignoreFormItem) {
           return config.renderFormItem(renderProps, { slots, emit })
         }
+
+        // 过滤掉不需要传递给 ProFormItem 的 attrs
+        // 这些属性通常来自 ProTable columns 配置
+        const filteredAttrs = filterAttrs(attrs as Record<string, any>)
 
         // 否则包装在 ProFormItem 中
         return (
@@ -171,7 +267,7 @@ export function createField<T = any>(config: CreateFieldConfig) {
             secondary={props.secondary}
             colProps={props.colProps}
             {...mergedFormItemProps.value}
-            {...attrs}
+            {...filteredAttrs}
           >
             {config.renderFormItem(renderProps, { slots, emit })}
           </ProFormItem>

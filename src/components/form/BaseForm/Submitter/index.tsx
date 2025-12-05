@@ -105,6 +105,7 @@ export const Submitter = defineComponent({
 
     // 提交方法
     const submit = () => {
+      console.log('submit', props.onSubmit)
       formInstance?.submit?.()
       props.onSubmit?.()
     }

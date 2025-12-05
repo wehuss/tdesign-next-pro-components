@@ -17,6 +17,77 @@ import { LightWrapper } from '../../BaseForm/LightWrapper'
 import { useFieldContext, type SearchTransformKeyFn } from '../../FieldContext'
 import { useFormListContext } from '../List'
 
+/**
+ * 需要从 attrs 中过滤掉的属性列表
+ * 这些属性通常来自 ProTable columns 配置，不应该传递给 TDesign FormItem
+ */
+const FILTERED_ATTRS = [
+  'title',
+  'description',
+  'dataIndex',
+  'key',
+  'hideInTable',
+  'hideInSearch',
+  'hideInForm',
+  'sorter',
+  'filters',
+  'ellipsis',
+  'copyable',
+  'order',
+  'search',
+  'editable',
+  'fixed',
+  'align',
+  'className',
+  'render',
+  'renderText',
+  'renderFormItem',
+  'children',
+  'onFilter',
+  'onCell',
+  'onHeaderCell',
+  'valueType',
+  'valueEnum',
+  'fieldProps',
+  'formItemProps',
+  'proFieldProps',
+  'request',
+  'params',
+  'debounceTime',
+  'options',
+  'transform',
+  'convertValue',
+  'dataFormat',
+  'lightProps',
+  'addonBefore',
+  'addonAfter',
+  'addonWarpStyle',
+  'secondary',
+  'colProps',
+  'rowProps',
+  'proFormFieldKey',
+  'ignoreFormItem',
+  'isListField',
+  'emptyText',
+  'getValueProps',
+  'valuePropName',
+]
+
+/**
+ * 过滤掉不需要传递给 TDesign FormItem 的属性
+ * @param attrs 原始属性对象
+ * @returns 过滤后的属性对象
+ */
+function filterAttrs(attrs: Record<string, any>): Record<string, any> {
+  const result: Record<string, any> = {}
+  for (const key of Object.keys(attrs)) {
+    if (!FILTERED_ATTRS.includes(key)) {
+      result[key] = attrs[key]
+    }
+  }
+  return result
+}
+
 // FormItem 上下文
 export interface FormItemContextValue {
   name?: string | string[]
@@ -112,6 +183,7 @@ export interface ProFormItemProps {
 
 export const ProFormItem = defineComponent({
   name: 'ProFormItem',
+  inheritAttrs: false,
   props: {
     name: [String, Array] as PropType<string | string[]>,
     label: [String, Object] as PropType<string | VNode>,
@@ -322,6 +394,31 @@ export const ProFormItem = defineComponent({
       )
     }
 
+    // 过滤后的 attrs，移除不应传递给 TDesign FormItem 的属性
+    const filteredAttrs = computed(() =>
+      filterAttrs(attrs as Record<string, any>)
+    )
+
+    // 计算最终的 rules（处理 required 属性）
+    const finalRules = computed(() => {
+      const rules = props.rules ? [...props.rules] : []
+
+      // 如果设置了 required 但没有 required 规则，自动添加
+      if (props.required) {
+        const hasRequiredRule = rules.some(
+          (rule: any) => rule && rule.required === true
+        )
+        if (!hasRequiredRule) {
+          rules.unshift({
+            required: true,
+            message: `${props.label || props.name || '此字段'}不能为空`,
+          })
+        }
+      }
+
+      return rules.length > 0 ? rules : undefined
+    })
+
     return () => {
       const children = slotsInstance.default?.()
 
@@ -331,14 +428,14 @@ export const ProFormItem = defineComponent({
           <FormItem
             name={Array.isArray(props.name) ? props.name.join('.') : props.name}
             label={props.label as string}
-            rules={props.rules}
+            rules={finalRules.value}
             help={
               typeof props.help === 'function'
                 ? undefined
                 : (props.help as string)
             }
             style={fieldStyle.value}
-            {...attrs}
+            {...filteredAttrs.value}
             {...(fieldContext.formItemProps || {})}
           >
             {children}
@@ -363,14 +460,14 @@ export const ProFormItem = defineComponent({
         <FormItem
           name={formItemName.value}
           label={props.label as string}
-          rules={props.rules}
+          rules={finalRules.value}
           help={
             typeof props.help === 'function'
               ? undefined
               : (props.help as string)
           }
           style={fieldStyle.value}
-          {...attrs}
+          {...filteredAttrs.value}
           {...(fieldContext.formItemProps || {})}
         >
           {renderContent()}
