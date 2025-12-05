@@ -49,11 +49,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-org/tdesign-pro-components.git"
+    "url": "https://github.com/wehuss/tdesign-pro-components.git"
   },
-  "homepage": "https://github.com/your-org/tdesign-pro-components#readme",
+  "homepage": "https://github.com/wehuss/tdesign-pro-components#readme",
   "bugs": {
-    "url": "https://github.com/your-org/tdesign-pro-components/issues"
+    "url": "https://github.com/wehuss/tdesign-pro-components/issues"
   },
   "peerDependencies": {
     "vue": "^3.0.0"

@@ -1,36 +1,36 @@
 import { Button, Message, Space } from 'tdesign-vue-next'
 import { defineComponent, ref } from 'vue'
 import {
-    DrawerForm,
-    LightFilter,
-    ModalForm,
-    ProForm,
-    ProFormCascader,
-    ProFormCheckbox,
-    ProFormColorPicker,
-    ProFormDatePicker,
-    ProFormDateRangePicker,
-    ProFormDependency,
-    ProFormDigit,
-    ProFormFieldSet,
-    ProFormGroup,
-    ProFormList,
-    ProFormMoney,
-    ProFormPassword,
-    ProFormRadio,
-    ProFormRate,
-    ProFormSelect,
-    ProFormSlider,
-    ProFormSwitch,
-    ProFormText,
-    ProFormTextArea,
-    ProFormTimePicker,
-    ProFormTimeRangePicker,
-    ProFormTreeSelect,
-    ProFormUploadButton,
-    QueryFilter,
-    StepForm,
-    StepsForm
+  DrawerForm,
+  LightFilter,
+  ModalForm,
+  ProForm,
+  ProFormCascader,
+  ProFormCheckbox,
+  ProFormColorPicker,
+  ProFormDatePicker,
+  ProFormDateRangePicker,
+  ProFormDependency,
+  ProFormDigit,
+  ProFormFieldSet,
+  ProFormGroup,
+  ProFormList,
+  ProFormMoney,
+  ProFormPassword,
+  ProFormRadio,
+  ProFormRate,
+  ProFormSelect,
+  ProFormSlider,
+  ProFormSwitch,
+  ProFormText,
+  ProFormTextArea,
+  ProFormTimePicker,
+  ProFormTimeRangePicker,
+  ProFormTreeSelect,
+  ProFormUploadButton,
+  QueryFilter,
+  StepForm,
+  StepsForm,
 } from '../index'
 
 export const TestForm = defineComponent({
@@ -115,7 +115,7 @@ export const TestForm = defineComponent({
     return () => (
       <div style={{ padding: '24px' }}>
         <h1>ProForm 组件功能测试</h1>
-        
+
         <Space direction="vertical" size="large" style={{ width: '100%' }}>
           {/* 基础表单控件测试 */}
           <div>
@@ -140,21 +140,21 @@ export const TestForm = defineComponent({
                 placeholder="请输入姓名"
                 rules={[{ required: true, message: '请输入姓名' }]}
               />
-              
+
               <ProFormPassword
                 name="password"
                 label="密码"
                 placeholder="请输入密码"
                 rules={[{ required: true, message: '请输入密码' }]}
               />
-              
+
               <ProFormTextArea
                 name="description"
                 label="描述"
                 placeholder="请输入描述"
                 fieldProps={{ rows: 4 }}
               />
-              
+
               <ProFormSelect
                 name="department"
                 label="部门"
@@ -166,7 +166,7 @@ export const TestForm = defineComponent({
                   { label: '运营部', value: 'operation' },
                 ]}
               />
-              
+
               <ProFormTreeSelect
                 name="skills"
                 label="技能"
@@ -176,7 +176,7 @@ export const TestForm = defineComponent({
                   multiple: true,
                 }}
               />
-              
+
               <ProFormCascader
                 name="location"
                 label="地区"
@@ -185,60 +185,58 @@ export const TestForm = defineComponent({
                   options: cascaderOptions,
                 }}
               />
-              
+
               <ProFormDatePicker
                 name="birthday"
                 label="生日"
                 placeholder="请选择生日"
               />
-              
+
               <ProFormDateRangePicker
                 name="workPeriod"
                 label="工作时间"
                 placeholder={['开始日期', '结束日期']}
               />
-              
+
               <ProFormTimePicker
                 name="workTime"
                 label="上班时间"
                 placeholder="请选择时间"
               />
-              
+
               <ProFormTimeRangePicker
                 name="workTimeRange"
                 label="工作时间段"
                 placeholder={['开始时间', '结束时间']}
               />
-              
+
               <ProFormDigit
                 name="age"
                 label="年龄"
                 placeholder="请输入年龄"
                 fieldProps={{ min: 0, max: 120 }}
               />
-              
+
               <ProFormMoney
                 name="salary"
                 label="薪资"
                 placeholder="请输入薪资"
               />
-              
+
               <ProFormSlider
                 name="experience"
                 label="工作经验"
-                fieldProps={{ min: 0, max: 10, marks: { 0: '0年', 5: '5年', 10: '10年+' } }}
+                fieldProps={{
+                  min: 0,
+                  max: 10,
+                  marks: { 0: '0年', 5: '5年', 10: '10年+' },
+                }}
               />
-              
-              <ProFormRate
-                name="rating"
-                label="评分"
-              />
-              
-              <ProFormSwitch
-                name="enabled"
-                label="启用状态"
-              />
-              
+
+              <ProFormRate name="rating" label="评分" />
+
+              <ProFormSwitch name="enabled" label="启用状态" />
+
               <ProFormRadio
                 name="gender"
                 label="性别"
@@ -247,7 +245,7 @@ export const TestForm = defineComponent({
                   { label: '女', value: 'female' },
                 ]}
               />
-              
+
               <ProFormCheckbox
                 name="hobbies"
                 label="爱好"
@@ -258,12 +256,9 @@ export const TestForm = defineComponent({
                   { label: '旅行', value: 'travel' },
                 ]}
               />
-              
-              <ProFormColorPicker
-                name="color"
-                label="主题色"
-              />
-              
+
+              <ProFormColorPicker name="color" label="主题色" />
+
               <ProFormUploadButton
                 name="avatar"
                 label="头像"
@@ -278,10 +273,7 @@ export const TestForm = defineComponent({
           {/* 布局组件测试 */}
           <div>
             <h2>2. 布局组件测试</h2>
-            <ProForm
-              title="布局组件测试"
-              onFinish={handleFinish}
-            >
+            <ProForm title="布局组件测试" onFinish={handleFinish}>
               <ProFormGroup title="基本信息">
                 <ProFormText
                   name="companyName"
@@ -294,7 +286,7 @@ export const TestForm = defineComponent({
                   placeholder="请输入联系人"
                 />
               </ProFormGroup>
-              
+
               <ProFormFieldSet name="address" label="地址信息">
                 <ProFormText
                   name="province"
@@ -312,7 +304,7 @@ export const TestForm = defineComponent({
                   placeholder="请输入区县"
                 />
               </ProFormFieldSet>
-              
+
               <ProFormList
                 name="members"
                 label="团队成员"
@@ -331,7 +323,7 @@ export const TestForm = defineComponent({
                   placeholder="请输入职位"
                 />
               </ProFormList>
-              
+
               <ProFormDependency name={['department']}>
                 {({ department }) => {
                   if (department === 'tech') {
@@ -357,20 +349,26 @@ export const TestForm = defineComponent({
           {/* 高级组件测试 */}
           <div>
             <h2>3. 高级组件测试</h2>
-            
+
             <Space>
-              <Button theme="primary" onClick={() => modalVisible.value = true}>
+              <Button
+                theme="primary"
+                onClick={() => (modalVisible.value = true)}
+              >
                 打开 ModalForm
               </Button>
-              <Button theme="primary" onClick={() => drawerVisible.value = true}>
+              <Button
+                theme="primary"
+                onClick={() => (drawerVisible.value = true)}
+              >
                 打开 DrawerForm
               </Button>
             </Space>
-            
+
             <ModalForm
               title="编辑用户信息"
               visible={modalVisible.value}
-              onVisibleChange={(visible) => modalVisible.value = visible}
+              onVisibleChange={visible => (modalVisible.value = visible)}
               onFinish={handleFinish}
             >
               <ProFormText
@@ -385,11 +383,11 @@ export const TestForm = defineComponent({
                 placeholder="请输入个人简介"
               />
             </ModalForm>
-            
+
             <DrawerForm
               title="创建项目"
               visible={drawerVisible.value}
-              onVisibleChange={(visible) => drawerVisible.value = visible}
+              onVisibleChange={visible => (drawerVisible.value = visible)}
               onFinish={handleFinish}
             >
               <ProFormText
@@ -417,16 +415,13 @@ export const TestForm = defineComponent({
             <StepsForm
               current={currentStep.value}
               steps={steps}
-              onCurrentChange={(current) => currentStep.value = current}
+              onCurrentChange={current => (currentStep.value = current)}
               onFinish={handleFinish}
             >
               {({ current, setFormRef }) => (
                 <>
                   {current === 0 && (
-                    <StepForm
-                      ref={setFormRef(0)}
-                      title="基本信息"
-                    >
+                    <StepForm ref={setFormRef(0)} title="基本信息">
                       <ProFormText
                         name="companyName"
                         label="公司名称"
@@ -441,12 +436,9 @@ export const TestForm = defineComponent({
                       />
                     </StepForm>
                   )}
-                  
+
                   {current === 1 && (
-                    <StepForm
-                      ref={setFormRef(1)}
-                      title="详细信息"
-                    >
+                    <StepForm ref={setFormRef(1)} title="详细信息">
                       <ProFormText
                         name="phone"
                         label="联系电话"
@@ -461,12 +453,9 @@ export const TestForm = defineComponent({
                       />
                     </StepForm>
                   )}
-                  
+
                   {current === 2 && (
-                    <StepForm
-                      ref={setFormRef(2)}
-                      title="确认信息"
-                    >
+                    <StepForm ref={setFormRef(2)} title="确认信息">
                       <ProFormTextArea
                         name="remarks"
                         label="备注"
@@ -483,7 +472,7 @@ export const TestForm = defineComponent({
           <div>
             <h2>5. 查询筛选器测试</h2>
             <QueryFilter
-              onSearch={(values) => {
+              onSearch={values => {
                 console.log('Search values:', values)
                 Message.info('查询成功')
               }}
@@ -506,7 +495,7 @@ export const TestForm = defineComponent({
                   { label: '禁用', value: 'inactive' },
                 ]}
               />
-              
+
               <template v-slot:collapsed>
                 <ProFormDatePicker
                   name="startDate"
@@ -526,7 +515,7 @@ export const TestForm = defineComponent({
           <div>
             <h2>6. 轻量筛选器测试</h2>
             <LightFilter
-              onFinish={(values) => {
+              onFinish={values => {
                 console.log('Filter values:', values)
                 Message.info('筛选成功')
               }}

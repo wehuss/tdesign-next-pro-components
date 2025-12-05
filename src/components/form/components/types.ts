@@ -2,6 +2,16 @@ import type { FormItemProps } from 'tdesign-vue-next'
 import type { VNode } from 'vue'
 import type { ProFormFieldItemProps } from '../typing'
 
+/**
+ * 搜索值转换函数类型
+ * 用于在表单提交时转换字段值
+ */
+export type SearchTransformKeyFn = (
+  value: any,
+  namePath: string | string[],
+  allValues: Record<string, any>
+) => string | Record<string, any>
+
 // 基础表单项类型
 export interface ProFormItemProps extends FormItemProps {
   ignoreFormItem?: boolean
@@ -135,34 +145,107 @@ export interface ProFormUploadDraggerProps extends ProFormFieldItemProps {
   maxCount?: number
 }
 
+// 图标配置
+export interface IconConfig {
+  Icon?: any
+  tooltipText?: string
+}
+
+// 操作守卫
+export interface FormListActionGuard {
+  beforeAddRow?: (
+    defaultValue: any,
+    insertIndex: number,
+    count: number
+  ) => boolean | Promise<boolean>
+  beforeRemoveRow?: (index: number, count: number) => boolean | Promise<boolean>
+}
+
+// 操作类型
+export interface FormListOperation {
+  add: (defaultValue?: any, insertIndex?: number) => void
+  remove: (index: number | number[]) => void
+  move: (from: number, to: number) => void
+}
+
 // 表单列表
 export interface ProFormListProps extends ProFormFieldItemProps {
   min?: number
   max?: number
-  copyIconProps?: any
-  deleteIconProps?: any
-  creatorButtonProps?: any
-  creatorRecord?: any
-  actionRender?: (field: any, action: any, defaultActionDom: VNode[], count: number) => VNode[]
-  actionGuard?: {
-    beforeAddRow?: (defaultValue: any, insertIndex: number, count: number) => boolean | Promise<boolean>
-    beforeRemoveRow?: (index: number, count: number) => boolean | Promise<boolean>
-  }
+  copyIconProps?: IconConfig | false
+  deleteIconProps?: IconConfig | false
+  upIconProps?: IconConfig | false
+  downIconProps?: IconConfig | false
+  arrowSort?: boolean
+  creatorButtonProps?:
+    | false
+    | {
+        creatorButtonText?: string | VNode
+        position?: 'top' | 'bottom'
+        type?: 'default' | 'primary' | 'danger' | 'warning'
+        block?: boolean
+        icon?: VNode
+      }
+  creatorRecord?: Record<string, any> | (() => Record<string, any>)
+  actionRender?: (
+    field: { name: number; key: number },
+    action: FormListOperation,
+    defaultActionDom: VNode[],
+    count: number
+  ) => VNode[]
+  actionGuard?: FormListActionGuard
+  itemContainerRender?: (doms: VNode | VNode[], listMeta: any) => VNode
+  itemRender?: (
+    dom: { listDom: VNode; action: VNode | null },
+    listMeta: any
+  ) => VNode
+  alwaysShowItemLabel?: boolean
+  fieldExtraRender?: (
+    action: FormListOperation,
+    meta: { errors?: VNode[]; warnings?: VNode[] }
+  ) => VNode
+  onAfterAdd?: (defaultValue: any, insertIndex: number, count: number) => void
+  onAfterRemove?: (index: number, count: number) => void
+  containerClassName?: string
+  containerStyle?: Record<string, any>
+  readonly?: boolean
 }
 
 // 表单组
 export interface ProFormGroupProps extends ProFormFieldItemProps {
   title?: VNode | string
+  label?: VNode | string
+  tooltip?: VNode | string
   collapsible?: boolean
   defaultCollapsed?: boolean
-  extra?: VNode
+  collapsed?: boolean
+  onCollapse?: (collapsed: boolean) => void
+  extra?: VNode | string
+  size?: 'small' | 'medium' | 'large' | number
+  direction?: 'horizontal' | 'vertical'
+  align?: 'start' | 'end' | 'center' | 'baseline'
+  wrap?: boolean
+  titleStyle?: Record<string, any>
+  titleRender?: (title: VNode | string | undefined, props: any) => VNode
+  labelLayout?: 'inline' | 'twoLine'
+  autoFocus?: boolean
+  spaceProps?: Record<string, any>
 }
 
 // 表单集合
 export interface ProFormFieldSetProps extends ProFormFieldItemProps {
-  type?: 'space' | 'group' | 'card'
-  title?: VNode | string
-  tooltip?: VNode | string
+  type?: 'space' | 'group'
+  value?: any[]
+  onChange?: (value: any[]) => void
+  valuePropName?: string
+  space?: {
+    size?: 'small' | 'medium' | 'large' | number
+    direction?: 'horizontal' | 'vertical'
+    align?: 'start' | 'end' | 'center' | 'baseline'
+    wrap?: boolean
+  }
+  convertValue?: (value: any, namePath: string | string[]) => any
+  transform?: (value: any, namePath: string | string[], allValues: any) => any
 }
 
 // 表单依赖
@@ -170,4 +253,49 @@ export interface ProFormDependencyProps {
   name: string | string[]
   children: (values: any, form: any) => VNode | VNode[]
   ignoreFormListField?: boolean
+}
+
+// 验证码输入框
+export interface ProFormCaptchaProps extends ProFormFieldItemProps {
+  /** 倒计时的秒数，默认 60 */
+  countDown?: number
+  /** 手机号的 name，用于验证 */
+  phoneName?: string | string[]
+  /** 获取验证码的方法 */
+  onGetCaptcha: (mobile: string) => Promise<void>
+  /** 计时回调 */
+  onTiming?: (count: number) => void
+  /** 渲染按钮的文字 */
+  captchaTextRender?: (timing: boolean, count: number) => VNode | string
+  /** 获取按钮验证码的 props */
+  captchaProps?: Record<string, any>
+}
+
+// 分段控制器
+export interface ProFormSegmentedProps extends ProFormFieldItemProps {
+  options?: Array<{ label: string; value: any; disabled?: boolean }>
+}
+
+// 通用字段包装器
+export interface ProFormFieldProps extends ProFormFieldItemProps {
+  /** 值类型 */
+  valueType?: string
+  /** 值枚举 */
+  valueEnum?: Record<string, any> | Map<string | number, any>
+  /** 渲染模式 */
+  mode?: 'edit' | 'read' | 'update'
+  /** 是否为默认 DOM */
+  isDefaultDom?: boolean
+  /** 纯文本模式 */
+  plain?: boolean
+  /** 文本值 */
+  text?: any
+  /** 获取字段属性 */
+  getFieldProps?: () => Record<string, any>
+  /** 获取表单项属性 */
+  getFormItemProps?: () => Record<string, any>
+  /** 依赖值 */
+  dependenciesValues?: Record<string, any>
+  /** 原始依赖 */
+  originDependencies?: Record<string, unknown>
 }

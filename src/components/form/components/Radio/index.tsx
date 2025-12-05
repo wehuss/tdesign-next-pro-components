@@ -10,7 +10,11 @@ export const ProFormRadio = createField<ProFormRadioGroupProps>({
         v-model={props.modelValue}
         options={props.options || props.fieldProps?.options}
         disabled={props.disabled}
-        variant={props.fieldProps?.radioType === 'button' ? 'default-filled' : 'outline'}
+        variant={
+          props.fieldProps?.radioType === 'button'
+            ? 'default-filled'
+            : 'outline'
+        }
         {...props.fieldProps}
       />
     )

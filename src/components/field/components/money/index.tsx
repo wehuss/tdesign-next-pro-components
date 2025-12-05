@@ -54,7 +54,7 @@ export const FieldMoney = defineComponent({
 
     expose({
       getDataEntryRef,
-      dataEntryRef
+      dataEntryRef,
     })
 
     // 格式化金额显示
@@ -63,7 +63,7 @@ export const FieldMoney = defineComponent({
 
       const num = Number(value)
       if (isNaN(num)) return '-'
-
+      console.log('props.currency', props.currency)
       try {
         return `${props.currency} ${num.toLocaleString(props.locale, {
           minimumFractionDigits: props.precision,

@@ -54,6 +54,8 @@ coverage
 docs/.vitepress/cache
 docs/.vitepress/dist
 
+.vitepress/cache
+.vitepress/dist
 # Temporary folders
 tmp/
 temp/

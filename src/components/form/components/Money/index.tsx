@@ -16,7 +16,7 @@ export const ProFormMoney = createField<ProFormMoneyProps>({
         precision={2}
         {...props.fieldProps}
         v-slots={{
-          suffix: () => props.fieldProps?.customSymbol || '¥'
+          suffix: () => props.fieldProps?.customSymbol || '¥',
         }}
       />
     )

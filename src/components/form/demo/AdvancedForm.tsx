@@ -1,17 +1,17 @@
 import { Button, Message, Space } from 'tdesign-vue-next'
 import { defineComponent, ref } from 'vue'
 import {
-    DrawerForm,
-    LightFilter,
-    ModalForm,
-    ProForm,
-    ProFormDatePicker,
-    ProFormSelect,
-    ProFormText,
-    ProFormTextArea,
-    QueryFilter,
-    StepForm,
-    StepsForm
+  DrawerForm,
+  LightFilter,
+  ModalForm,
+  ProForm,
+  ProFormDatePicker,
+  ProFormSelect,
+  ProFormText,
+  ProFormTextArea,
+  QueryFilter,
+  StepForm,
+  StepsForm,
 } from '../index'
 
 export const AdvancedFormDemo = defineComponent({
@@ -36,7 +36,7 @@ export const AdvancedFormDemo = defineComponent({
     return () => (
       <div style={{ padding: '24px' }}>
         <h2>高级表单组件演示</h2>
-        
+
         <Space direction="vertical" size="large" style={{ width: '100%' }}>
           {/* ProForm 演示 */}
           <div>
@@ -78,13 +78,13 @@ export const AdvancedFormDemo = defineComponent({
           {/* ModalForm 演示 */}
           <div>
             <h3>2. ModalForm - 弹窗表单</h3>
-            <Button theme="primary" onClick={() => modalVisible.value = true}>
+            <Button theme="primary" onClick={() => (modalVisible.value = true)}>
               打开弹窗表单
             </Button>
             <ModalForm
               title="编辑用户信息"
               visible={modalVisible.value}
-              onVisibleChange={(visible) => modalVisible.value = visible}
+              onVisibleChange={visible => (modalVisible.value = visible)}
               onFinish={handleFinish}
             >
               <ProFormText
@@ -104,13 +104,16 @@ export const AdvancedFormDemo = defineComponent({
           {/* DrawerForm 演示 */}
           <div>
             <h3>3. DrawerForm - 抽屉表单</h3>
-            <Button theme="primary" onClick={() => drawerVisible.value = true}>
+            <Button
+              theme="primary"
+              onClick={() => (drawerVisible.value = true)}
+            >
               打开抽屉表单
             </Button>
             <DrawerForm
               title="创建项目"
               visible={drawerVisible.value}
-              onVisibleChange={(visible) => drawerVisible.value = visible}
+              onVisibleChange={visible => (drawerVisible.value = visible)}
               onFinish={handleFinish}
             >
               <ProFormText
@@ -143,16 +146,13 @@ export const AdvancedFormDemo = defineComponent({
             <StepsForm
               current={currentStep.value}
               steps={steps}
-              onCurrentChange={(current) => currentStep.value = current}
+              onCurrentChange={current => (currentStep.value = current)}
               onFinish={handleFinish}
             >
               {({ current, setFormRef }) => (
                 <>
                   {current === 0 && (
-                    <StepForm
-                      ref={setFormRef(0)}
-                      title="基本信息"
-                    >
+                    <StepForm ref={setFormRef(0)} title="基本信息">
                       <ProFormText
                         name="companyName"
                         label="公司名称"
@@ -167,12 +167,9 @@ export const AdvancedFormDemo = defineComponent({
                       />
                     </StepForm>
                   )}
-                  
+
                   {current === 1 && (
-                    <StepForm
-                      ref={setFormRef(1)}
-                      title="详细信息"
-                    >
+                    <StepForm ref={setFormRef(1)} title="详细信息">
                       <ProFormText
                         name="phone"
                         label="联系电话"
@@ -187,12 +184,9 @@ export const AdvancedFormDemo = defineComponent({
                       />
                     </StepForm>
                   )}
-                  
+
                   {current === 2 && (
-                    <StepForm
-                      ref={setFormRef(2)}
-                      title="确认信息"
-                    >
+                    <StepForm ref={setFormRef(2)} title="确认信息">
                       <ProFormTextArea
                         name="remarks"
                         label="备注"
@@ -209,7 +203,7 @@ export const AdvancedFormDemo = defineComponent({
           <div>
             <h3>5. QueryFilter - 查询筛选器</h3>
             <QueryFilter
-              onSearch={(values) => {
+              onSearch={values => {
                 console.log('Search values:', values)
                 Message.info('查询成功')
               }}
@@ -232,7 +226,7 @@ export const AdvancedFormDemo = defineComponent({
                   { label: '禁用', value: 'inactive' },
                 ]}
               />
-              
+
               {/* 高级查询条件 */}
               <template v-slot:collapsed>
                 <ProFormDatePicker
@@ -253,7 +247,7 @@ export const AdvancedFormDemo = defineComponent({
           <div>
             <h3>6. LightFilter - 轻量筛选器</h3>
             <LightFilter
-              onFinish={(values) => {
+              onFinish={values => {
                 console.log('Filter values:', values)
                 Message.info('筛选成功')
               }}

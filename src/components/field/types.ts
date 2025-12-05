@@ -150,7 +150,7 @@ export interface ProFieldValueObject {
   showColor?: boolean
   precision?: number
   /** 金额组件 */
-  moneySymbol?: boolean
+  currency?: boolean
   /** 图片组件 */
   width?: number
 }

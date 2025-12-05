@@ -1,11 +1,11 @@
 import type { FormItemProps } from 'tdesign-vue-next'
 import type { CSSProperties, Ref, VNode } from 'vue'
 import type {
-    ProFieldProps,
-    ProFieldValueType,
-    ProFormBaseGroupProps,
-    ProSchema,
-    SearchConvertKeyFn,
+  ProFieldProps,
+  ProFieldValueType,
+  ProFormBaseGroupProps,
+  ProSchema,
+  SearchConvertKeyFn,
 } from '../field/types'
 import type { ProFormInstance } from './BaseForm'
 import type { CaptFieldRef } from './components/Captcha'
@@ -99,7 +99,7 @@ export type LightFilterFooterRender =
       /**
        * @name 清除选择
        */
-      onClear?: (e?: Event) => void,
+      onClear?: (e?: Event) => void
     ) => VNode | false)
   | false
 
@@ -171,4 +171,82 @@ export type ProFormItemProps = FormItemProps & {
   dataFormat?: string
   lightProps?: any
   proFormFieldKey?: any
+}
+
+/**
+ * BaseForm 的 Props 类型
+ */
+export interface BaseFormProps<
+  T = Record<string, any>,
+  U = Record<string, any>,
+> {
+  /** 表单布局 */
+  layout?: 'vertical' | 'inline' | 'horizontal'
+  /** 加载状态 */
+  loading?: boolean
+  /** 只读模式 */
+  readonly?: boolean
+  /** 提交按钮配置 */
+  submitter?: any | false
+  /** 表单提交回调 */
+  onFinish?: (formData: T) => Promise<boolean | void> | void
+  /** 表单提交失败回调 */
+  onFinishFailed?: (errorInfo: any) => void
+  /** 表单重置回调 */
+  onReset?: () => void
+  /** 表单值变化回调 */
+  onValuesChange?: (changedValues: any, allValues: any) => void
+  /** 加载状态变化回调 */
+  onLoadingChange?: (loading: boolean) => void
+  /** 表单实例引用 */
+  formRef?: any
+  /** 是否开启栅格布局 */
+  grid?: boolean
+  /** 栅格列配置 */
+  colProps?: Record<string, any>
+  /** 栅格行配置 */
+  rowProps?: Record<string, any>
+  /** 内容渲染函数 */
+  contentRender?: (items: any[], submitter: any, form: any) => any
+  /** 字段属性 */
+  fieldProps?: Record<string, any>
+  /** ProField 属性 */
+  proFieldProps?: Record<string, any>
+  /** 表单项属性 */
+  formItemProps?: Record<string, any>
+  /** 分组属性 */
+  groupProps?: ProFormGroupProps
+  /** 表单组件类型 */
+  formComponentType?: 'DrawerForm' | 'ModalForm' | 'QueryFilter'
+  /** 是否回车提交 */
+  isKeyPressSubmit?: boolean
+  /** 是否自动聚焦第一个输入框 */
+  autoFocusFirstInput?: boolean
+  /** 是否忽略 nil 值 */
+  omitNil?: boolean
+  /** 日期格式化 */
+  dateFormatter?:
+    | string
+    | ((value: any, valueType: string) => string | number)
+    | false
+  /** 表单初始化回调 */
+  onInit?: (values: T, form: any) => void
+  /** 请求参数 */
+  params?: U
+  /** 请求函数 */
+  request?: (params: U) => Promise<T>
+  /** 表单 key */
+  formKey?: string
+  /** 同步到 URL */
+  syncToUrl?: boolean | ((values: T, type: 'get' | 'set') => T)
+  /** 同步到 URL 时以 URL 为主 */
+  syncToUrlAsImportant?: boolean
+  /** 额外的 URL 参数 */
+  extraUrlParams?: Record<string, any>
+  /** 同步到初始值 */
+  syncToInitialValues?: boolean
+  /** 初始值 */
+  initialValues?: T
+  /** 是否保留隐藏字段 */
+  preserve?: boolean
 }

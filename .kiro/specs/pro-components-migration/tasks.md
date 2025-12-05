@@ -83,105 +83,122 @@
 
 ## Phase 2: ProForm 基础组件完善 (P0 - 核心)
 
-- [ ] 3. 完善 BaseForm 核心组件
-  - [ ] 3.1 完善 Submitter 组件
+- [x] 3. 完善 BaseForm 核心组件
+  - [x] 3.1 完善 Submitter 组件
     - 检查并完善 `src/components/form/BaseForm/Submitter/index.tsx`
     - 添加 render 自定义渲染支持
     - 添加 searchConfig 配置支持
     - 参考 `raw/src/form/BaseForm/Submitter/`
     - _Requirements: 2.2_
-  - [ ] 3.2 创建 LightWrapper 组件
+
+  - [x] 3.2 创建 LightWrapper 组件
     - 创建 `src/components/form/BaseForm/LightWrapper/index.tsx`
     - 参考 `raw/src/form/BaseForm/LightWrapper/`
     - 实现轻量级表单项包装功能
     - _Requirements: 2.3_
-  - [ ] 3.3 完善 EditOrReadOnlyContext
+
+  - [x] 3.3 完善 EditOrReadOnlyContext
     - 检查并完善 `src/components/form/BaseForm/EditOrReadOnlyContext.ts`
     - 确保 provide/inject 正确工作
     - _Requirements: 2.4_
-  - [ ] 3.4 完善 FieldContext
+
+  - [x] 3.4 完善 FieldContext
     - 检查并完善 `src/components/form/FieldContext.ts`
     - 添加缺失的上下文属性
     - _Requirements: 2.5_
+
   - [ ]\* 3.5 编写 BaseForm 属性测试
     - **Property 3: Form Value Binding**
     - **Validates: Requirements 3.1-3.18**
 
-- [ ] 4. 完善 ProForm 表单项组件
-  - [ ] 4.1 审查并完善现有表单项组件
+- [x] 4. 完善 ProForm 表单项组件
+  - [x] 4.1 审查并完善现有表单项组件
     - 审查 `src/components/form/components/` 下所有组件
     - 确保与 BaseForm 正确集成
     - 确保 valueType 和 valueEnum 支持
     - _Requirements: 3.1-3.18_
-  - [ ] 4.2 创建 ProFormCaptcha 组件
+
+  - [x] 4.2 创建 ProFormCaptcha 组件
     - 创建 `src/components/form/components/Captcha/index.tsx`
     - 参考 `raw/src/form/components/Captcha/`
     - 实现验证码输入和倒计时功能
     - _Requirements: 3.19_
-  - [ ] 4.3 创建 ProFormSegmented 组件
+
+  - [x] 4.3 创建 ProFormSegmented 组件
     - 创建 `src/components/form/components/Segmented/index.tsx`
     - 参考 `raw/src/form/components/Segmented/`
     - _Requirements: 3.20_
-  - [ ] 4.4 创建 ProFormField 通用组件
+
+  - [x] 4.4 创建 ProFormField 通用组件
     - 创建 `src/components/form/components/Field/index.tsx`
     - 参考 `raw/src/form/components/Field/`
     - 实现通用字段包装器
     - _Requirements: 3.21_
 
-- [ ] 5. 完善 ProForm 高级组件
-  - [ ] 5.1 完善 ProFormGroup 组件
+- [x] 5. 完善 ProForm 高级组件
+  - [x] 5.1 完善 ProFormGroup 组件
     - 检查 `src/components/form/components/Group/`
     - 确保分组标题和布局正确
     - _Requirements: 4.1_
-  - [ ] 5.2 完善 ProFormList 组件
+
+  - [x] 5.2 完善 ProFormList 组件
     - 检查 `src/components/form/components/List/`
     - 确保动态增删功能正常
     - 参考 `raw/src/form/components/List/`
     - _Requirements: 4.2_
-  - [ ] 5.3 完善 ProFormFieldSet 组件
+
+  - [x] 5.3 完善 ProFormFieldSet 组件
     - 检查 `src/components/form/components/FieldSet/`
     - 参考 `raw/src/form/components/FieldSet/`
     - _Requirements: 4.3_
-  - [ ] 5.4 完善 ProFormDependency 组件
+
+  - [x] 5.4 完善 ProFormDependency 组件
     - 检查 `src/components/form/components/Dependency/`
     - 确保字段依赖逻辑正确
     - 参考 `raw/src/form/components/Dependency/`
     - _Requirements: 4.4_
-  - [ ] 5.5 完善 ProFormItem 组件
+
+  - [x] 5.5 完善 ProFormItem 组件
     - 检查 `src/components/form/components/FormItem/`
     - 参考 `raw/src/form/components/FormItem/`
     - _Requirements: 4.5_
+
   - [ ]\* 5.6 编写 ProFormList 属性测试
     - **Property 4: Form List Operations**
     - **Validates: Requirements 4.2**
 
-- [ ] 6. Checkpoint - 确保 ProForm 基础组件测试通过
+- [x] 6. Checkpoint - 确保 ProForm 基础组件测试通过
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Phase 3: ProForm 布局组件完善 (P1 - 重要)
 
-- [ ] 7. 完善现有布局组件
-  - [ ] 7.1 完善 ProForm 标准布局
+- [x] 7. 完善现有布局组件
+  - [x] 7.1 完善 ProForm 标准布局
     - 检查 `src/components/form/ProForm/`
     - 参考 `raw/src/form/layouts/ProForm/`
     - _Requirements: 5.1_
-  - [ ] 7.2 完善 ModalForm 组件
+
+  - [x] 7.2 完善 ModalForm 组件
     - 检查 `src/components/form/ModalForm/`
     - 参考 `raw/src/form/layouts/ModalForm/`
     - _Requirements: 5.2_
-  - [ ] 7.3 完善 DrawerForm 组件
+
+  - [x] 7.3 完善 DrawerForm 组件
     - 检查 `src/components/form/DrawerForm/`
     - 参考 `raw/src/form/layouts/DrawerForm/`
     - _Requirements: 5.3_
-  - [ ] 7.4 完善 QueryFilter 组件
+
+  - [x] 7.4 完善 QueryFilter 组件
     - 检查 `src/components/form/QueryFilter/`
     - 参考 `raw/src/form/layouts/QueryFilter/`
     - _Requirements: 5.4_
-  - [ ] 7.5 完善 LightFilter 组件
+
+  - [x] 7.5 完善 LightFilter 组件
     - 检查 `src/components/form/LightFilter/`
     - 参考 `raw/src/form/layouts/LightFilter/`
     - _Requirements: 5.5_
-  - [ ] 7.6 完善 StepsForm 组件
+
+  - [x] 7.6 完善 StepsForm 组件
     - 检查 `src/components/form/StepsForm/`
     - 参考 `raw/src/form/layouts/StepsForm/`
     - _Requirements: 5.6_

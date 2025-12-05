@@ -1,18 +1,24 @@
 import type { FormInstanceFunctions } from 'tdesign-vue-next'
 import { Form, Loading } from 'tdesign-vue-next'
 import type { Ref } from 'vue'
-import { defineComponent, onMounted, ref, watch } from 'vue'
+import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { provideFieldContext } from '../FieldContext'
 import { provideGridContext } from '../helpers/index.tsx'
 import type { ProFormGroupProps } from '../typing'
-import { provideEditOrReadOnlyContext } from './EditOrReadOnlyContext'
+import {
+  createEditOrReadOnlyContext,
+  provideEditOrReadOnlyContext,
+} from './EditOrReadOnlyContext'
 import { Submitter } from './Submitter'
 
 export interface ProFormInstance extends FormInstanceFunctions {
   getFieldsFormatValue?: (allData?: boolean, omitNil?: boolean) => any
   getFieldFormatValue?: (nameList?: any, omitNil?: boolean) => any
   getFieldFormatValueObject?: (nameList?: any, omitNil?: boolean) => any
-  validateFieldsReturnFormatValue?: (nameList?: any[], omitNil?: boolean) => Promise<any>
+  validateFieldsReturnFormatValue?: (
+    nameList?: any[],
+    omitNil?: boolean
+  ) => Promise<any>
   nativeElement?: HTMLElement
 }
 
@@ -120,7 +126,7 @@ export interface ProFormInstance extends FormInstanceFunctions {
 //   /** Form 组件的类型，内部使用 */
 //   formComponentType?: 'DrawerForm' | 'ModalForm' | 'QueryFilter'
 // }
-export type BaseFormProps=any
+export type BaseFormProps = any
 export const BaseForm = defineComponent({
   name: 'BaseForm',
   props: {
@@ -208,7 +214,10 @@ export const BaseForm = defineComponent({
       default: true,
     },
     dateFormatter: {
-      type: [String, Function, Boolean] as () => string | ((value: any, valueType: string) => string | number) | false,
+      type: [String, Function, Boolean] as () =>
+        | string
+        | ((value: any, valueType: string) => string | number)
+        | false,
       default: 'string',
     },
     onInit: {
@@ -226,7 +235,9 @@ export const BaseForm = defineComponent({
       default: '',
     },
     syncToUrl: {
-      type: [Boolean, Function] as () => boolean | ((values: any, type: 'get' | 'set') => any),
+      type: [Boolean, Function] as () =>
+        | boolean
+        | ((values: any, type: 'get' | 'set') => any),
       default: false,
     },
     syncToUrlAsImportant: {
@@ -250,11 +261,14 @@ export const BaseForm = defineComponent({
     const initialDataLoading = ref(false)
 
     // 监听loading变化
-    watch(() => props.loading, (newLoading) => {
-      loading.value = newLoading || false
-    })
+    watch(
+      () => props.loading,
+      newLoading => {
+        loading.value = newLoading || false
+      }
+    )
 
-    watch(loading, (newLoading) => {
+    watch(loading, newLoading => {
       props.onLoadingChange?.(newLoading)
       emit('loadingChange', newLoading)
     })
@@ -262,9 +276,9 @@ export const BaseForm = defineComponent({
     // 处理表单提交
     const handleFinish = async (values: any) => {
       if (!props.onFinish) return
-      
+
       if (loading.value) return
-      
+
       try {
         loading.value = true
         const result = await props.onFinish(values)
@@ -283,10 +297,13 @@ export const BaseForm = defineComponent({
       formRef.value?.reset()
     }
 
-    // 提供上下文
-    provideEditOrReadOnlyContext({
-      mode: props.readonly ? 'read' : 'edit',
-    })
+    // 提供上下文 - 使用响应式模式以便在 readonly 变化时自动更新
+    const editOrReadOnlyMode = computed(() =>
+      props.readonly ? 'read' : 'edit'
+    )
+    provideEditOrReadOnlyContext(
+      createEditOrReadOnlyContext(editOrReadOnlyMode)
+    )
 
     provideFieldContext({
       formRef,
@@ -329,17 +346,20 @@ export const BaseForm = defineComponent({
       const items = slots.default?.()
 
       // 渲染提交按钮
-      const submitterNode = props.submitter !== false ? (
-        <Submitter
-          {...(typeof props.submitter === 'object' ? props.submitter : {})}
-          onSubmit={() => formRef.value?.submit()}
-          onReset={handleReset}
-          submitButtonProps={{
-            loading: loading.value,
-            ...(typeof props.submitter === 'object' ? props.submitter.submitButtonProps : {}),
-          }}
-        />
-      ) : null
+      const submitterNode =
+        props.submitter !== false ? (
+          <Submitter
+            {...(typeof props.submitter === 'object' ? props.submitter : {})}
+            onSubmit={() => formRef.value?.submit()}
+            onReset={handleReset}
+            submitButtonProps={{
+              loading: loading.value,
+              ...(typeof props.submitter === 'object'
+                ? props.submitter.submitButtonProps
+                : {}),
+            }}
+          />
+        ) : null
 
       // 自定义内容渲染
       if (props.contentRender) {
@@ -349,7 +369,13 @@ export const BaseForm = defineComponent({
       // 加载状态
       if (props.request && initialDataLoading.value) {
         return (
-          <div style={{ paddingTop: '50px', paddingBottom: '50px', textAlign: 'center' }}>
+          <div
+            style={{
+              paddingTop: '50px',
+              paddingBottom: '50px',
+              textAlign: 'center',
+            }}
+          >
             <Loading />
           </div>
         )

@@ -1,4 +1,6 @@
 // 导出所有表单组件
+export { ProFormCaptcha } from './Captcha'
+export type { CaptFieldRef } from './Captcha'
 export { ProFormCascader } from './Cascader'
 export { ProFormCheckbox } from './Checkbox'
 export { ProFormColorPicker } from './ColorPicker'
@@ -6,13 +8,15 @@ export { ProFormDatePicker } from './DatePicker'
 export { ProFormDateRangePicker } from './DateRangePicker'
 export { ProFormDependency } from './Dependency'
 export { ProFormDigit } from './Digit'
+export { ProFormField } from './Field'
 export { ProFormFieldSet } from './FieldSet'
-export { ProFormItem } from './FormItem'
+export { FormItemContext, FormItemContextKey, ProFormItem } from './FormItem'
 export { ProFormGroup } from './Group'
-export { ProFormList } from './List'
+export { FormListContextKey, ProFormList, useFormListContext } from './List'
 export { ProFormMoney } from './Money'
 export { ProFormRadio } from './Radio'
 export { ProFormRate } from './Rate'
+export { ProFormSegmented } from './Segmented'
 export { ProFormSelect } from './Select'
 export { ProFormSlider } from './Slider'
 export { ProFormSwitch } from './Switch'
@@ -25,7 +29,30 @@ export { ProFormUploadDragger } from './UploadDragger'
 
 // 导出类型
 export type {
-    ProFormCascaderProps, ProFormCheckboxGroupProps, ProFormColorPickerProps, ProFormDatePickerProps,
-    ProFormDateRangePickerProps, ProFormDependencyProps, ProFormDigitProps, ProFormFieldSetProps, ProFormGroupProps, ProFormItemProps, ProFormListProps, ProFormMoneyProps, ProFormRadioGroupProps, ProFormRateProps, ProFormSelectProps, ProFormSliderProps, ProFormSwitchProps, ProFormTextAreaProps, ProFormTextProps, ProFormTimePickerProps, ProFormTreeSelectProps, ProFormUploadButtonProps,
-    ProFormUploadDraggerProps
+  ProFormCaptchaProps,
+  ProFormCascaderProps,
+  ProFormCheckboxGroupProps,
+  ProFormColorPickerProps,
+  ProFormDatePickerProps,
+  ProFormDateRangePickerProps,
+  ProFormDependencyProps,
+  ProFormDigitProps,
+  ProFormFieldProps,
+  ProFormFieldSetProps,
+  ProFormGroupProps,
+  ProFormItemProps,
+  ProFormListProps,
+  ProFormMoneyProps,
+  ProFormRadioGroupProps,
+  ProFormRateProps,
+  ProFormSegmentedProps,
+  ProFormSelectProps,
+  ProFormSliderProps,
+  ProFormSwitchProps,
+  ProFormTextAreaProps,
+  ProFormTextProps,
+  ProFormTimePickerProps,
+  ProFormTreeSelectProps,
+  ProFormUploadButtonProps,
+  ProFormUploadDraggerProps,
 } from './types'

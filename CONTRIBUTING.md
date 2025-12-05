@@ -178,8 +178,8 @@ pnpm changeset
 
 ## Getting Help
 
-- Check existing [GitHub Issues](https://github.com/your-org/tdesign-pro-components/issues)
-- Join [GitHub Discussions](https://github.com/your-org/tdesign-pro-components/discussions)
+- Check existing [GitHub Issues](https://github.com/wehuss/tdesign-pro-components/issues)
+- Join [GitHub Discussions](https://github.com/wehuss/tdesign-pro-components/discussions)
 - Read the [TDesign Vue Next documentation](https://tdesign.tencent.com/vue-next/overview)
 
 ## Code of Conduct

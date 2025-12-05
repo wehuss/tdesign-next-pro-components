@@ -37,6 +37,17 @@ export default [
         clearTimeout: 'readonly',
         setInterval: 'readonly',
         clearInterval: 'readonly',
+        // DOM types
+        HTMLElement: 'readonly',
+        HTMLInputElement: 'readonly',
+        Event: 'readonly',
+        MouseEvent: 'readonly',
+        KeyboardEvent: 'readonly',
+        Element: 'readonly',
+        Node: 'readonly',
+        NodeList: 'readonly',
+        // TDesign components
+        Button: 'readonly',
       },
     },
     plugins: {
@@ -91,6 +102,7 @@ export default [
       '.changeset/**',
       'docs/.vitepress/cache/**',
       'docs/.vitepress/dist/**',
+      'raw/**',
     ],
   },
 ]

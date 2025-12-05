@@ -1,5 +1,9 @@
-import { defineComponent, ref } from 'vue'
+import type { VNode } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 import { BaseForm } from '../BaseForm/BaseForm'
+import { EditOrReadOnlyContext } from '../BaseForm/EditOrReadOnlyContext'
+import { ProFormItem } from '../components/FormItem'
+import { ProFormGroup } from '../components/Group'
 import type { BaseFormProps } from '../typing'
 
 export interface ProFormProps extends BaseFormProps {
@@ -11,6 +15,12 @@ export interface ProFormProps extends BaseFormProps {
   onFinish?: (values: any) => Promise<boolean | void> | boolean | void
   onFinishFailed?: (errorInfo: any) => void
   onReset?: () => void
+  // 内容渲染函数
+  contentRender?: (
+    items: VNode[],
+    submitter: VNode | null,
+    form: any
+  ) => VNode | VNode[]
 }
 
 export const ProForm = defineComponent({
@@ -42,11 +52,26 @@ export const ProForm = defineComponent({
     onReset: {
       type: Function as () => () => void,
     },
+    contentRender: {
+      type: Function as () => (
+        items: VNode[],
+        submitter: VNode | null,
+        form: any
+      ) => VNode | VNode[],
+    },
   },
-  emits: ['finish', 'finishFailed', 'reset', 'valuesChange'],
+  emits: ['finish', 'finishFailed', 'reset', 'valuesChange', 'init'],
   setup(props, { slots, emit, expose }) {
     const formRef = ref()
     const loading = ref(props.loading)
+
+    // 监听外部 loading 变化
+    watch(
+      () => props.loading,
+      newVal => {
+        loading.value = newVal
+      }
+    )
 
     // 处理表单提交
     const handleFinish = async (values: any) => {
@@ -57,8 +82,10 @@ export const ProForm = defineComponent({
           if (result !== false) {
             emit('finish', values)
           }
+          return result
         } catch (error) {
           console.error('Form submit error:', error)
+          throw error
         } finally {
           loading.value = false
         }
@@ -84,43 +111,77 @@ export const ProForm = defineComponent({
       emit('reset')
     }
 
+    // 处理表单初始化
+    const handleInit = (values: any, form: any) => {
+      emit('init', values, form)
+    }
+
     // 暴露表单实例方法
     expose({
       submit: () => formRef.value?.submit(),
       reset: handleReset,
       validate: () => formRef.value?.validate(),
-      validateFields: (fields: string[]) => formRef.value?.validateFields(fields),
+      validateFields: (fields: string[]) =>
+        formRef.value?.validateFields(fields),
       getFieldValue: (field: string) => formRef.value?.getFieldValue(field),
       getFieldsValue: () => formRef.value?.getFieldsValue(),
-      setFieldValue: (field: string, value: any) => formRef.value?.setFieldValue(field, value),
+      setFieldValue: (field: string, value: any) =>
+        formRef.value?.setFieldValue(field, value),
       setFieldsValue: (values: any) => formRef.value?.setFieldsValue(values),
+      clearValidate: (fields?: string[]) =>
+        formRef.value?.clearValidate(fields),
+      scrollToField: (field: string) => formRef.value?.scrollToField(field),
     })
 
-    return () => (
-      <div class="pro-form">
-        {(props.title || props.description) && (
-          <div class="pro-form-header">
-            {props.title && <h3 class="pro-form-title">{props.title}</h3>}
-            {props.description && <div class="pro-form-description">{props.description}</div>}
-          </div>
-        )}
-        
-        <BaseForm
-          ref={formRef}
-          {...props}
-          loading={loading.value}
-          submitter={props.submitter}
-          onFinish={handleFinish}
-          onReset={handleReset}
-          onValuesChange={(changedValues: any, allValues: any) => {
-            emit('valuesChange', changedValues, allValues)
-          }}
-        >
-          {slots.default?.()}
-        </BaseForm>
-      </div>
-    )
+    // 默认内容渲染：items + submitter
+    const defaultContentRender = (items: VNode[], submitter: VNode | null) => {
+      return (
+        <>
+          {items}
+          {submitter}
+        </>
+      )
+    }
+
+    return () => {
+      const contentRender = props.contentRender || defaultContentRender
+
+      return (
+        <div class="pro-form">
+          {(props.title || props.description) && (
+            <div class="pro-form-header">
+              {props.title && <h3 class="pro-form-title">{props.title}</h3>}
+              {props.description && (
+                <div class="pro-form-description">{props.description}</div>
+              )}
+            </div>
+          )}
+
+          <BaseForm
+            ref={formRef}
+            {...props}
+            layout="vertical"
+            loading={loading.value}
+            submitter={props.submitter}
+            contentRender={contentRender}
+            onFinish={handleFinish}
+            onReset={handleReset}
+            onInit={handleInit}
+            onValuesChange={(changedValues: any, allValues: any) => {
+              emit('valuesChange', changedValues, allValues)
+            }}
+          >
+            {slots.default?.()}
+          </BaseForm>
+        </div>
+      )
+    }
   },
 })
+
+// 静态属性 - 类似 React 版本的 ProForm.Group 等
+ProForm.Group = ProFormGroup
+ProForm.Item = ProFormItem
+ProForm.EditOrReadOnlyContext = EditOrReadOnlyContext
 
 export default ProForm
