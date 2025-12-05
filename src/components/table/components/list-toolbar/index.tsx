@@ -263,6 +263,11 @@ export default defineComponent({
       )
     }
 
+    // 处理 Tab 变化
+    const handleTabChange = (value: string | number) => {
+      props.tabs?.onChange?.(String(value))
+    }
+
     // 渲染 Tab 栏
     const renderTabBar = () => {
       if (!props.multipleLine) return null
@@ -274,7 +279,7 @@ export default defineComponent({
           <div class={`${props.prefixCls}-extra-line`}>
             <Tabs
               value={props.tabs.activeKey || props.tabs.defaultActiveKey}
-              onChange={props.tabs.onChange}
+              onChange={handleTabChange}
               style={{ width: '100%' }}
             >
               {props.tabs.items.map(item => (

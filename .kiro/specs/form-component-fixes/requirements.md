@@ -2,84 +2,85 @@
 
 ## Introduction
 
-本文档定义了修复 Vue 3 ProForm 组件迁移问题的需求。当前从 React 迁移到 Vue 3 + TDesign 的过程中，存在以下核心问题：
-
-1. **handleFinish 无法触发**: TDesign Form 的 `onSubmit` 事件签名与 React 版本不同，导致表单提交回调无法正确触发
-2. **泛型 Props 问题**: Vue 组件不支持将泛型作为 props 传递，导致 `createField` 工厂函数的类型系统无法正常工作
-3. **Extraneous non-props attributes 警告**: 组件渲染 fragment 或 text 时无法自动继承属性，导致控制台警告
+This document specifies the requirements for fixing the ProForm component type inference issue in the Vue 3 + TDesign implementation. The current implementation uses a generic `createField` factory function that loses type information from TDesign components, resulting in no IDE type hints when using ProFormXXX components. The goal is to rewrite the form components to preserve full type inference from the underlying TDesign components while maintaining the ProForm wrapper functionality.
 
 ## Glossary
 
-- **TDesign Form**: 腾讯设计系统的 Vue 3 表单组件
-- **SubmitContext**: TDesign Form onSubmit 事件的上下文对象，包含 validateResult、firstError、fields 等属性
-- **createField**: 用于创建表单字段组件的工厂函数
-- **inheritAttrs**: Vue 组件选项，控制是否自动继承非 props 属性
-- **ProFormItem**: 表单项包装组件
-- **BaseForm**: 表单基础组件，封装 TDesign Form
+- **ProFormXXX**: Wrapper components (e.g., ProFormColorPicker, ProFormSelect) that combine TDesign form controls with ProFormItem functionality
+- **TDesign**: The TDesign Vue Next component library providing base form controls
+- **createField**: A factory function that creates ProForm field components with common functionality
+- **Type Inference**: TypeScript's ability to automatically determine types, enabling IDE autocomplete and type checking
+- **fieldProps**: Props passed directly to the underlying TDesign component
+- **ProFormItem**: A wrapper component that provides form item functionality (label, validation, layout)
+- **valueType**: A string identifier for the type of field (e.g., 'text', 'select', 'date')
+- **valueEnum**: An object or Map that defines enumerated values for select-like components
 
 ## Requirements
 
-### Requirement 1: 修复表单提交事件处理
+### Requirement 1
 
-**User Story:** As a developer, I want the form onFinish callback to be triggered correctly when the form is submitted, so that I can handle form data submission.
-
-#### Acceptance Criteria
-
-1. WHEN a user clicks the submit button THEN the BaseForm SHALL validate the form and call onFinish with the form values if validation passes
-2. WHEN form validation fails THEN the BaseForm SHALL call onFinishFailed with the validation errors
-3. WHEN the form is submitted THEN the BaseForm SHALL correctly extract form values from TDesign Form's SubmitContext
-4. WHEN the form has a data prop THEN the BaseForm SHALL use the data prop to get form values
-5. WHEN the form uses v-model on fields THEN the field values SHALL be correctly collected and passed to onFinish
-
----
-
-### Requirement 2: 修复 createField 工厂函数
-
-**User Story:** As a developer, I want to use createField to create form field components with proper TypeScript support, so that I can have type-safe form fields.
+**User Story:** As a developer, I want ProFormXXX components to provide full type hints for the underlying TDesign component props, so that I can use IDE autocomplete and type checking when configuring form fields.
 
 #### Acceptance Criteria
 
-1. WHEN createField is called with a config THEN the system SHALL return a valid Vue component
-2. WHEN a field component is rendered THEN the system SHALL correctly pass props to the underlying input component
-3. WHEN a field component uses v-model THEN the system SHALL support bidirectional data binding
-4. WHEN a field component has fieldProps THEN the system SHALL merge fieldProps with component props correctly
-5. WHEN a field component is inside a ProForm THEN the system SHALL integrate with the form context
+1. WHEN a developer uses ProFormColorPicker THEN the IDE SHALL display ColorPicker props from TDesign in autocomplete suggestions for fieldProps
+2. WHEN a developer uses ProFormSelect THEN the IDE SHALL display Select props from TDesign in autocomplete suggestions for fieldProps
+3. WHEN a developer uses ProFormInput THEN the IDE SHALL display Input props from TDesign in autocomplete suggestions for fieldProps
+4. WHEN a developer passes invalid props to fieldProps THEN TypeScript SHALL report a type error
+5. WHEN a developer hovers over a ProFormXXX component THEN the IDE SHALL display the combined type definition including both ProForm props and TDesign component props
 
----
+### Requirement 2
 
-### Requirement 3: 修复属性继承警告
-
-**User Story:** As a developer, I want to use ProForm components without console warnings about extraneous attributes, so that I have a clean development experience.
+**User Story:** As a developer, I want each ProFormXXX component to be a standalone component with explicit type definitions, so that the type system can properly infer all available props.
 
 #### Acceptance Criteria
 
-1. WHEN a component renders a single root element THEN the component SHALL correctly inherit non-props attributes
-2. WHEN a component renders a fragment THEN the component SHALL handle attributes explicitly without warnings
-3. WHEN ProFormItem wraps a field THEN the system SHALL filter out non-applicable attributes before passing to children
-4. WHEN createField creates a component THEN the component SHALL use inheritAttrs: false and handle attrs explicitly
+1. WHEN defining ProFormColorPicker THEN the component SHALL use defineComponent with explicit props derived from TDesign ColorPickerProps
+2. WHEN defining ProFormSelect THEN the component SHALL use defineComponent with explicit props derived from TDesign SelectProps
+3. WHEN defining any ProFormXXX component THEN the component SHALL export a properly typed component definition
+4. WHEN a component is created THEN the component SHALL NOT use generic type parameters that Vue cannot resolve at runtime
 
----
+### Requirement 3
 
-### Requirement 4: 修复 ProFormSelect 组件
-
-**User Story:** As a developer, I want to use ProFormSelect with proper options and value binding, so that I can create select fields in forms.
+**User Story:** As a developer, I want the createField utility to be refactored or replaced with a pattern that preserves type information, so that all ProFormXXX components have consistent behavior while maintaining type safety.
 
 #### Acceptance Criteria
 
-1. WHEN ProFormSelect is rendered with options THEN the system SHALL display all options correctly
-2. WHEN a user selects an option THEN the system SHALL update the v-model value
-3. WHEN ProFormSelect has valueEnum THEN the system SHALL convert valueEnum to options format
-4. WHEN ProFormSelect is in read mode THEN the system SHALL display the selected option label
+1. WHEN the createField utility is used THEN the resulting component SHALL preserve type information from the input component props
+2. WHEN a ProFormXXX component is created THEN the component SHALL include all common ProForm props (name, label, rules, etc.)
+3. WHEN a ProFormXXX component is created THEN the component SHALL include fieldProps typed to the specific TDesign component
+4. WHEN the utility generates a component THEN the component SHALL support v-model for two-way binding
 
----
+### Requirement 4
 
-### Requirement 5: 修复表单数据绑定
-
-**User Story:** As a developer, I want form fields to correctly bind to form data, so that I can manage form state effectively.
+**User Story:** As a developer, I want ProFormXXX components to maintain all existing functionality including form context integration, validation, and layout features, so that the type fix does not break existing behavior.
 
 #### Acceptance Criteria
 
-1. WHEN a field has a name prop THEN the field value SHALL be registered with the form
-2. WHEN the form is submitted THEN the system SHALL collect all named field values
-3. WHEN a field value changes THEN the system SHALL notify the form of the change
-4. WHEN the form is reset THEN all field values SHALL be reset to initial values
+1. WHEN a ProFormXXX component is used within a ProForm THEN the component SHALL integrate with the form context for value management
+2. WHEN a ProFormXXX component has validation rules THEN the component SHALL display validation errors correctly
+3. WHEN ignoreFormItem is set to true THEN the component SHALL render without the ProFormItem wrapper
+4. WHEN readonly mode is enabled THEN the component SHALL display the value in read-only format
+5. WHEN the form is submitted THEN the component SHALL apply any configured transform functions to the value
+
+### Requirement 5
+
+**User Story:** As a developer, I want the types.ts file to define proper intersection types that combine ProForm base props with TDesign component props, so that type definitions are centralized and maintainable.
+
+#### Acceptance Criteria
+
+1. WHEN defining ProFormColorPickerProps THEN the type SHALL extend ProFormFieldItemProps and include ColorPickerProps from TDesign
+2. WHEN defining ProFormSelectProps THEN the type SHALL extend ProFormFieldItemProps and include SelectProps from TDesign
+3. WHEN defining any ProFormXXXProps THEN the type SHALL use TypeScript intersection or extension to combine types
+4. WHEN types are exported THEN the types SHALL be available for external consumption
+
+### Requirement 6
+
+**User Story:** As a developer, I want a consistent pattern for creating new ProFormXXX components, so that future components can be added with proper type support.
+
+#### Acceptance Criteria
+
+1. WHEN a new ProFormXXX component is needed THEN the developer SHALL follow a documented pattern that preserves types
+2. WHEN the pattern is applied THEN the resulting component SHALL have full type inference for the underlying TDesign component
+3. WHEN the pattern is applied THEN the resulting component SHALL integrate with ProFormItem automatically
+4. WHEN the pattern is applied THEN the resulting component SHALL support all common ProForm features (valueType, valueEnum, transform, etc.)

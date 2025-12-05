@@ -1,393 +1,308 @@
-# Design Document: ProForm Component Fixes
+# Design Document: ProForm Component Type Inference Fix
 
 ## Overview
 
-本设计文档描述修复 Vue 3 ProForm 组件迁移问题的技术方案。主要解决三个核心问题：
+本设计文档描述了修复 ProForm 组件类型推断问题的技术方案。当前实现使用通用的 `createField` 工厂函数，导致 TypeScript 无法推断底层 TDesign 组件的类型信息。
 
-1. **TDesign Form 事件签名不匹配**: TDesign Form 的 `onSubmit` 事件接收 `SubmitContext` 对象，而非直接的表单值
-2. **Vue 泛型限制**: Vue 组件不支持将泛型作为 props 传递，需要重新设计类型系统
-3. **属性继承问题**: 组件渲染 fragment 时无法自动继承属性，需要显式处理
+### 问题分析
 
-### 修复策略
+Vue 3 的 `defineComponent` 不支持像 React 那样将泛型作为 props 传递。当前的 `createField` 函数返回的组件丢失了 TDesign 组件的类型信息，导致：
 
-1. **适配 TDesign Form 事件**: 在 BaseForm 中正确解析 SubmitContext，提取表单值
-2. **简化类型系统**: 移除无效的泛型参数，使用运行时类型检查
-3. **显式属性处理**: 使用 `inheritAttrs: false` 并手动处理 attrs
+1. `fieldProps` 没有类型提示
+2. IDE 无法提供自动补全
+3. TypeScript 无法检测无效的 props
+
+### 解决方案
+
+采用**显式类型定义 + 组件工厂模式**：
+
+1. 为每个 ProFormXXX 组件定义显式的 Props 类型，继承 TDesign 组件的 Props
+2. 重构 `createField` 为类型安全的工厂函数
+3. 每个组件使用 `defineComponent` 并显式声明 props 类型
 
 ## Architecture
 
 ```
-src/components/form/
-├── BaseForm/
-│   ├── BaseForm.tsx          # 修复 onSubmit 事件处理
-│   ├── Submitter/            # 提交按钮组件
-│   └── ...
-├── components/
-│   ├── FormItem/             # 修复属性过滤
-│   ├── Select/               # 修复 Select 组件
-│   └── ...
-└── utils/
-    └── createField.tsx       # 修复工厂函数
+┌─────────────────────────────────────────────────────────────┐
+│                    ProFormXXX Components                     │
+├─────────────────────────────────────────────────────────────┤
+│  ProFormText    ProFormSelect    ProFormColorPicker  ...    │
+│       │              │                  │                    │
+│       ▼              ▼                  ▼                    │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │              types.ts (Type Definitions)             │    │
+│  │  ProFormTextProps = ProFormFieldItemProps<InputProps>│    │
+│  │  ProFormSelectProps = ProFormFieldItemProps<SelectProps>│ │
+│  └─────────────────────────────────────────────────────┘    │
+│                          │                                   │
+│                          ▼                                   │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │           createField (Factory Function)             │    │
+│  │  - Accepts component config with typed props         │    │
+│  │  - Returns typed Vue component                       │    │
+│  │  - Handles form context integration                  │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                          │                                   │
+│                          ▼                                   │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │              ProFormItem (Wrapper)                   │    │
+│  │  - Label, validation, layout                         │    │
+│  │  - Form context integration                          │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ## Components and Interfaces
 
-### 1. BaseForm 修复方案
+### 1. 类型定义 (types.ts)
 
 ```typescript
-// TDesign Form 的 SubmitContext 类型
-interface SubmitContext<T = any> {
-  e?: FormSubmitEvent
-  validateResult: FormValidateResult<T>
-  firstError?: string
-  fields?: any
+import type {
+  ColorPickerProps,
+  InputProps,
+  SelectProps,
+  // ... other TDesign props
+} from 'tdesign-vue-next'
+
+// 基础 ProForm 字段属性
+export interface ProFormFieldBaseProps {
+  name?: string | string[]
+  label?: string
+  rules?: any[]
+  required?: boolean
+  help?: string
+  extra?: string
+  width?: string | number
+  ignoreFormItem?: boolean
+  valueType?: string
+  valueEnum?: Record<string, any> | Map<string | number, any>
+  transform?: (value: any, namePath: string | string[], allValues: any) => any
+  convertValue?: (value: any, namePath: string | string[]) => any
+  dataFormat?: string
+  disabled?: boolean
+  readonly?: boolean
+  placeholder?: string | string[]
+  emptyText?: string
+  fieldProps?: Record<string, any>
+  formItemProps?: Record<string, any>
+  // ... other common props
 }
 
-// 修复后的 handleFinish
-const handleFinish = async (context: SubmitContext) => {
-  const { validateResult, firstError } = context
-
-  // 验证失败
-  if (validateResult !== true) {
-    handleFinishFailed({ validateResult, firstError })
-    return
+// 泛型 ProForm 字段属性，T 为 TDesign 组件的 Props 类型
+export type ProFormFieldItemProps<T = Record<string, any>> =
+  ProFormFieldBaseProps & {
+    fieldProps?: Partial<T>
   }
 
-  // 获取表单值 - 使用 TDesign Form 的 data prop 或收集字段值
-  const values = props.data || collectFormValues()
-
-  // 调用用户的 onFinish
-  await props.onFinish?.(values)
-  emit('finish', values)
-}
+// 具体组件的 Props 类型
+export type ProFormColorPickerProps = ProFormFieldItemProps<ColorPickerProps>
+export type ProFormSelectProps = ProFormFieldItemProps<SelectProps>
+export type ProFormTextProps = ProFormFieldItemProps<InputProps>
+// ... other component props
 ```
 
-### 2. createField 修复方案
+### 2. createField 工厂函数重构
 
 ```typescript
-// 移除无效的泛型参数
-export function createField(config: CreateFieldConfig) {
-  return defineComponent({
-    name: config.name,
-    inheritAttrs: false,  // 关键：禁用自动属性继承
-    props: {
-      // 定义所有需要的 props
+import type { DefineComponent, PropType } from 'vue'
+import { defineComponent } from 'vue'
+
+export interface CreateFieldConfig<T> {
+  name: string
+  valueType?: string
+  // 显式声明 fieldProps 的类型
+  fieldPropsType?: T
+  renderFormItem: (props: any, context: any) => any
+}
+
+// 返回类型化的组件
+export function createField<T extends Record<string, any>>(
+  config: CreateFieldConfig<T>
+): DefineComponent<ProFormFieldItemProps<T>>
+```
+
+### 3. 组件实现模式
+
+每个 ProFormXXX 组件采用以下模式：
+
+```typescript
+// ProFormColorPicker/index.tsx
+import type { ColorPickerProps } from 'tdesign-vue-next'
+import { ColorPicker } from 'tdesign-vue-next'
+import type { ProFormColorPickerProps } from '../types'
+
+export const ProFormColorPicker = defineComponent<ProFormColorPickerProps>({
+  name: 'ProFormColorPicker',
+  props: {
+    // 显式声明所有 props
+    name: [String, Array],
+    label: String,
+    fieldProps: {
+      type: Object as PropType<Partial<ColorPickerProps>>,
+      default: () => ({}),
     },
-    setup(props, { slots, emit, attrs }) {
-      // 过滤不需要传递的 attrs
-      const filteredAttrs = computed(() => {
-        const { title, description, dataIndex, ...rest } = attrs
-        return rest
-      })
-
-      return () => {
-        // 使用 filteredAttrs 而非 attrs
-        return (
-          <ProFormItem {...filteredAttrs.value}>
-            {config.renderFormItem(props, { slots, emit })}
-          </ProFormItem>
-        )
-      }
-    }
-  })
-}
-```
-
-### 3. ProFormItem 属性过滤
-
-```typescript
-// 需要过滤的属性列表（来自 ProTable columns 等）
-const FILTERED_ATTRS = [
-  'title',
-  'description',
-  'dataIndex',
-  'key',
-  'hideInTable',
-  'hideInSearch',
-  'hideInForm',
-  'sorter',
-  'filters',
-  'ellipsis',
-  'copyable',
-  'order',
-]
-
-// 在 ProFormItem 中过滤
-const filterAttrs = (attrs: Record<string, any>) => {
-  return Object.fromEntries(
-    Object.entries(attrs).filter(([key]) => !FILTERED_ATTRS.includes(key))
-  )
-}
+    // ... other props
+  },
+  setup(props, { slots, emit }) {
+    // 实现逻辑
+  },
+})
 ```
 
 ## Data Models
 
-### 1. 表单提交上下文
+### ProFormFieldBaseProps
 
-```typescript
-// TDesign Form SubmitContext
-interface SubmitContext<T = any> {
-  e?: FormSubmitEvent
-  validateResult: FormValidateResult<T>
-  firstError?: string
-  fields?: any
-}
-
-// 验证结果类型
-type FormValidateResult<T> = boolean | ValidateResultObj<T>
-type ValidateResultObj<T> = {
-  [key in keyof T]: boolean | ValidateResultList
-}
-```
-
-### 2. 表单值收集
-
-```typescript
-// 表单值类型
-type FormValues = Record<string, any>
-
-// 字段注册信息
-interface FieldRegistration {
-  name: string | string[]
-  getValue: () => any
-  setValue: (value: any) => void
-}
-```
+| 属性           | 类型               | 说明                   |
+| -------------- | ------------------ | ---------------------- |
+| name           | string \| string[] | 字段名称               |
+| label          | string             | 标签文本               |
+| rules          | any[]              | 验证规则               |
+| required       | boolean            | 是否必填               |
+| help           | string             | 帮助文本               |
+| extra          | string             | 额外信息               |
+| width          | string \| number   | 宽度                   |
+| ignoreFormItem | boolean            | 是否忽略 FormItem 包装 |
+| valueType      | string             | 值类型                 |
+| valueEnum      | Record \| Map      | 枚举值映射             |
+| transform      | Function           | 提交时值转换           |
+| convertValue   | Function           | 获取时值转换           |
+| dataFormat     | string             | 数据格式               |
+| disabled       | boolean            | 是否禁用               |
+| readonly       | boolean            | 是否只读               |
+| placeholder    | string \| string[] | 占位符                 |
+| emptyText      | string             | 空值显示文本           |
+| fieldProps     | object             | 传递给底层组件的属性   |
+| formItemProps  | object             | 传递给 FormItem 的属性 |
 
 ## Correctness Properties
 
 _A property is a characteristic or behavior that should hold true across all valid executions of a system-essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees._
 
-### Property 1: Form Submit Triggers onFinish
+### Property 1: Component Export Validity
 
-_For any_ valid form with fields and an onFinish handler, when the form is submitted and validation passes, onFinish SHALL be called with the collected form values.
-**Validates: Requirements 1.1, 1.3**
+_For any_ ProFormXXX component exported from the library, the component SHALL be a valid Vue component that can be mounted without runtime errors.
 
-### Property 2: Form Validation Failure Triggers onFinishFailed
+**Validates: Requirements 2.3**
 
-_For any_ form with validation rules and invalid field values, when the form is submitted, onFinishFailed SHALL be called with the validation errors.
-**Validates: Requirements 1.2**
+### Property 2: Common Props Acceptance
 
-### Property 3: Field v-model Bidirectional Binding
+_For any_ ProFormXXX component and any valid combination of common ProForm props (name, label, rules, disabled, readonly, placeholder), the component SHALL accept these props without type errors and render correctly.
 
-_For any_ field component with v-model binding, changing the model value SHALL update the field display, and changing the field input SHALL update the model value.
-**Validates: Requirements 2.3, 5.3**
+**Validates: Requirements 3.2, 6.4**
 
-### Property 4: createField Returns Valid Component
+### Property 3: FieldProps Passthrough and v-model Binding
 
-_For any_ valid CreateFieldConfig, calling createField SHALL return a Vue component that can be rendered without errors.
-**Validates: Requirements 2.1**
+_For any_ ProFormXXX component, when fieldProps are provided, they SHALL be passed to the underlying TDesign component, and v-model binding SHALL correctly synchronize values between the component and its parent.
 
-### Property 5: Attribute Filtering Prevents Warnings
-
-_For any_ ProFormItem with extra attributes from ProTable columns, the component SHALL filter out non-applicable attributes and render without console warnings.
 **Validates: Requirements 3.3, 3.4**
 
-### Property 6: Select Options Rendering
+### Property 4: Form Context Integration
 
-_For any_ ProFormSelect with options array, all options SHALL be rendered in the dropdown and selectable.
-**Validates: Requirements 4.1, 4.2**
+_For any_ ProFormXXX component used within a ProForm, the component SHALL integrate with the form context such that form.getFieldsValue() returns the component's current value.
 
-### Property 7: Form Reset Restores Initial Values
+**Validates: Requirements 4.1**
 
-_For any_ form with initial values, calling reset SHALL restore all field values to their initial state.
-**Validates: Requirements 5.4**
+### Property 5: Validation Error Display
+
+_For any_ ProFormXXX component with validation rules, when the value violates a rule, the component SHALL display the appropriate validation error message.
+
+**Validates: Requirements 4.2**
+
+### Property 6: IgnoreFormItem Behavior
+
+_For any_ ProFormXXX component with ignoreFormItem set to true, the component SHALL render without the ProFormItem wrapper, resulting in a DOM structure that does not contain FormItem elements.
+
+**Validates: Requirements 4.3**
+
+### Property 7: Readonly Mode Display
+
+_For any_ ProFormXXX component with readonly set to true, the component SHALL display the value in a read-only format (text display) rather than an editable input.
+
+**Validates: Requirements 4.4**
+
+### Property 8: Transform Function Application
+
+_For any_ ProFormXXX component with a transform function, when the form is submitted, the submitted value SHALL be the result of applying the transform function to the original value.
+
+**Validates: Requirements 4.5**
+
+### Property 9: ProFormItem Integration
+
+_For any_ ProFormXXX component created using the standard pattern (without ignoreFormItem), the component SHALL render with a ProFormItem wrapper that provides label and validation UI.
+
+**Validates: Requirements 6.3**
 
 ## Error Handling
 
-### 1. 表单提交错误处理
+### Type Errors
 
-```typescript
-const handleFinish = async (context: SubmitContext) => {
-  const { validateResult, firstError } = context
+- 当 `fieldProps` 包含无效属性时，TypeScript 编译器应报告类型错误
+- 当必需的 props 缺失时，TypeScript 应提供明确的错误信息
 
-  // 验证失败 - 调用 onFinishFailed
-  if (validateResult !== true) {
-    const errorInfo = {
-      validateResult,
-      firstError,
-      errorFields: extractErrorFields(validateResult),
-    }
+### Runtime Errors
 
-    if (props.onFinishFailed) {
-      const handlers = Array.isArray(props.onFinishFailed)
-        ? props.onFinishFailed
-        : [props.onFinishFailed]
-      handlers.forEach(handler => handler?.(errorInfo))
-    }
-    emit('finishFailed', errorInfo)
-    return
-  }
+- 当组件在 ProForm 外部使用时，应优雅降级而不是抛出错误
+- 当 valueEnum 格式无效时，应使用空选项列表并在控制台警告
 
-  // 验证成功 - 调用 onFinish
-  try {
-    const values = getFormValues()
-    if (props.onFinish) {
-      const handlers = Array.isArray(props.onFinish)
-        ? props.onFinish
-        : [props.onFinish]
-      for (const handler of handlers) {
-        await handler?.(values)
-      }
-    }
-    emit('finish', values)
-  } catch (error) {
-    console.error('Form submit error:', error)
-    throw error
-  }
-}
-```
+### Validation Errors
 
-### 2. 属性过滤错误处理
-
-```typescript
-const filterAttrs = (attrs: Record<string, any>) => {
-  try {
-    return Object.fromEntries(
-      Object.entries(attrs).filter(([key]) => !FILTERED_ATTRS.includes(key))
-    )
-  } catch (error) {
-    console.warn('Error filtering attrs:', error)
-    return {}
-  }
-}
-```
+- 验证错误应通过 ProFormItem 显示
+- 错误消息应支持国际化
 
 ## Testing Strategy
 
-### 测试框架选择
+### Dual Testing Approach
 
-- **单元测试**: Vitest
-- **属性测试**: fast-check (Property-Based Testing)
-- **组件测试**: @vue/test-utils
+本项目采用单元测试和属性测试相结合的方式：
 
-### 测试目录结构
+- **单元测试**: 验证特定示例和边界情况
+- **属性测试**: 验证应在所有输入上成立的通用属性
+
+### Property-Based Testing Library
+
+使用 **fast-check** 作为属性测试库，配置每个属性测试运行至少 100 次迭代。
+
+### Test File Structure
 
 ```
-src/components/form/
-├── __tests__/
-│   ├── BaseForm.test.ts           # BaseForm 单元测试
-│   ├── BaseForm.property.test.ts  # BaseForm 属性测试
-│   ├── createField.test.ts        # createField 单元测试
-│   └── ProFormSelect.test.ts      # Select 组件测试
+src/components/form/__tests__/
+├── createField.test.ts          # 单元测试
+├── createField.property.test.ts # 属性测试
+├── components/
+│   ├── ColorPicker.test.ts
+│   ├── Select.test.ts
+│   └── ...
 ```
 
-### 属性测试示例
+### Property Test Annotation Format
+
+每个属性测试必须使用以下格式标注：
 
 ```typescript
-// BaseForm.property.test.ts
-import { fc } from 'fast-check'
-import { mount } from '@vue/test-utils'
-import { BaseForm } from '../BaseForm'
-import { ProFormText } from '../components/Text'
-
-describe('BaseForm Property Tests', () => {
-  // **Feature: form-component-fixes, Property 1: Form Submit Triggers onFinish**
-  it('should call onFinish with form values when validation passes', () => {
-    fc.assert(
-      fc.property(
-        fc.record({
-          username: fc.string({ minLength: 1 }),
-          email: fc.emailAddress(),
-        }),
-        async formData => {
-          const onFinish = vi.fn()
-          const wrapper = mount(BaseForm, {
-            props: {
-              data: formData,
-              onFinish,
-            },
-            slots: {
-              default: () => [
-                h(ProFormText, { name: 'username' }),
-                h(ProFormText, { name: 'email' }),
-              ],
-            },
-          })
-
-          // Simulate successful submit
-          await wrapper.vm.handleFinish({
-            validateResult: true,
-            firstError: undefined,
-          })
-
-          expect(onFinish).toHaveBeenCalledWith(formData)
-        }
-      ),
-      { numRuns: 100 }
-    )
-  })
-
-  // **Feature: form-component-fixes, Property 2: Form Validation Failure Triggers onFinishFailed**
-  it('should call onFinishFailed when validation fails', () => {
-    fc.assert(
-      fc.property(fc.string({ minLength: 1 }), async errorMessage => {
-        const onFinishFailed = vi.fn()
-        const wrapper = mount(BaseForm, {
-          props: { onFinishFailed },
-        })
-
-        // Simulate failed validation
-        await wrapper.vm.handleFinish({
-          validateResult: {
-            username: [{ result: false, message: errorMessage }],
-          },
-          firstError: errorMessage,
-        })
-
-        expect(onFinishFailed).toHaveBeenCalled()
-      }),
-      { numRuns: 100 }
-    )
-  })
+/**
+ * **Feature: form-component-fixes, Property 1: Component Export Validity**
+ */
+it.prop([...], (input) => {
+  // test implementation
 })
 ```
 
-### 单元测试示例
+### Unit Test Coverage
 
-```typescript
-// createField.test.ts
-import { mount } from '@vue/test-utils'
-import { createField } from '../utils/createField'
-import { Input } from 'tdesign-vue-next'
+单元测试应覆盖：
 
-describe('createField', () => {
-  it('should create a valid Vue component', () => {
-    const TestField = createField({
-      name: 'TestField',
-      renderFormItem: (props) => <Input v-model={props.modelValue.value} />
-    })
+1. 组件基本渲染
+2. Props 传递
+3. 事件处理
+4. 边界情况（空值、无效输入等）
 
-    expect(TestField.name).toBe('TestField')
-    expect(TestField.inheritAttrs).toBe(false)
-  })
+### Property Test Coverage
 
-  it('should filter out table column attributes', () => {
-    const TestField = createField({
-      name: 'TestField',
-      renderFormItem: (props) => <Input v-model={props.modelValue.value} />
-    })
+属性测试应覆盖：
 
-    const wrapper = mount(TestField, {
-      props: { name: 'test' },
-      attrs: {
-        title: 'Column Title',
-        dataIndex: 'test',
-        hideInTable: true,
-        class: 'custom-class'  // This should pass through
-      }
-    })
-
-    // title, dataIndex, hideInTable should be filtered
-    // class should pass through
-    expect(wrapper.classes()).toContain('custom-class')
-  })
-})
-```
-
-### 测试覆盖要求
-
-1. **属性测试**: 每个 Correctness Property 必须有对应的属性测试
-2. **单元测试**: 核心组件和工具函数需要单元测试覆盖
-3. **测试运行**: 每个属性测试至少运行 100 次迭代
-4. **测试标注**: 每个属性测试必须使用格式 `**Feature: form-component-fixes, Property {number}: {property_text}**`
+1. 所有 ProFormXXX 组件的通用行为
+2. fieldProps 传递的正确性
+3. v-model 双向绑定
+4. 表单上下文集成
+5. 验证规则应用
