@@ -1,4 +1,4 @@
-import { FormItem } from 'tdesign-vue-next'
+import { FormItem, type FormItemProps } from 'tdesign-vue-next'
 import {
   cloneVNode,
   computed,
@@ -119,7 +119,7 @@ export interface ProFormItemProps {
   /** 字段名 */
   name?: string | string[]
   /** 标签 */
-  label?: string | VNode
+  label?: FormItemProps['label']
   /** 校验规则 */
   rules?: any[]
   /** 是否必填 */
@@ -186,7 +186,7 @@ export const ProFormItem = defineComponent({
   inheritAttrs: false,
   props: {
     name: [String, Array] as PropType<string | string[]>,
-    label: [String, Object] as PropType<string | VNode>,
+    label: [String, Function] as PropType<FormItemProps['label']>,
     rules: Array as PropType<any[]>,
     required: {
       type: Boolean,
@@ -459,7 +459,7 @@ export const ProFormItem = defineComponent({
       return (
         <FormItem
           name={formItemName.value}
-          label={props.label as string}
+          label={props.label}
           rules={finalRules.value}
           help={
             typeof props.help === 'function'

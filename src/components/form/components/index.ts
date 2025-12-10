@@ -14,6 +14,7 @@ export { FormItemContext, FormItemContextKey, ProFormItem } from './FormItem'
 export { ProFormGroup } from './Group'
 export { FormListContextKey, ProFormList, useFormListContext } from './List'
 export { ProFormMoney } from './Money'
+export { ProFormPassword } from './Password'
 export { ProFormRadio } from './Radio'
 export { ProFormRate } from './Rate'
 export { ProFormSegmented } from './Segmented'
@@ -23,9 +24,11 @@ export { ProFormSwitch } from './Switch'
 export { ProFormText } from './Text'
 export { ProFormTextArea } from './TextArea'
 export { ProFormTimePicker } from './TimePicker'
+export { ProFormTimeRangePicker } from './TimeRangePicker'
 export { ProFormTreeSelect } from './TreeSelect'
 export { ProFormUploadButton } from './UploadButton'
 export { ProFormUploadDragger } from './UploadDragger'
+
 
 // 导出类型
 export type {
@@ -54,5 +57,6 @@ export type {
   ProFormTimePickerProps,
   ProFormTreeSelectProps,
   ProFormUploadButtonProps,
-  ProFormUploadDraggerProps,
+  ProFormUploadDraggerProps
 } from './types'
+

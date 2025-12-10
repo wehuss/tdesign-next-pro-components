@@ -1,5 +1,5 @@
 import { ChevronDownIcon, CloseCircleFilledIcon } from 'tdesign-icons-vue-next'
-import { Button, Popup } from 'tdesign-vue-next'
+import { Button, Popup, type FormItemProps } from 'tdesign-vue-next'
 import type { CSSProperties, PropType, VNode } from 'vue'
 import { cloneVNode, computed, defineComponent, ref, watch } from 'vue'
 import type { LightFilterFooterRender } from '../../typing'
@@ -83,14 +83,14 @@ export const LightWrapper = defineComponent({
   name: 'LightWrapper',
   props: {
     label: {
-      type: [String, Object] as PropType<string | VNode>,
+      type: [String, Function] as PropType<FormItemProps['label']>,
     },
     disabled: {
       type: Boolean,
       default: false,
     },
     placeholder: {
-      type: [String, Object] as PropType<string | VNode>,
+      type: [String, Function] as PropType<string | (()=>VNode)>,
     },
     size: {
       type: String as PropType<SizeType>,

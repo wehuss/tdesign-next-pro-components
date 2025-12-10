@@ -19,6 +19,11 @@ export type SearchTransformKeyFn = (
 export const proFormFieldProps = {
   /** 字段名称，用于表单数据收集 */
   name: [String, Array] as PropType<string | string[]>,
+  /** v-model 值 */
+  modelValue: {
+    type: [String, Number, Boolean, Array, Object] as PropType<any>,
+    default: undefined,
+  },
   /** 标签文本 */
   label: String,
   /** 表单验证规则 */

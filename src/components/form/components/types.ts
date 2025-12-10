@@ -1,4 +1,22 @@
-import type { FormItemProps } from 'tdesign-vue-next'
+import type {
+    CascaderProps,
+    CheckboxGroupProps,
+    ColorPickerProps,
+    DatePickerProps,
+    DateRangePickerProps,
+    FormItemProps,
+    InputNumberProps,
+    InputProps,
+    RadioGroupProps,
+    RateProps,
+    SelectProps,
+    SliderProps,
+    SwitchProps,
+    TextareaProps,
+    TimePickerProps,
+    TimeRangePickerProps,
+    TreeSelectProps,
+} from 'tdesign-vue-next'
 import type { VNode } from 'vue'
 import type { ProFormFieldItemProps } from '../typing'
 
@@ -24,12 +42,12 @@ export interface ProFormItemProps extends FormItemProps {
 
 // 文本输入框
 export interface ProFormTextProps extends ProFormFieldItemProps {
-  // 继承所有基础属性
+  fieldProps?: InputProps
 }
 
 // 文本域
 export interface ProFormTextAreaProps extends ProFormFieldItemProps {
-  // 继承所有基础属性
+  fieldProps?: TextareaProps
 }
 
 // 选择器
@@ -38,23 +56,27 @@ export interface ProFormSelectProps extends ProFormFieldItemProps {
   mode?: 'multiple' | 'tags'
   showSearch?: boolean
   allowClear?: boolean
+  fieldProps?: SelectProps
 }
 
 // 单选框组
 export interface ProFormRadioGroupProps extends ProFormFieldItemProps {
   options?: Array<{ label: string; value: any; disabled?: boolean }>
   radioType?: 'radio' | 'button'
+  fieldProps?: RadioGroupProps
 }
 
 // 复选框组
 export interface ProFormCheckboxGroupProps extends ProFormFieldItemProps {
   options?: Array<{ label: string; value: any; disabled?: boolean }>
+  fieldProps?: CheckboxGroupProps
 }
 
 // 开关
 export interface ProFormSwitchProps extends ProFormFieldItemProps {
   checkedChildren?: VNode | string
   unCheckedChildren?: VNode | string
+  fieldProps?: SwitchProps
 }
 
 // 滑块
@@ -63,6 +85,7 @@ export interface ProFormSliderProps extends ProFormFieldItemProps {
   max?: number
   step?: number
   range?: boolean
+  fieldProps?: SliderProps
 }
 
 // 评分
@@ -70,6 +93,7 @@ export interface ProFormRateProps extends ProFormFieldItemProps {
   count?: number
   allowHalf?: boolean
   allowClear?: boolean
+  fieldProps?: RateProps
 }
 
 // 日期选择器
@@ -77,6 +101,7 @@ export interface ProFormDatePickerProps extends ProFormFieldItemProps {
   format?: string
   valueFormat?: string
   placeholder?: string
+  fieldProps?: DatePickerProps
 }
 
 // 日期范围选择器
@@ -84,12 +109,21 @@ export interface ProFormDateRangePickerProps extends ProFormFieldItemProps {
   format?: string
   valueFormat?: string
   placeholder?: [string, string]
+  fieldProps?: DateRangePickerProps
 }
 
 // 时间选择器
 export interface ProFormTimePickerProps extends ProFormFieldItemProps {
   format?: string
   placeholder?: string
+  fieldProps?: TimePickerProps
+}
+
+// 时间范围选择器
+export interface ProFormTimeRangePickerProps extends ProFormFieldItemProps {
+  format?: string
+  placeholder?: string
+  fieldProps?: TimeRangePickerProps
 }
 
 // 数字输入框
@@ -98,6 +132,7 @@ export interface ProFormDigitProps extends ProFormFieldItemProps {
   max?: number
   step?: number
   precision?: number
+  fieldProps?: InputNumberProps
 }
 
 // 金额输入框
@@ -107,6 +142,7 @@ export interface ProFormMoneyProps extends ProFormFieldItemProps {
   precision?: number
   locale?: string
   customSymbol?: string
+  fieldProps?: InputNumberProps
 }
 
 // 树选择器
@@ -115,6 +151,7 @@ export interface ProFormTreeSelectProps extends ProFormFieldItemProps {
   multiple?: boolean
   treeCheckable?: boolean
   showSearch?: boolean
+  fieldProps?: TreeSelectProps
 }
 
 // 级联选择器
@@ -122,12 +159,25 @@ export interface ProFormCascaderProps extends ProFormFieldItemProps {
   options?: any[]
   multiple?: boolean
   showSearch?: boolean
+  fieldProps?: CascaderProps
 }
 
 // 颜色选择器
 export interface ProFormColorPickerProps extends ProFormFieldItemProps {
   format?: 'hex' | 'rgb' | 'hsl'
   showText?: boolean
+  fieldProps?: ColorPickerProps
+}
+
+// 密码输入框
+export interface ProFormPasswordProps extends ProFormFieldItemProps {
+  fieldProps?: InputProps
+}
+
+// 分段控制器
+export interface ProFormSegmentedProps extends ProFormFieldItemProps {
+  options?: Array<{ label: string; value: any; disabled?: boolean }>
+  fieldProps?: any
 }
 
 // 上传按钮
@@ -136,6 +186,7 @@ export interface ProFormUploadButtonProps extends ProFormFieldItemProps {
   multiple?: boolean
   maxCount?: number
   listType?: 'text' | 'picture' | 'picture-card'
+  fieldProps?: any
 }
 
 // 上传拖拽
@@ -143,6 +194,7 @@ export interface ProFormUploadDraggerProps extends ProFormFieldItemProps {
   accept?: string
   multiple?: boolean
   maxCount?: number
+  fieldProps?: any
 }
 
 // 图标配置
@@ -269,11 +321,7 @@ export interface ProFormCaptchaProps extends ProFormFieldItemProps {
   captchaTextRender?: (timing: boolean, count: number) => VNode | string
   /** 获取按钮验证码的 props */
   captchaProps?: Record<string, any>
-}
-
-// 分段控制器
-export interface ProFormSegmentedProps extends ProFormFieldItemProps {
-  options?: Array<{ label: string; value: any; disabled?: boolean }>
+  fieldProps?: InputProps
 }
 
 // 通用字段包装器

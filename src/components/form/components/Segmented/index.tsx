@@ -1,126 +1,90 @@
-import { FieldSegmented } from '@/components/field/components/segmented'
-import { computed, defineComponent, inject, useModel, type PropType } from 'vue'
-import type { ProFieldValueEnumType } from '../../../field/types'
+import type { PropType } from 'vue'
+import { computed, defineComponent, inject, useModel } from 'vue'
+import { FieldSegmented } from '../../../field/components/segmented'
+import type { ProFieldMode } from '../../../field/types'
 import { EditOrReadOnlyContextKey } from '../../BaseForm/EditOrReadOnlyContext'
-import { useFieldContext } from '../../FieldContext'
+import {
+    proFormFieldEmits,
+    proFormFieldProps,
+} from '../../utils/proFormFieldProps'
 import { ProFormItem } from '../FormItem'
 
 /**
- * ProFormSegmented - 分段控制器表单组件
- * 基于 FieldSegmented 组件，集成表单功能
+ * ProFormSegmented 组件
+ * 分段控制器表单字段，使用 FieldSegmented 组件
  */
 export const ProFormSegmented = defineComponent({
   name: 'ProFormSegmented',
+  inheritAttrs: false,
   props: {
-    // 基础属性
-    'name': [String, Array] as PropType<string | string[]>,
-    'label': String,
-    'rules': Array,
-    'required': Boolean,
-    'help': String,
-    'extra': String,
-    'width': [String, Number],
-    'ignoreFormItem': Boolean,
-    'disabled': Boolean,
-    'readonly': Boolean,
-    // 选项
-    'options': {
+    ...proFormFieldProps,
+    options: {
       type: Array as PropType<
         Array<{ label: string; value: string | number; disabled?: boolean }>
       >,
-      default: () => [],
-    },
-    'valueEnum': {
-      type: [Object, Map] as unknown as () => ProFieldValueEnumType,
       default: undefined,
     },
-    // 字段属性
-    'fieldProps': {
+    fieldProps: {
       type: Object,
       default: () => ({}),
     },
-    // ProField 属性
-    'proFieldProps': {
-      type: Object,
-      default: () => ({}),
-    },
-    // 请求相关
-    'request': Function,
-    'params': Object,
-    // v-model
-    'modelValue': [String, Number],
-    'onUpdate:modelValue': Function,
   },
-  emits: ['update:modelValue', 'change'],
-  setup(props) {
-    // 使用 useModel 实现双向绑定
+  emits: [...proFormFieldEmits],
+  setup(props, { attrs }) {
     const modelValue = useModel(props, 'modelValue')
 
-    // 获取表单上下文
-    const fieldContext = useFieldContext()
-
-    // 获取编辑/只读模式上下文
     const editOrReadOnlyContext = inject(EditOrReadOnlyContextKey, {
       mode: 'edit',
     })
 
-    // 计算当前模式
-    const currentMode = computed(() => {
+    const currentMode = computed<ProFieldMode>(() => {
       if (props.readonly) return 'read'
       const contextMode =
         typeof editOrReadOnlyContext.mode === 'object' &&
         'value' in editOrReadOnlyContext.mode
           ? editOrReadOnlyContext.mode.value
           : editOrReadOnlyContext.mode
-      return contextMode || 'edit'
+      return (contextMode as ProFieldMode) || 'edit'
     })
 
-    // 合并 fieldProps
-    const mergedFieldProps = computed(() => ({
-      ...fieldContext.fieldProps,
-      ...props.fieldProps,
-    }))
-
-    // 注册字段类型到上下文
-    if (fieldContext.setFieldValueType && props.name) {
-      const namePath = Array.isArray(props.name) ? props.name : [props.name]
-      fieldContext.setFieldValueType(namePath, {
-        valueType: 'segmented',
-      })
-    }
-
     return () => {
-      const segmentedNode = (
+      const renderField = () => (
         <FieldSegmented
           v-model={modelValue.value}
           mode={currentMode.value}
-          options={props.options}
           valueEnum={props.valueEnum}
-          disabled={props.disabled}
-          readonly={props.readonly}
-          fieldProps={mergedFieldProps.value}
-          {...props.proFieldProps}
+          fieldProps={{
+            ...props.fieldProps,
+            options: props.options ?? props.fieldProps?.options
+          }}
+          {...attrs}
         />
       )
 
-      // 如果忽略 FormItem，直接返回分段控制器
       if (props.ignoreFormItem) {
-        return segmentedNode
+        return renderField()
       }
 
-      // 包装在 ProFormItem 中
       return (
         <ProFormItem
           name={props.name}
           label={props.label}
-          rules={props.rules as any}
+          rules={props.rules}
           required={props.required}
           help={props.help}
           extra={props.extra}
           width={props.width}
-          valueType="segmented"
+          transform={props.transform}
+          dataFormat={props.dataFormat}
+          lightProps={props.lightProps}
+          addonBefore={props.addonBefore}
+          addonAfter={props.addonAfter}
+          addonWarpStyle={props.addonWarpStyle}
+          secondary={props.secondary}
+          colProps={props.colProps}
+          {...props.formItemProps}
         >
-          {segmentedNode}
+          {renderField()}
         </ProFormItem>
       )
     }

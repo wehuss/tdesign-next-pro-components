@@ -1,26 +1,28 @@
-import type { TextareaProps } from 'tdesign-vue-next'
+import type { TimeRangePickerProps } from 'tdesign-vue-next'
 import type { PropType } from 'vue'
 import { computed, defineComponent, inject, useModel } from 'vue'
-import { FieldTextArea } from '../../../field/components/textarea'
+import { FieldTimeRange } from '../../../field/components/time-range'
 import type { ProFieldMode } from '../../../field/types'
 import { EditOrReadOnlyContextKey } from '../../BaseForm/EditOrReadOnlyContext'
 import {
-    proFormFieldEmits,
-    proFormFieldProps,
+  proFormFieldEmits,
+  proFormFieldProps,
 } from '../../utils/proFormFieldProps'
 import { ProFormItem } from '../FormItem'
 
 /**
- * ProFormTextArea 组件
- * 文本域表单字段，使用 FieldTextArea 组件
+ * ProFormTimeRangePicker 组件
+ * 时间范围选择器表单字段，使用 FieldTimeRange 组件
  */
-export const ProFormTextArea = defineComponent({
-  name: 'ProFormTextArea',
+export const ProFormTimeRangePicker = defineComponent({
+  name: 'ProFormTimeRangePicker',
   inheritAttrs: false,
   props: {
     ...proFormFieldProps,
+    format: String,
+    placeholder: [String, Array] as PropType<string | string[]>,
     fieldProps: {
-      type: Object as PropType<TextareaProps>,
+      type: Object as PropType<TimeRangePickerProps>,
       default: () => ({}),
     },
   },
@@ -44,9 +46,11 @@ export const ProFormTextArea = defineComponent({
 
     return () => {
       const renderField = () => (
-        <FieldTextArea
+        <FieldTimeRange
           v-model={modelValue.value}
           mode={currentMode.value}
+          format={props.format}
+          placeholder={props.placeholder}
           fieldProps={props.fieldProps}
           {...attrs}
         />
@@ -82,4 +86,4 @@ export const ProFormTextArea = defineComponent({
   },
 })
 
-export default ProFormTextArea
+export default ProFormTimeRangePicker

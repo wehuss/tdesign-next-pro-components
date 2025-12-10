@@ -1,7 +1,7 @@
-import type { TextareaProps } from 'tdesign-vue-next'
+import type { InputProps } from 'tdesign-vue-next'
 import type { PropType } from 'vue'
 import { computed, defineComponent, inject, useModel } from 'vue'
-import { FieldTextArea } from '../../../field/components/textarea'
+import { FieldPassword } from '../../../field/components/password'
 import type { ProFieldMode } from '../../../field/types'
 import { EditOrReadOnlyContextKey } from '../../BaseForm/EditOrReadOnlyContext'
 import {
@@ -11,16 +11,16 @@ import {
 import { ProFormItem } from '../FormItem'
 
 /**
- * ProFormTextArea 组件
- * 文本域表单字段，使用 FieldTextArea 组件
+ * ProFormPassword 组件
+ * 密码输入框表单字段，使用 FieldPassword 组件
  */
-export const ProFormTextArea = defineComponent({
-  name: 'ProFormTextArea',
+export const ProFormPassword = defineComponent({
+  name: 'ProFormPassword',
   inheritAttrs: false,
   props: {
     ...proFormFieldProps,
     fieldProps: {
-      type: Object as PropType<TextareaProps>,
+      type: Object as PropType<InputProps>,
       default: () => ({}),
     },
   },
@@ -44,7 +44,7 @@ export const ProFormTextArea = defineComponent({
 
     return () => {
       const renderField = () => (
-        <FieldTextArea
+        <FieldPassword
           v-model={modelValue.value}
           mode={currentMode.value}
           fieldProps={props.fieldProps}
@@ -82,4 +82,4 @@ export const ProFormTextArea = defineComponent({
   },
 })
 
-export default ProFormTextArea
+export default ProFormPassword

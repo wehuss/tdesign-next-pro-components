@@ -1,10 +1,10 @@
-import { Switch } from 'tdesign-vue-next'
+import type { SwitchProps } from 'tdesign-vue-next'
+import type { PropType } from 'vue'
 import { computed, defineComponent, inject, useModel } from 'vue'
+import { FieldSwitch } from '../../../field/components/switch'
 import type { ProFieldMode } from '../../../field/types'
 import { EditOrReadOnlyContextKey } from '../../BaseForm/EditOrReadOnlyContext'
 import {
-    extractProFormProps,
-    filterAttrs,
     proFormFieldEmits,
     proFormFieldProps,
 } from '../../utils/proFormFieldProps'
@@ -12,17 +12,22 @@ import { ProFormItem } from '../FormItem'
 
 /**
  * ProFormSwitch 组件
- * 开关表单字段，继承 TDesign Switch 的所有 props
+ * 开关表单字段，使用 FieldSwitch 组件
  */
 export const ProFormSwitch = defineComponent({
   name: 'ProFormSwitch',
-  extends: Switch,
   inheritAttrs: false,
   props: {
     ...proFormFieldProps,
+    checkedChildren: [String, Object] as PropType<string | any>,
+    unCheckedChildren: [String, Object] as PropType<string | any>,
+    fieldProps: {
+      type: Object as PropType<SwitchProps>,
+      default: () => ({}),
+    },
   },
   emits: [...proFormFieldEmits],
-  setup(props, { slots, emit, attrs }) {
+  setup(props, { attrs }) {
     const modelValue = useModel(props, 'modelValue')
 
     const editOrReadOnlyContext = inject(EditOrReadOnlyContextKey, {
@@ -40,51 +45,42 @@ export const ProFormSwitch = defineComponent({
     })
 
     return () => {
-      const { proFormProps, componentProps } = extractProFormProps(props)
-      const filteredAttrs = filterAttrs(attrs as Record<string, any>)
+      const renderField = () => (
+        <FieldSwitch
+          v-model={modelValue.value}
+          mode={currentMode.value}
+          fieldProps={{
+            ...props.fieldProps,
+            label: props.fieldProps.label ?? [props.checkedChildren, props.unCheckedChildren]
+          }}
+          {...attrs}
+        />
+      )
 
-      const renderSwitch = () => {
-        if (currentMode.value === 'read') {
-          return (
-            <span class="pro-form-switch-read">
-              {modelValue.value ? '是' : '否'}
-            </span>
-          )
-        }
-
-        return (
-          <Switch
-            v-model={modelValue.value}
-            {...componentProps}
-            {...filteredAttrs}
-          />
-        )
-      }
-
-      if (proFormProps.ignoreFormItem) {
-        return renderSwitch()
+      if (props.ignoreFormItem) {
+        return renderField()
       }
 
       return (
         <ProFormItem
-          name={proFormProps.name}
-          label={proFormProps.label}
-          rules={proFormProps.rules}
-          required={proFormProps.required}
-          help={proFormProps.help}
-          extra={proFormProps.extra}
-          width={proFormProps.width}
-          transform={proFormProps.transform}
-          dataFormat={proFormProps.dataFormat}
-          lightProps={proFormProps.lightProps}
-          addonBefore={proFormProps.addonBefore}
-          addonAfter={proFormProps.addonAfter}
-          addonWarpStyle={proFormProps.addonWarpStyle}
-          secondary={proFormProps.secondary}
-          colProps={proFormProps.colProps}
-          {...proFormProps.formItemProps}
+          name={props.name}
+          label={props.label}
+          rules={props.rules}
+          required={props.required}
+          help={props.help}
+          extra={props.extra}
+          width={props.width}
+          transform={props.transform}
+          dataFormat={props.dataFormat}
+          lightProps={props.lightProps}
+          addonBefore={props.addonBefore}
+          addonAfter={props.addonAfter}
+          addonWarpStyle={props.addonWarpStyle}
+          secondary={props.secondary}
+          colProps={props.colProps}
+          {...props.formItemProps}
         >
-          {renderSwitch()}
+          {renderField()}
         </ProFormItem>
       )
     }
