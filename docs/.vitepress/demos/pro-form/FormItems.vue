@@ -14,8 +14,8 @@
     ProFormText,
     ProFormTextArea,
     ProFormTimePicker,
-  } from '@/components/form'
-  import { ref } from 'vue'
+} from '@/components/form'
+import { ref } from 'vue'
 
   const formRef = ref()
 
@@ -27,30 +27,43 @@
 <template>
   <ProForm ref="formRef" @finish="handleFinish">
     <!-- 文本输入 -->
-    <ProFormText name="name" label="姓名" placeholder="请输入姓名" />
+    <ProFormText
+      name="name"
+      label="姓名"
+      :field-props="{ placeholder: '请输入姓名' }"
+    />
 
     <ProFormTextArea
       name="description"
       label="描述"
-      placeholder="请输入描述"
-      :fieldProps="{ autosize: { minRows: 2, maxRows: 4 } }"
+      :field-props="{
+        placeholder: '请输入描述',
+        autosize: { minRows: 2, maxRows: 4 },
+      }"
     />
 
     <!-- 数字输入 -->
     <ProFormDigit
       name="age"
       label="年龄"
-      placeholder="请输入年龄"
-      :fieldProps="{ min: 0, max: 150 }"
+      :field-props="{
+        placeholder: '请输入年龄',
+        min: 0,
+        max: 150,
+      }"
     />
 
-    <ProFormMoney name="salary" label="薪资" placeholder="请输入薪资" />
+    <ProFormMoney
+      name="salary"
+      label="薪资"
+      :field-props="{ placeholder: '请输入薪资' }"
+    />
 
     <!-- 选择类 -->
     <ProFormSelect
       name="city"
       label="城市"
-      placeholder="请选择城市"
+      :field-props="{ placeholder: '请选择城市' }"
       :options="[
         { label: '北京', value: 'beijing' },
         { label: '上海', value: 'shanghai' },
@@ -78,12 +91,16 @@
     />
 
     <!-- 日期时间 -->
-    <ProFormDatePicker name="birthday" label="生日" placeholder="请选择日期" />
+    <ProFormDatePicker
+      name="birthday"
+      label="生日"
+      :field-props="{ placeholder: '请选择日期' }"
+    />
 
     <ProFormTimePicker
       name="workTime"
       label="上班时间"
-      placeholder="请选择时间"
+      :field-props="{ placeholder: '请选择时间' }"
     />
 
     <!-- 其他组件 -->

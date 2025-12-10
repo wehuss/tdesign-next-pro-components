@@ -1,6 +1,6 @@
 import { objectToMap, proFieldParsingText } from '@/utils'
-import { Checkbox, CheckboxGroup } from 'tdesign-vue-next'
-import { computed, defineComponent, ref, useModel } from 'vue'
+import { Checkbox, CheckboxGroup, type CheckboxGroupProps, type CheckboxProps } from 'tdesign-vue-next'
+import { computed, defineComponent, ref, useModel, type PropType } from 'vue'
 import type { ProFieldMode, ProFieldValueEnumType } from '../../types'
 
 /**
@@ -23,7 +23,7 @@ export const FieldCheckbox = defineComponent({
       default: () => ({}),
     },
     fieldProps: {
-      type: Object as any,
+      type: Object as PropType<CheckboxGroupProps|CheckboxProps>,
       default: () => ({}),
     },
     readonly: {
@@ -48,8 +48,11 @@ export const FieldCheckbox = defineComponent({
     // 转换 valueEnum 为选项列表
     const options = computed(() => {
       const valueEnum = objectToMap(props.valueEnum as ProFieldValueEnumType)
-
+      console.log('props.fieldProps ',props.fieldProps )
       if (!valueEnum || valueEnum.size === 0) {
+        if((props.fieldProps as CheckboxGroupProps)?.options) {
+          return (props.fieldProps as CheckboxGroupProps)!.options
+        }
         return []
       }
 
@@ -85,8 +88,8 @@ export const FieldCheckbox = defineComponent({
       }
 
       // 编辑模式
-      const hasOptions = options.value.length > 0
-
+      const hasOptions = options.value!.length > 0
+      console.log('options.value',options.value)
       if (hasOptions) {
         // 有选项的情况，显示复选框组
         return (
@@ -95,7 +98,7 @@ export const FieldCheckbox = defineComponent({
             v-model={modelValue.value}
             options={options.value}
             disabled={props.disabled}
-            {...props.fieldProps}
+            {...props.fieldProps as CheckboxGroupProps}
           />
         )
       } else {
@@ -105,7 +108,7 @@ export const FieldCheckbox = defineComponent({
             ref={dataEntryRef}
             v-model={modelValue.value}
             disabled={props.disabled}
-            {...props.fieldProps}
+            {...props.fieldProps as CheckboxProps}
           >
             {props.fieldProps?.label || ''}
           </Checkbox>

@@ -16,14 +16,20 @@ ProForm 提供了一系列预设的表单项组件，可以快速构建表单：
 <script setup lang="ts">
   import {
     ProForm,
-    ProFormText,
-    ProFormSelect,
     ProFormDatePicker,
+    ProFormSelect,
     ProFormSwitch,
+    ProFormText,
   } from 'tdesign-pro-components'
-  import { ref } from 'vue'
   import { MessagePlugin } from 'tdesign-vue-next'
+  import { ref } from 'vue'
 
+  const formData = ref({
+    username: '',
+    role: '',
+    birthday: '',
+    enabled: false,
+  })
   const formRef = ref()
 
   const handleFinish = async (values: any) => {
@@ -45,24 +51,31 @@ ProForm 提供了一系列预设的表单项组件，可以快速构建表单：
     <ProFormText
       name="username"
       label="用户名"
-      placeholder="请输入用户名"
+      :field-props="{ placeholder: '请输入用户名' }"
       :rules="[{ required: true, message: '请输入用户名' }]"
+      v-model="formData.username"
     />
 
     <ProFormSelect
       name="role"
       label="角色"
-      placeholder="请选择角色"
+      :field-props="{ placeholder: '请选择角色' }"
       :options="[
         { label: '管理员', value: 'admin' },
         { label: '普通用户', value: 'user' },
         { label: '访客', value: 'guest' },
       ]"
+      v-model="formData.role"
     />
 
-    <ProFormDatePicker name="birthday" label="生日" placeholder="请选择日期" />
+    <ProFormDatePicker
+      name="birthday"
+      label="生日"
+      :field-props="{ placeholder: '请选择日期' }"
+      v-model="formData.birthday"
+    />
 
-    <ProFormSwitch name="enabled" label="启用状态" />
+    <ProFormSwitch name="enabled" label="启用状态" v-model="formData.enabled" />
   </ProForm>
 </template>
 ```
@@ -83,19 +96,19 @@ ProForm 提供了丰富的表单项组件：
 <script setup lang="ts">
   import {
     ProForm,
-    ProFormText,
-    ProFormTextArea,
+    ProFormCheckbox,
+    ProFormColorPicker,
+    ProFormDatePicker,
     ProFormDigit,
     ProFormMoney,
-    ProFormSelect,
     ProFormRadio,
-    ProFormCheckbox,
-    ProFormSwitch,
-    ProFormDatePicker,
-    ProFormTimePicker,
     ProFormRate,
+    ProFormSelect,
     ProFormSlider,
-    ProFormColorPicker,
+    ProFormSwitch,
+    ProFormText,
+    ProFormTextArea,
+    ProFormTimePicker,
   } from 'tdesign-pro-components'
   import { ref } from 'vue'
 
@@ -109,30 +122,43 @@ ProForm 提供了丰富的表单项组件：
 <template>
   <ProForm ref="formRef" @finish="handleFinish">
     <!-- 文本输入 -->
-    <ProFormText name="name" label="姓名" placeholder="请输入姓名" />
+    <ProFormText
+      name="name"
+      label="姓名"
+      :field-props="{ placeholder: '请输入姓名' }"
+    />
 
     <ProFormTextArea
       name="description"
       label="描述"
-      placeholder="请输入描述"
-      :fieldProps="{ autosize: { minRows: 2, maxRows: 4 } }"
+      :field-props="{
+        placeholder: '请输入描述',
+        autosize: { minRows: 2, maxRows: 4 },
+      }"
     />
 
     <!-- 数字输入 -->
     <ProFormDigit
       name="age"
       label="年龄"
-      placeholder="请输入年龄"
-      :fieldProps="{ min: 0, max: 150 }"
+      :field-props="{
+        placeholder: '请输入年龄',
+        min: 0,
+        max: 150,
+      }"
     />
 
-    <ProFormMoney name="salary" label="薪资" placeholder="请输入薪资" />
+    <ProFormMoney
+      name="salary"
+      label="薪资"
+      :field-props="{ placeholder: '请输入薪资' }"
+    />
 
     <!-- 选择类 -->
     <ProFormSelect
       name="city"
       label="城市"
-      placeholder="请选择城市"
+      :field-props="{ placeholder: '请选择城市' }"
       :options="[
         { label: '北京', value: 'beijing' },
         { label: '上海', value: 'shanghai' },
@@ -160,12 +186,16 @@ ProForm 提供了丰富的表单项组件：
     />
 
     <!-- 日期时间 -->
-    <ProFormDatePicker name="birthday" label="生日" placeholder="请选择日期" />
+    <ProFormDatePicker
+      name="birthday"
+      label="生日"
+      :field-props="{ placeholder: '请选择日期' }"
+    />
 
     <ProFormTimePicker
       name="workTime"
       label="上班时间"
-      placeholder="请选择时间"
+      :field-props="{ placeholder: '请选择时间' }"
     />
 
     <!-- 其他组件 -->
@@ -196,9 +226,9 @@ ProForm 提供了丰富的表单项组件：
 <script setup lang="ts">
   import {
     ProForm,
-    ProFormText,
-    ProFormSelect,
     ProFormGroup,
+    ProFormSelect,
+    ProFormText,
   } from 'tdesign-pro-components'
   import { ref } from 'vue'
 
@@ -213,8 +243,16 @@ ProForm 提供了丰富的表单项组件：
   <ProForm ref="formRef" @finish="handleFinish">
     <!-- 两列布局 -->
     <ProFormGroup title="基本信息" :colProps="{ span: 12 }">
-      <ProFormText name="firstName" label="名" placeholder="请输入名" />
-      <ProFormText name="lastName" label="姓" placeholder="请输入姓" />
+      <ProFormText
+        name="firstName"
+        label="名"
+        :field-props="{ placeholder: '请输入名' }"
+      />
+      <ProFormText
+        name="lastName"
+        label="姓"
+        :field-props="{ placeholder: '请输入姓' }"
+      />
     </ProFormGroup>
 
     <!-- 三列布局 -->
@@ -222,7 +260,7 @@ ProForm 提供了丰富的表单项组件：
       <ProFormSelect
         name="province"
         label="省"
-        placeholder="请选择省"
+        :field-props="{ placeholder: '请选择省' }"
         :options="[
           { label: '北京', value: 'beijing' },
           { label: '上海', value: 'shanghai' },
@@ -232,18 +270,26 @@ ProForm 提供了丰富的表单项组件：
       <ProFormSelect
         name="city"
         label="市"
-        placeholder="请选择市"
+        :field-props="{ placeholder: '请选择市' }"
         :options="[
           { label: '北京市', value: 'beijing' },
           { label: '上海市', value: 'shanghai' },
           { label: '广州市', value: 'guangzhou' },
         ]"
       />
-      <ProFormText name="district" label="区" placeholder="请输入区" />
+      <ProFormText
+        name="district"
+        label="区"
+        :field-props="{ placeholder: '请输入区' }"
+      />
     </ProFormGroup>
 
     <!-- 详细地址 -->
-    <ProFormText name="address" label="详细地址" placeholder="请输入详细地址" />
+    <ProFormText
+      name="address"
+      label="详细地址"
+      :field-props="{ placeholder: '请输入详细地址' }"
+    />
   </ProForm>
 </template>
 ```
@@ -264,9 +310,9 @@ ProForm 提供了丰富的表单项组件：
 <script setup lang="ts">
   import {
     ProForm,
-    ProFormText,
-    ProFormSelect,
     ProFormDependency,
+    ProFormSelect,
+    ProFormText,
   } from 'tdesign-pro-components'
   import { ref } from 'vue'
 
@@ -282,7 +328,7 @@ ProForm 提供了丰富的表单项组件：
     <ProFormSelect
       name="type"
       label="类型"
-      placeholder="请选择类型"
+      :field-props="{ placeholder: '请选择类型' }"
       :options="[
         { label: '个人', value: 'personal' },
         { label: '企业', value: 'company' },
@@ -295,20 +341,24 @@ ProForm 提供了丰富的表单项组件：
           v-if="type === 'personal'"
           name="idCard"
           label="身份证号"
-          placeholder="请输入身份证号"
+          :field-props="{ placeholder: '请输入身份证号' }"
           :rules="[{ required: true, message: '请输入身份证号' }]"
         />
         <ProFormText
           v-else-if="type === 'company'"
           name="businessLicense"
           label="营业执照号"
-          placeholder="请输入营业执照号"
+          :field-props="{ placeholder: '请输入营业执照号' }"
           :rules="[{ required: true, message: '请输入营业执照号' }]"
         />
       </template>
     </ProFormDependency>
 
-    <ProFormText name="contact" label="联系人" placeholder="请输入联系人" />
+    <ProFormText
+      name="contact"
+      label="联系人"
+      :field-props="{ placeholder: '请输入联系人' }"
+    />
   </ProForm>
 </template>
 ```
@@ -329,9 +379,9 @@ ProForm 提供了丰富的表单项组件：
 <script setup lang="ts">
   import {
     ProForm,
-    ProFormText,
     ProFormDigit,
     ProFormList,
+    ProFormText,
   } from 'tdesign-pro-components'
   import { ref } from 'vue'
 
@@ -359,20 +409,23 @@ ProForm 提供了丰富的表单项组件：
           <ProFormText
             :name="[field.name, 'name']"
             :label="index === 0 ? '姓名' : ''"
-            placeholder="请输入姓名"
+            :field-props="{ placeholder: '请输入姓名' }"
             style="flex: 1"
           />
           <ProFormDigit
             :name="[field.name, 'age']"
             :label="index === 0 ? '年龄' : ''"
-            placeholder="请输入年龄"
             style="width: 120px"
-            :fieldProps="{ min: 0, max: 150 }"
+            :field-props="{
+              placeholder: '请输入年龄',
+              min: 0,
+              max: 150,
+            }"
           />
           <ProFormText
             :name="[field.name, 'phone']"
             :label="index === 0 ? '电话' : ''"
-            placeholder="请输入电话"
+            :field-props="{ placeholder: '请输入电话' }"
             style="flex: 1"
           />
         </div>
@@ -396,9 +449,9 @@ ProForm 支持 TDesign Form 的所有验证规则：
 
 ```vue
 <script setup lang="ts">
-  import { ProForm, ProFormText, ProFormSelect } from 'tdesign-pro-components'
-  import { ref } from 'vue'
+  import { ProForm, ProFormSelect, ProFormText } from 'tdesign-pro-components'
   import { MessagePlugin } from 'tdesign-vue-next'
+  import { ref } from 'vue'
 
   const formRef = ref()
 
@@ -422,7 +475,7 @@ ProForm 支持 TDesign Form 的所有验证规则：
     <ProFormText
       name="email"
       label="邮箱"
-      placeholder="请输入邮箱"
+      :field-props="{ placeholder: '请输入邮箱' }"
       :rules="[
         { required: true, message: '请输入邮箱' },
         { email: true, message: '请输入正确的邮箱格式' },
@@ -432,7 +485,7 @@ ProForm 支持 TDesign Form 的所有验证规则：
     <ProFormText
       name="phone"
       label="手机号"
-      placeholder="请输入手机号"
+      :field-props="{ placeholder: '请输入手机号' }"
       :rules="[
         { required: true, message: '请输入手机号' },
         { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号' },
@@ -442,8 +495,10 @@ ProForm 支持 TDesign Form 的所有验证规则：
     <ProFormText
       name="password"
       label="密码"
-      placeholder="请输入密码"
-      :fieldProps="{ type: 'password' }"
+      :field-props="{
+        placeholder: '请输入密码',
+        type: 'password',
+      }"
       :rules="[
         { required: true, message: '请输入密码' },
         { min: 6, max: 20, message: '密码长度为6-20位' },
@@ -453,14 +508,14 @@ ProForm 支持 TDesign Form 的所有验证规则：
     <ProFormText
       name="website"
       label="网站"
-      placeholder="请输入网站地址"
+      :field-props="{ placeholder: '请输入网站地址' }"
       :rules="[{ url: true, message: '请输入正确的网址' }]"
     />
 
     <ProFormSelect
       name="country"
       label="国家"
-      placeholder="请选择国家"
+      :field-props="{ placeholder: '请选择国家' }"
       :options="[
         { label: '中国', value: 'china' },
         { label: '美国', value: 'usa' },
@@ -497,8 +552,6 @@ ProForm 支持 TDesign Form 的所有验证规则：
 | label       | 标签                 | `string`                                 | -       |
 | rules       | 验证规则             | `FormRule[]`                             | -       |
 | tooltip     | 提示信息             | `string`                                 | -       |
-| placeholder | 占位符               | `string`                                 | -       |
-| disabled    | 禁用                 | `boolean`                                | `false` |
 | readonly    | 只读                 | `boolean`                                | `false` |
 | width       | 宽度                 | `number \| 'sm' \| 'md' \| 'lg' \| 'xl'` | -       |
 | fieldProps  | 传递给底层组件的属性 | `object`                                 | -       |

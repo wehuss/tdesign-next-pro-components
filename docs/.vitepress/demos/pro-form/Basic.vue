@@ -1,13 +1,13 @@
 <script setup lang="ts">
   import {
-    ProForm,
-    ProFormDatePicker,
-    ProFormSelect,
-    ProFormSwitch,
-    ProFormText,
-  } from '@/components/form'
-  import { MessagePlugin } from 'tdesign-vue-next'
-  import { ref } from 'vue'
+  ProForm,
+  ProFormDatePicker,
+  ProFormSelect,
+  ProFormSwitch,
+  ProFormText,
+} from '@/components/form'
+import { MessagePlugin } from 'tdesign-vue-next'
+import { ref } from 'vue'
 
   const formData = ref({
     username: '',
@@ -36,7 +36,7 @@
     <ProFormText
       name="username"
       label="用户名"
-      placeholder="请输入用户名"
+      :field-props="{ placeholder: '请输入用户名' }"
       :rules="[{ required: true, message: '请输入用户名' }]"
       v-model="formData.username"
     />
@@ -44,7 +44,7 @@
     <ProFormSelect
       name="role"
       label="角色"
-      placeholder="请选择角色"
+      :field-props="{ placeholder: '请选择角色' }"
       :options="[
         { label: '管理员', value: 'admin' },
         { label: '普通用户', value: 'user' },
@@ -56,7 +56,7 @@
     <ProFormDatePicker
       name="birthday"
       label="生日"
-      placeholder="请选择日期"
+      :field-props="{ placeholder: '请选择日期' }"
       v-model="formData.birthday"
     />
 

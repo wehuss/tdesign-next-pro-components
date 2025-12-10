@@ -4,8 +4,8 @@
     ProFormDigit,
     ProFormList,
     ProFormText,
-  } from '@/components/form'
-  import { ref } from 'vue'
+} from '@/components/form'
+import { ref } from 'vue'
 
   const formRef = ref()
 
@@ -31,20 +31,23 @@
           <ProFormText
             :name="[field.name, 'name']"
             :label="index === 0 ? '姓名' : ''"
-            placeholder="请输入姓名"
+            :field-props="{ placeholder: '请输入姓名' }"
             style="flex: 1"
           />
           <ProFormDigit
             :name="[field.name, 'age']"
             :label="index === 0 ? '年龄' : ''"
-            placeholder="请输入年龄"
             style="width: 120px"
-            :fieldProps="{ min: 0, max: 150 }"
+            :field-props="{
+              placeholder: '请输入年龄',
+              min: 0,
+              max: 150,
+            }"
           />
           <ProFormText
             :name="[field.name, 'phone']"
             :label="index === 0 ? '电话' : ''"
-            placeholder="请输入电话"
+            :field-props="{ placeholder: '请输入电话' }"
             style="flex: 1"
           />
         </div>

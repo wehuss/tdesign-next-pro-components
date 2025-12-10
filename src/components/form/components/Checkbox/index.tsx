@@ -5,8 +5,8 @@ import { FieldCheckbox } from '../../../field/components/checkbox'
 import type { ProFieldMode } from '../../../field/types'
 import { EditOrReadOnlyContextKey } from '../../BaseForm/EditOrReadOnlyContext'
 import {
-    proFormFieldEmits,
-    proFormFieldProps,
+  proFormFieldEmits,
+  proFormFieldProps,
 } from '../../utils/proFormFieldProps'
 import { ProFormItem } from '../FormItem'
 
@@ -21,7 +21,7 @@ export const ProFormCheckbox = defineComponent({
     ...proFormFieldProps,
     options: {
       type: Array as PropType<Array<{ label: string; value: any; disabled?: boolean }>>,
-      default: undefined,
+      default: () => [],
     },
     fieldProps: {
       type: Object as PropType<CheckboxGroupProps>,
