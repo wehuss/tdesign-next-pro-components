@@ -25,15 +25,15 @@ export const proFormFieldProps = {
     default: undefined,
   },
   /** 标签文本 */
-  label: String,
+  label: [String, Function] as PropType<string | (() => VNode)>,
   /** 表单验证规则 */
   rules: Array as PropType<FormItemProps['rules']>,
   /** 是否必填 */
   required: Boolean,
   /** 帮助提示信息 */
-  help: String,
+  help: [String, Function] as PropType<string | (() => VNode)>,
   /** 额外信息 */
-  extra: String,
+  extra: [String, Function] as PropType<string | (() => VNode)>,
   /** 字段宽度 */
   width: [String, Number] as PropType<string | number>,
   /** 是否忽略 FormItem 包装 */
@@ -57,9 +57,9 @@ export const proFormFieldProps = {
   /** LightFilter 相关属性 */
   lightProps: Object,
   /** 前置装饰 */
-  addonBefore: [String, Object] as PropType<string | VNode>,
+  addonBefore: [String, Function] as PropType<string | (() => VNode)>,
   /** 后置装饰 */
-  addonAfter: [String, Object] as PropType<string | VNode>,
+  addonAfter: [String, Function] as PropType<string | (() => VNode)>,
   /** 装饰容器样式 */
   addonWarpStyle: Object,
   /** 是否次要 */

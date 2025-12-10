@@ -130,7 +130,7 @@ export interface ProFormItemProps {
     | VNode
     | ((params: { errors: VNode[]; warnings: VNode[] }) => VNode)
   /** 额外信息 */
-  extra?: string | VNode
+  extra?: string | VNode | (() => VNode)
   /** 是否忽略 FormItem 包装 */
   ignoreFormItem?: boolean
   /** 值类型 */
@@ -152,9 +152,9 @@ export interface ProFormItemProps {
   /** 字段唯一标识 */
   proFormFieldKey?: string | number
   /** 前置元素 */
-  addonBefore?: string | VNode
+  addonBefore?: string | VNode | (() => VNode)
   /** 后置元素 */
-  addonAfter?: string | VNode
+  addonAfter?: string | VNode | (() => VNode)
   /** 前后置元素包装样式 */
   addonWarpStyle?: Record<string, any>
   /** 获取时转换值 */
@@ -186,14 +186,14 @@ export const ProFormItem = defineComponent({
   inheritAttrs: false,
   props: {
     name: [String, Array] as PropType<string | string[]>,
-    label: [String, Function] as PropType<FormItemProps['label']>,
+    label: [String, Function] as PropType<string | (() => VNode)>,
     rules: Array as PropType<any[]>,
     required: {
       type: Boolean,
       default: false,
     },
     help: [String, Object, Function] as PropType<ProFormItemProps['help']>,
-    extra: [String, Object] as PropType<string | VNode>,
+    extra: [String, Function] as PropType<string | (() => VNode)>,
     ignoreFormItem: {
       type: Boolean,
       default: false,
@@ -209,8 +209,8 @@ export const ProFormItem = defineComponent({
       default: () => ({}),
     },
     proFormFieldKey: [String, Number],
-    addonBefore: [String, Object] as PropType<string | VNode>,
-    addonAfter: [String, Object] as PropType<string | VNode>,
+    addonBefore: [String, Function] as PropType<string | (() => VNode)>,
+    addonAfter: [String, Function] as PropType<string | (() => VNode)>,
     addonWarpStyle: {
       type: Object,
       default: () => ({}),
@@ -370,7 +370,16 @@ export const ProFormItem = defineComponent({
       }
 
       // 处理前置后置元素
-      if (!props.addonBefore && !props.addonAfter) {
+      const addonBefore =
+        typeof props.addonBefore === 'function'
+          ? (props.addonBefore as Function)()
+          : props.addonBefore
+      const addonAfter =
+        typeof props.addonAfter === 'function'
+          ? (props.addonAfter as Function)()
+          : props.addonAfter
+
+      if (!addonBefore && !addonAfter) {
         return wrappedChildren
       }
 
@@ -383,12 +392,12 @@ export const ProFormItem = defineComponent({
             ...props.addonWarpStyle,
           }}
         >
-          {props.addonBefore && (
-            <div style={{ marginRight: '8px' }}>{props.addonBefore}</div>
+          {addonBefore && (
+            <div style={{ marginRight: '8px' }}>{addonBefore}</div>
           )}
           {wrappedChildren}
-          {props.addonAfter && (
-            <div style={{ marginLeft: '8px' }}>{props.addonAfter}</div>
+          {addonAfter && (
+            <div style={{ marginLeft: '8px' }}>{addonAfter}</div>
           )}
         </div>
       )
