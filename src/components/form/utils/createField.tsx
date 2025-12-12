@@ -9,7 +9,7 @@ import {
 } from 'vue'
 import type { ProFieldValueEnumType } from '../../field/types'
 import { EditOrReadOnlyContextKey } from '../BaseForm/EditOrReadOnlyContext'
-import { ProFormItem } from '../components/FormItem'
+import { ProFormItem } from '../components/form-item'
 import { useFieldContext } from '../FieldContext'
 
 /**

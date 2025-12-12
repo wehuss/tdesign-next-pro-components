@@ -1,6 +1,6 @@
 # ProForm 高级表单
 
-ProForm 是基于 TDesign Form 封装的高级表单组件，提供了更便捷的表单开发体验。
+ProForm 是基于 TDesign Form 封装的高级表单组件，提供了更便捷的表单开发体验。它内置了丰富的表单项组件，支持表单联动、动态表单、表单验证等功能。
 
 ## 基础用法
 
@@ -11,522 +11,293 @@ ProForm 提供了一系列预设的表单项组件，可以快速构建表单：
 </DemoContainer>
 
 ::: details 查看代码
-
-```vue
-<script setup lang="ts">
-  import {
-    ProForm,
-    ProFormDatePicker,
-    ProFormSelect,
-    ProFormSwitch,
-    ProFormText,
-  } from 'tdesign-pro-components'
-  import { MessagePlugin } from 'tdesign-vue-next'
-  import { ref } from 'vue'
-
-  const formData = ref({
-    username: '',
-    role: '',
-    birthday: '',
-    enabled: false,
-  })
-  const formRef = ref()
-
-  const handleFinish = async (values: any) => {
-    console.log('表单数据:', values)
-    MessagePlugin.success('提交成功')
-  }
-
-  const handleFinishFailed = (errors: any) => {
-    console.log('验证失败:', errors)
-  }
-</script>
-
-<template>
-  <ProForm
-    ref="formRef"
-    @finish="handleFinish"
-    @finishFailed="handleFinishFailed"
-  >
-    <ProFormText
-      name="username"
-      label="用户名"
-      :field-props="{ placeholder: '请输入用户名' }"
-      :rules="[{ required: true, message: '请输入用户名' }]"
-      v-model="formData.username"
-    />
-
-    <ProFormSelect
-      name="role"
-      label="角色"
-      :field-props="{ placeholder: '请选择角色' }"
-      :options="[
-        { label: '管理员', value: 'admin' },
-        { label: '普通用户', value: 'user' },
-        { label: '访客', value: 'guest' },
-      ]"
-      v-model="formData.role"
-    />
-
-    <ProFormDatePicker
-      name="birthday"
-      label="生日"
-      :field-props="{ placeholder: '请选择日期' }"
-      v-model="formData.birthday"
-    />
-
-    <ProFormSwitch name="enabled" label="启用状态" v-model="formData.enabled" />
-  </ProForm>
-</template>
-```
-
+<<< @/.vitepress/demos/pro-form/Basic.vue
 :::
 
 ## 表单项组件
 
-ProForm 提供了丰富的表单项组件：
+ProForm 提供了丰富的表单项组件，涵盖文本输入、数字输入、选择类、日期时间、级联选择等多种类型：
 
 <DemoContainer title="表单项组件">
   <ProFormFormItems />
 </DemoContainer>
 
 ::: details 查看代码
+<<< @/.vitepress/demos/pro-form/FormItems.vue
+:::
 
-```vue
-<script setup lang="ts">
-  import {
-    ProForm,
-    ProFormCheckbox,
-    ProFormColorPicker,
-    ProFormDatePicker,
-    ProFormDigit,
-    ProFormMoney,
-    ProFormRadio,
-    ProFormRate,
-    ProFormSelect,
-    ProFormSlider,
-    ProFormSwitch,
-    ProFormText,
-    ProFormTextArea,
-    ProFormTimePicker,
-  } from 'tdesign-pro-components'
-  import { ref } from 'vue'
+## 文本输入
 
-  const formRef = ref()
+### ProFormText 文本框
 
-  const handleFinish = (values: any) => {
-    console.log('表单数据:', values)
-  }
-</script>
+<DemoContainer title="文本框">
+  <ProFormTextDemo />
+</DemoContainer>
 
-<template>
-  <ProForm ref="formRef" @finish="handleFinish">
-    <!-- 文本输入 -->
-    <ProFormText
-      name="name"
-      label="姓名"
-      :field-props="{ placeholder: '请输入姓名' }"
-    />
+::: details 查看代码
+<<< @/.vitepress/demos/pro-form/TextDemo.vue
+:::
 
-    <ProFormTextArea
-      name="description"
-      label="描述"
-      :field-props="{
-        placeholder: '请输入描述',
-        autosize: { minRows: 2, maxRows: 4 },
-      }"
-    />
+### ProFormTextArea 多行文本
 
-    <!-- 数字输入 -->
-    <ProFormDigit
-      name="age"
-      label="年龄"
-      :field-props="{
-        placeholder: '请输入年龄',
-        min: 0,
-        max: 150,
-      }"
-    />
+<DemoContainer title="多行文本">
+  <ProFormTextAreaDemo />
+</DemoContainer>
 
-    <ProFormMoney
-      name="salary"
-      label="薪资"
-      :field-props="{ placeholder: '请输入薪资' }"
-    />
+::: details 查看代码
+<<< @/.vitepress/demos/pro-form/TextAreaDemo.vue
+:::
 
-    <!-- 选择类 -->
-    <ProFormSelect
-      name="city"
-      label="城市"
-      :field-props="{ placeholder: '请选择城市' }"
-      :options="[
-        { label: '北京', value: 'beijing' },
-        { label: '上海', value: 'shanghai' },
-        { label: '广州', value: 'guangzhou' },
-      ]"
-    />
+### ProFormPassword 密码框
 
-    <ProFormRadio
-      name="gender"
-      label="性别"
-      :options="[
-        { label: '男', value: 'male' },
-        { label: '女', value: 'female' },
-      ]"
-    />
+<DemoContainer title="密码框">
+  <ProFormPasswordDemo />
+</DemoContainer>
 
-    <ProFormCheckbox
-      name="hobbies"
-      label="爱好"
-      :options="[
-        { label: '阅读', value: 'reading' },
-        { label: '运动', value: 'sports' },
-        { label: '音乐', value: 'music' },
-      ]"
-    />
+::: details 查看代码
+<<< @/.vitepress/demos/pro-form/PasswordDemo.vue
+:::
 
-    <!-- 日期时间 -->
-    <ProFormDatePicker
-      name="birthday"
-      label="生日"
-      :field-props="{ placeholder: '请选择日期' }"
-    />
+## 数字输入
 
-    <ProFormTimePicker
-      name="workTime"
-      label="上班时间"
-      :field-props="{ placeholder: '请选择时间' }"
-    />
+### ProFormDigit 数字输入框
 
-    <!-- 其他组件 -->
-    <ProFormSwitch name="enabled" label="启用" />
+<DemoContainer title="数字输入框">
+  <ProFormDigitDemo />
+</DemoContainer>
 
-    <ProFormRate name="score" label="评分" />
+::: details 查看代码
+<<< @/.vitepress/demos/pro-form/DigitDemo.vue
+:::
 
-    <ProFormSlider name="progress" label="进度" />
+### ProFormMoney 金额输入
 
-    <ProFormColorPicker name="color" label="颜色" />
-  </ProForm>
-</template>
-```
+<DemoContainer title="金额输入">
+  <ProFormMoneyDemo />
+</DemoContainer>
 
+::: details 查看代码
+<<< @/.vitepress/demos/pro-form/MoneyDemo.vue
+:::
+
+### ProFormSlider 滑块
+
+<DemoContainer title="滑块">
+  <ProFormSliderDemo />
+</DemoContainer>
+
+::: details 查看代码
+<<< @/.vitepress/demos/pro-form/SliderDemo.vue
+:::
+
+## 选择类组件
+
+### ProFormSelect 下拉选择
+
+<DemoContainer title="下拉选择">
+  <ProFormSelectDemo />
+</DemoContainer>
+
+::: details 查看代码
+<<< @/.vitepress/demos/pro-form/SelectDemo.vue
+:::
+
+### ProFormRadio 单选框
+
+<DemoContainer title="单选框">
+  <ProFormRadioDemo />
+</DemoContainer>
+
+::: details 查看代码
+<<< @/.vitepress/demos/pro-form/RadioDemo.vue
+:::
+
+### ProFormCheckbox 复选框
+
+<DemoContainer title="复选框">
+  <ProFormCheckboxDemo />
+</DemoContainer>
+
+::: details 查看代码
+<<< @/.vitepress/demos/pro-form/CheckboxDemo.vue
+:::
+
+### ProFormSegmented 分段控制器
+
+<DemoContainer title="分段控制器">
+  <ProFormSegmentedDemo />
+</DemoContainer>
+
+::: details 查看代码
+<<< @/.vitepress/demos/pro-form/SegmentedDemo.vue
+:::
+
+### ProFormSwitch 开关
+
+<DemoContainer title="开关">
+  <ProFormSwitchDemo />
+</DemoContainer>
+
+::: details 查看代码
+<<< @/.vitepress/demos/pro-form/SwitchDemo.vue
+:::
+
+### ProFormRate 评分
+
+<DemoContainer title="评分">
+  <ProFormRateDemo />
+</DemoContainer>
+
+::: details 查看代码
+<<< @/.vitepress/demos/pro-form/RateDemo.vue
+:::
+
+## 级联与树选择
+
+### ProFormCascader 级联选择
+
+<DemoContainer title="级联选择">
+  <ProFormCascaderDemo />
+</DemoContainer>
+
+::: details 查看代码
+<<< @/.vitepress/demos/pro-form/CascaderDemo.vue
+:::
+
+### ProFormTreeSelect 树选择
+
+<DemoContainer title="树选择">
+  <ProFormTreeSelectDemo />
+</DemoContainer>
+
+::: details 查看代码
+<<< @/.vitepress/demos/pro-form/TreeSelectDemo.vue
+:::
+
+## 日期时间
+
+### ProFormDatePicker 日期选择
+
+<DemoContainer title="日期选择">
+  <ProFormDatePickerDemo />
+</DemoContainer>
+
+::: details 查看代码
+<<< @/.vitepress/demos/pro-form/DatePickerDemo.vue
+:::
+
+### ProFormDateRangePicker 日期范围选择
+
+<DemoContainer title="日期范围选择">
+  <ProFormDateRangePickerDemo />
+</DemoContainer>
+
+::: details 查看代码
+<<< @/.vitepress/demos/pro-form/DateRangePickerDemo.vue
+:::
+
+### ProFormTimePicker 时间选择
+
+<DemoContainer title="时间选择">
+  <ProFormTimePickerDemo />
+</DemoContainer>
+
+::: details 查看代码
+<<< @/.vitepress/demos/pro-form/TimePickerDemo.vue
+:::
+
+## 其他组件
+
+### ProFormColorPicker 颜色选择
+
+<DemoContainer title="颜色选择">
+  <ProFormColorPickerDemo />
+</DemoContainer>
+
+::: details 查看代码
+<<< @/.vitepress/demos/pro-form/ColorPickerDemo.vue
+:::
+
+### ProFormCaptcha 验证码
+
+<DemoContainer title="验证码">
+  <ProFormCaptchaDemo />
+</DemoContainer>
+
+::: details 查看代码
+<<< @/.vitepress/demos/pro-form/CaptchaDemo.vue
 :::
 
 ## 表单布局
 
-使用 `ProFormGroup` 实现栅格布局：
+使用 `ProFormGroup` 实现分组布局，支持水平、垂直方向，以及可折叠功能：
 
 <DemoContainer title="表单布局">
   <ProFormLayout />
 </DemoContainer>
 
 ::: details 查看代码
-
-```vue
-<script setup lang="ts">
-  import {
-    ProForm,
-    ProFormGroup,
-    ProFormSelect,
-    ProFormText,
-  } from 'tdesign-pro-components'
-  import { ref } from 'vue'
-
-  const formRef = ref()
-
-  const handleFinish = (values: any) => {
-    console.log('表单数据:', values)
-  }
-</script>
-
-<template>
-  <ProForm ref="formRef" @finish="handleFinish">
-    <!-- 两列布局 -->
-    <ProFormGroup title="基本信息" :colProps="{ span: 12 }">
-      <ProFormText
-        name="firstName"
-        label="名"
-        :field-props="{ placeholder: '请输入名' }"
-      />
-      <ProFormText
-        name="lastName"
-        label="姓"
-        :field-props="{ placeholder: '请输入姓' }"
-      />
-    </ProFormGroup>
-
-    <!-- 三列布局 -->
-    <ProFormGroup title="地址信息" :colProps="{ span: 8 }">
-      <ProFormSelect
-        name="province"
-        label="省"
-        :field-props="{ placeholder: '请选择省' }"
-        :options="[
-          { label: '北京', value: 'beijing' },
-          { label: '上海', value: 'shanghai' },
-          { label: '广东', value: 'guangdong' },
-        ]"
-      />
-      <ProFormSelect
-        name="city"
-        label="市"
-        :field-props="{ placeholder: '请选择市' }"
-        :options="[
-          { label: '北京市', value: 'beijing' },
-          { label: '上海市', value: 'shanghai' },
-          { label: '广州市', value: 'guangzhou' },
-        ]"
-      />
-      <ProFormText
-        name="district"
-        label="区"
-        :field-props="{ placeholder: '请输入区' }"
-      />
-    </ProFormGroup>
-
-    <!-- 详细地址 -->
-    <ProFormText
-      name="address"
-      label="详细地址"
-      :field-props="{ placeholder: '请输入详细地址' }"
-    />
-  </ProForm>
-</template>
-```
-
+<<< @/.vitepress/demos/pro-form/Layout.vue
 :::
 
 ## 表单联动
 
-使用 `ProFormDependency` 实现字段联动：
+使用 `ProFormDependency` 实现字段联动，支持根据其他字段值动态显示/隐藏字段、动态修改验证规则等：
 
 <DemoContainer title="表单联动">
   <ProFormDependency />
 </DemoContainer>
 
 ::: details 查看代码
-
-```vue
-<script setup lang="ts">
-  import {
-    ProForm,
-    ProFormDependency,
-    ProFormSelect,
-    ProFormText,
-  } from 'tdesign-pro-components'
-  import { ref } from 'vue'
-
-  const formRef = ref()
-
-  const handleFinish = (values: any) => {
-    console.log('表单数据:', values)
-  }
-</script>
-
-<template>
-  <ProForm ref="formRef" @finish="handleFinish">
-    <ProFormSelect
-      name="type"
-      label="类型"
-      :field-props="{ placeholder: '请选择类型' }"
-      :options="[
-        { label: '个人', value: 'personal' },
-        { label: '企业', value: 'company' },
-      ]"
-    />
-
-    <ProFormDependency :name="['type']">
-      <template #default="{ type }">
-        <ProFormText
-          v-if="type === 'personal'"
-          name="idCard"
-          label="身份证号"
-          :field-props="{ placeholder: '请输入身份证号' }"
-          :rules="[{ required: true, message: '请输入身份证号' }]"
-        />
-        <ProFormText
-          v-else-if="type === 'company'"
-          name="businessLicense"
-          label="营业执照号"
-          :field-props="{ placeholder: '请输入营业执照号' }"
-          :rules="[{ required: true, message: '请输入营业执照号' }]"
-        />
-      </template>
-    </ProFormDependency>
-
-    <ProFormText
-      name="contact"
-      label="联系人"
-      :field-props="{ placeholder: '请输入联系人' }"
-    />
-  </ProForm>
-</template>
-```
-
+<<< @/.vitepress/demos/pro-form/Dependency.vue
 :::
 
 ## 动态表单
 
-使用 `ProFormList` 实现动态增减表单项：
+使用 `ProFormList` 实现动态增减表单项，支持排序、复制、最大/最小数量限制等功能：
 
-<DemoContainer title="动态表单">
+<DemoContainer title="动态表单（基础）">
   <ProFormList />
 </DemoContainer>
 
 ::: details 查看代码
+<<< @/.vitepress/demos/pro-form/List.vue
+:::
 
-```vue
-<script setup lang="ts">
-  import {
-    ProForm,
-    ProFormDigit,
-    ProFormList,
-    ProFormText,
-  } from 'tdesign-pro-components'
-  import { ref } from 'vue'
+### 复杂动态表单
 
-  const formRef = ref()
+支持更复杂的动态表单场景，如多字段组合、嵌套结构等：
 
-  const handleFinish = (values: any) => {
-    console.log('表单数据:', values)
-  }
-</script>
+<DemoContainer title="动态表单（复杂）">
+  <ProFormDynamicForm />
+</DemoContainer>
 
-<template>
-  <ProForm ref="formRef" @finish="handleFinish">
-    <ProFormList
-      name="users"
-      label="用户列表"
-      :creatorButtonProps="{
-        creatorButtonText: '添加用户',
-        position: 'bottom',
-      }"
-      :min="1"
-      :max="5"
-    >
-      <template #default="{ field, index }">
-        <div style="display: flex; gap: 16px; margin-bottom: 8px">
-          <ProFormText
-            :name="[field.name, 'name']"
-            :label="index === 0 ? '姓名' : ''"
-            :field-props="{ placeholder: '请输入姓名' }"
-            style="flex: 1"
-          />
-          <ProFormDigit
-            :name="[field.name, 'age']"
-            :label="index === 0 ? '年龄' : ''"
-            style="width: 120px"
-            :field-props="{
-              placeholder: '请输入年龄',
-              min: 0,
-              max: 150,
-            }"
-          />
-          <ProFormText
-            :name="[field.name, 'phone']"
-            :label="index === 0 ? '电话' : ''"
-            :field-props="{ placeholder: '请输入电话' }"
-            style="flex: 1"
-          />
-        </div>
-      </template>
-    </ProFormList>
-  </ProForm>
-</template>
-```
-
+::: details 查看代码
+<<< @/.vitepress/demos/pro-form/DynamicForm.vue
 :::
 
 ## 表单验证
 
-ProForm 支持 TDesign Form 的所有验证规则：
+ProForm 支持 TDesign Form 的所有验证规则，包括必填、格式、长度、自定义验证等：
 
 <DemoContainer title="表单验证">
   <ProFormValidation />
 </DemoContainer>
 
 ::: details 查看代码
+<<< @/.vitepress/demos/pro-form/Validation.vue
+:::
 
-```vue
-<script setup lang="ts">
-  import { ProForm, ProFormSelect, ProFormText } from 'tdesign-pro-components'
-  import { MessagePlugin } from 'tdesign-vue-next'
-  import { ref } from 'vue'
+## 只读模式
 
-  const formRef = ref()
+通过 `readonly` 属性可以将表单切换为只读模式，适用于详情展示场景：
 
-  const handleFinish = (values: any) => {
-    console.log('表单数据:', values)
-    MessagePlugin.success('验证通过，提交成功')
-  }
+<DemoContainer title="只读模式">
+  <ProFormReadonly />
+</DemoContainer>
 
-  const handleFinishFailed = (errors: any) => {
-    console.log('验证失败:', errors)
-    MessagePlugin.error('表单验证失败，请检查输入')
-  }
-</script>
-
-<template>
-  <ProForm
-    ref="formRef"
-    @finish="handleFinish"
-    @finishFailed="handleFinishFailed"
-  >
-    <ProFormText
-      name="email"
-      label="邮箱"
-      :field-props="{ placeholder: '请输入邮箱' }"
-      :rules="[
-        { required: true, message: '请输入邮箱' },
-        { email: true, message: '请输入正确的邮箱格式' },
-      ]"
-    />
-
-    <ProFormText
-      name="phone"
-      label="手机号"
-      :field-props="{ placeholder: '请输入手机号' }"
-      :rules="[
-        { required: true, message: '请输入手机号' },
-        { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号' },
-      ]"
-    />
-
-    <ProFormText
-      name="password"
-      label="密码"
-      :field-props="{
-        placeholder: '请输入密码',
-        type: 'password',
-      }"
-      :rules="[
-        { required: true, message: '请输入密码' },
-        { min: 6, max: 20, message: '密码长度为6-20位' },
-      ]"
-    />
-
-    <ProFormText
-      name="website"
-      label="网站"
-      :field-props="{ placeholder: '请输入网站地址' }"
-      :rules="[{ url: true, message: '请输入正确的网址' }]"
-    />
-
-    <ProFormSelect
-      name="country"
-      label="国家"
-      :field-props="{ placeholder: '请选择国家' }"
-      :options="[
-        { label: '中国', value: 'china' },
-        { label: '美国', value: 'usa' },
-        { label: '日本', value: 'japan' },
-      ]"
-      :rules="[{ required: true, message: '请选择国家' }]"
-    />
-  </ProForm>
-</template>
-```
-
+::: details 查看代码
+<<< @/.vitepress/demos/pro-form/Readonly.vue
 :::
 
 ## API
@@ -546,15 +317,15 @@ ProForm 支持 TDesign Form 的所有验证规则：
 
 所有 ProForm 表单项组件都支持以下属性：
 
-| 属性        | 说明                 | 类型                                     | 默认值  |
-| ----------- | -------------------- | ---------------------------------------- | ------- |
-| name        | 字段名               | `string \| string[]`                     | -       |
-| label       | 标签                 | `string`                                 | -       |
-| rules       | 验证规则             | `FormRule[]`                             | -       |
-| tooltip     | 提示信息             | `string`                                 | -       |
-| readonly    | 只读                 | `boolean`                                | `false` |
-| width       | 宽度                 | `number \| 'sm' \| 'md' \| 'lg' \| 'xl'` | -       |
-| fieldProps  | 传递给底层组件的属性 | `object`                                 | -       |
+| 属性       | 说明                 | 类型                                     | 默认值  |
+| ---------- | -------------------- | ---------------------------------------- | ------- |
+| name       | 字段名               | `string \| string[]`                     | -       |
+| label      | 标签                 | `string`                                 | -       |
+| rules      | 验证规则             | `FormRule[]`                             | -       |
+| tooltip    | 提示信息             | `string`                                 | -       |
+| readonly   | 只读                 | `boolean`                                | `false` |
+| width      | 宽度                 | `number \| 'sm' \| 'md' \| 'lg' \| 'xl'` | -       |
+| fieldProps | 传递给底层组件的属性 | `object`                                 | -       |
 
 ### SubmitterProps
 
@@ -568,25 +339,73 @@ ProForm 支持 TDesign Form 的所有验证规则：
 
 ### ProFormGroup Props
 
-| 属性     | 说明       | 类型     | 默认值 |
-| -------- | ---------- | -------- | ------ |
-| title    | 分组标题   | `string` | -      |
-| colProps | 栅格列配置 | `object` | -      |
-| rowProps | 栅格行配置 | `object` | -      |
+| 属性        | 说明       | 类型                             | 默认值         |
+| ----------- | ---------- | -------------------------------- | -------------- |
+| title       | 分组标题   | `string`                         | -              |
+| direction   | 排列方向   | `'horizontal' \| 'vertical'`     | `'horizontal'` |
+| wrap        | 是否换行   | `boolean`                        | `false`        |
+| collapsible | 是否可折叠 | `boolean`                        | `false`        |
+| size        | 间距大小   | `'small' \| 'medium' \| 'large'` | `'medium'`     |
 
 ### ProFormList Props
 
-| 属性               | 说明           | 类型                 | 默认值     |
-| ------------------ | -------------- | -------------------- | ---------- |
-| name               | 字段名         | `string \| string[]` | -          |
-| label              | 标签           | `string`             | -          |
-| min                | 最小行数       | `number`             | `0`        |
-| max                | 最大行数       | `number`             | `Infinity` |
-| creatorButtonProps | 新增按钮配置   | `object \| false`    | -          |
-| creatorRecord      | 新增行默认数据 | `object \| function` | -          |
+| 属性                | 说明             | 类型                 | 默认值     |
+| ------------------- | ---------------- | -------------------- | ---------- |
+| name                | 字段名           | `string \| string[]` | -          |
+| label               | 标签             | `string`             | -          |
+| min                 | 最小行数         | `number`             | `0`        |
+| max                 | 最大行数         | `number`             | `Infinity` |
+| creatorButtonProps  | 新增按钮配置     | `object \| false`    | -          |
+| creatorRecord       | 新增行默认数据   | `object \| function` | -          |
+| arrowSort           | 是否显示排序箭头 | `boolean`            | `false`    |
+| copyIconProps       | 复制按钮配置     | `object \| false`    | -          |
+| alwaysShowItemLabel | 是否始终显示标签 | `boolean`            | `false`    |
 
 ### ProFormDependency Props
 
-| 属性 | 说明         | 类型       | 默认值 |
-| ---- | ------------ | ---------- | ------ |
-| name | 依赖的字段名 | `string[]` | -      |
+| 属性     | 说明         | 类型                                     | 默认值 |
+| -------- | ------------ | ---------------------------------------- | ------ |
+| name     | 依赖的字段名 | `string[]`                               | -      |
+| children | 渲染函数     | `(values: Record<string, any>) => VNode` | -      |
+
+### ProFormCaptcha Props
+
+| 属性         | 说明           | 类型     | 默认值 |
+| ------------ | -------------- | -------- | ------ |
+| captchaProps | 验证码按钮配置 | `object` | -      |
+
+#### captchaProps
+
+| 属性         | 说明           | 类型                      | 默认值         |
+| ------------ | -------------- | ------------------------- | -------------- |
+| onGetCaptcha | 获取验证码回调 | `(phone: string) => void` | -              |
+| countDown    | 倒计时秒数     | `number`                  | `60`           |
+| buttonText   | 按钮文字       | `string`                  | `'获取验证码'` |
+
+## 表单项组件列表
+
+| 组件名                 | 说明         |
+| ---------------------- | ------------ |
+| ProFormText            | 文本框       |
+| ProFormTextArea        | 多行文本     |
+| ProFormPassword        | 密码框       |
+| ProFormDigit           | 数字输入框   |
+| ProFormMoney           | 金额输入     |
+| ProFormSelect          | 下拉选择     |
+| ProFormRadio           | 单选框       |
+| ProFormCheckbox        | 复选框       |
+| ProFormSwitch          | 开关         |
+| ProFormRate            | 评分         |
+| ProFormSlider          | 滑块         |
+| ProFormSegmented       | 分段控制器   |
+| ProFormCascader        | 级联选择     |
+| ProFormTreeSelect      | 树选择       |
+| ProFormDatePicker      | 日期选择     |
+| ProFormDateRangePicker | 日期范围选择 |
+| ProFormTimePicker      | 时间选择     |
+| ProFormTimeRangePicker | 时间范围选择 |
+| ProFormColorPicker     | 颜色选择     |
+| ProFormCaptcha         | 验证码       |
+| ProFormGroup           | 表单分组     |
+| ProFormList            | 动态表单     |
+| ProFormDependency      | 表单联动     |

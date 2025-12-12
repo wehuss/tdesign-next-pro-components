@@ -5,10 +5,10 @@ import { FieldSelect } from '../../../field/components/select'
 import type { ProFieldMode } from '../../../field/types'
 import { EditOrReadOnlyContextKey } from '../../BaseForm/EditOrReadOnlyContext'
 import {
-    proFormFieldEmits,
-    proFormFieldProps,
+  proFormFieldEmits,
+  proFormFieldProps,
 } from '../../utils/proFormFieldProps'
-import { ProFormItem } from '../FormItem'
+import { ProFormItem } from '../form-item'
 
 /**
  * 选项类型
@@ -63,7 +63,7 @@ export const ProFormSelect = defineComponent({
           valueEnum={props.valueEnum}
           fieldProps={{
             ...props.fieldProps,
-            options: props.options ?? props.fieldProps?.options
+            options: props.options ?? props.fieldProps?.options,
           }}
           {...attrs}
         />

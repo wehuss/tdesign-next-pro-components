@@ -4,8 +4,9 @@
     ProFormGroup,
     ProFormSelect,
     ProFormText,
-} from '@/components/form'
-import { ref } from 'vue'
+    ProFormTextArea,
+  } from '@/components/form'
+  import { ref } from 'vue'
 
   const formRef = ref()
 
@@ -16,22 +17,35 @@ import { ref } from 'vue'
 
 <template>
   <ProForm ref="formRef" @finish="handleFinish">
-    <!-- 两列布局 -->
-    <ProFormGroup title="基本信息" :colProps="{ span: 12 }">
+    <!-- 基本信息分组 - 水平布局 -->
+    <ProFormGroup title="基本信息" direction="horizontal" :wrap="true">
       <ProFormText
         name="firstName"
         label="名"
         :field-props="{ placeholder: '请输入名' }"
+        :style="{ width: '200px' }"
       />
       <ProFormText
         name="lastName"
         label="姓"
         :field-props="{ placeholder: '请输入姓' }"
+        :style="{ width: '200px' }"
+      />
+      <ProFormText
+        name="nickname"
+        label="昵称"
+        :field-props="{ placeholder: '请输入昵称' }"
+        :style="{ width: '200px' }"
       />
     </ProFormGroup>
 
-    <!-- 三列布局 -->
-    <ProFormGroup title="地址信息" :colProps="{ span: 8 }">
+    <!-- 地址信息分组 - 可折叠 -->
+    <ProFormGroup
+      title="地址信息"
+      direction="horizontal"
+      :wrap="true"
+      :collapsible="true"
+    >
       <ProFormSelect
         name="province"
         label="省"
@@ -41,6 +55,7 @@ import { ref } from 'vue'
           { label: '上海', value: 'shanghai' },
           { label: '广东', value: 'guangdong' },
         ]"
+        :style="{ width: '200px' }"
       />
       <ProFormSelect
         name="city"
@@ -51,19 +66,38 @@ import { ref } from 'vue'
           { label: '上海市', value: 'shanghai' },
           { label: '广州市', value: 'guangzhou' },
         ]"
+        :style="{ width: '200px' }"
       />
       <ProFormText
         name="district"
         label="区"
         :field-props="{ placeholder: '请输入区' }"
+        :style="{ width: '200px' }"
       />
     </ProFormGroup>
 
-    <!-- 详细地址 -->
-    <ProFormText
+    <!-- 详细地址 - 全宽 -->
+    <ProFormTextArea
       name="address"
       label="详细地址"
-      :field-props="{ placeholder: '请输入详细地址' }"
+      :field-props="{
+        placeholder: '请输入详细地址',
+        autosize: { minRows: 2, maxRows: 4 },
+      }"
     />
+
+    <!-- 垂直布局分组 -->
+    <ProFormGroup title="其他信息" direction="vertical" size="small">
+      <ProFormText
+        name="email"
+        label="邮箱"
+        :field-props="{ placeholder: '请输入邮箱' }"
+      />
+      <ProFormText
+        name="phone"
+        label="电话"
+        :field-props="{ placeholder: '请输入电话' }"
+      />
+    </ProFormGroup>
   </ProForm>
 </template>

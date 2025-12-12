@@ -8,7 +8,7 @@ import {
   proFormFieldEmits,
   proFormFieldProps,
 } from '../../utils/proFormFieldProps'
-import { ProFormItem } from '../FormItem'
+import { ProFormItem } from '../form-item'
 
 /**
  * ProFormRate 组件
@@ -54,7 +54,7 @@ export const ProFormRate = defineComponent({
           allowHalf={props.allowHalf}
           fieldProps={{
             ...props.fieldProps,
-            clearable: props.allowClear ?? props.fieldProps?.clearable
+            clearable: props.allowClear ?? props.fieldProps?.clearable,
           }}
           {...attrs}
         />

@@ -8,7 +8,7 @@ import {
   proFormFieldEmits,
   proFormFieldProps,
 } from '../../utils/proFormFieldProps'
-import { ProFormItem } from '../FormItem'
+import { ProFormItem } from '../form-item'
 
 /**
  * ProFormMoney 组件

@@ -1,13 +1,13 @@
 <script setup lang="ts">
   import {
-  ProForm,
-  ProFormDatePicker,
-  ProFormSelect,
-  ProFormSwitch,
-  ProFormText,
-} from '@/components/form'
-import { MessagePlugin } from 'tdesign-vue-next'
-import { ref } from 'vue'
+    ProForm,
+    ProFormDatePicker,
+    ProFormSelect,
+    ProFormSwitch,
+    ProFormText,
+  } from '@/components/form'
+  import { MessagePlugin } from 'tdesign-vue-next'
+  import { ref } from 'vue'
 
   const formData = ref({
     username: '',

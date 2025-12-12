@@ -8,7 +8,7 @@ import type {
   SearchConvertKeyFn,
 } from '../field/types'
 import type { ProFormInstance } from './BaseForm'
-import type { CaptFieldRef } from './components/Captcha'
+import type { CaptFieldRef } from './components/captcha'
 
 export interface ProFormGridConfig {
   /**

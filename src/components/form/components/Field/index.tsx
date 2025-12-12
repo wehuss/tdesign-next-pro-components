@@ -13,7 +13,7 @@ import {
 } from 'vue'
 import { EditOrReadOnlyContextKey } from '../../BaseForm/EditOrReadOnlyContext'
 import { useFieldContext } from '../../FieldContext'
-import { ProFormItem } from '../FormItem'
+import { ProFormItem } from '../form-item'
 import type { SearchTransformKeyFn } from '../types'
 
 /**

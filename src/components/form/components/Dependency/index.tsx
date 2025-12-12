@@ -1,7 +1,7 @@
 import { computed, defineComponent, type PropType, type VNode } from 'vue'
 import type { ProFormInstance } from '../../BaseForm'
 import { useFieldContext } from '../../FieldContext'
-import { useFormListContext } from '../List'
+import { useFormListContext } from '../list'
 
 export interface ProFormDependencyProps {
   /** 依赖的字段名列表 */

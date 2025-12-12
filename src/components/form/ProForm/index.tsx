@@ -2,8 +2,8 @@ import type { PropType, VNode } from 'vue'
 import { defineComponent, ref, watch } from 'vue'
 import { BaseForm } from '../BaseForm/BaseForm'
 import { EditOrReadOnlyContext } from '../BaseForm/EditOrReadOnlyContext'
-import { ProFormItem } from '../components/FormItem'
-import { ProFormGroup } from '../components/Group'
+import { ProFormItem } from '../components/form-item'
+import { ProFormGroup } from '../components/group'
 import type { ProFormGroupProps } from '../typing'
 
 export interface ProFormProps {

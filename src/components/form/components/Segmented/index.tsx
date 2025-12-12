@@ -4,10 +4,10 @@ import { FieldSegmented } from '../../../field/components/segmented'
 import type { ProFieldMode } from '../../../field/types'
 import { EditOrReadOnlyContextKey } from '../../BaseForm/EditOrReadOnlyContext'
 import {
-    proFormFieldEmits,
-    proFormFieldProps,
+  proFormFieldEmits,
+  proFormFieldProps,
 } from '../../utils/proFormFieldProps'
-import { ProFormItem } from '../FormItem'
+import { ProFormItem } from '../form-item'
 
 /**
  * ProFormSegmented 组件
@@ -55,7 +55,7 @@ export const ProFormSegmented = defineComponent({
           valueEnum={props.valueEnum}
           fieldProps={{
             ...props.fieldProps,
-            options: props.options ?? props.fieldProps?.options
+            options: props.options ?? props.fieldProps?.options,
           }}
           {...attrs}
         />

@@ -5,10 +5,10 @@ import { FieldSwitch } from '../../../field/components/switch'
 import type { ProFieldMode } from '../../../field/types'
 import { EditOrReadOnlyContextKey } from '../../BaseForm/EditOrReadOnlyContext'
 import {
-    proFormFieldEmits,
-    proFormFieldProps,
+  proFormFieldEmits,
+  proFormFieldProps,
 } from '../../utils/proFormFieldProps'
-import { ProFormItem } from '../FormItem'
+import { ProFormItem } from '../form-item'
 
 /**
  * ProFormSwitch 组件
@@ -51,7 +51,10 @@ export const ProFormSwitch = defineComponent({
           mode={currentMode.value}
           fieldProps={{
             ...props.fieldProps,
-            label: props.fieldProps.label ?? [props.checkedChildren, props.unCheckedChildren]
+            label: props.fieldProps.label ?? [
+              props.checkedChildren,
+              props.unCheckedChildren,
+            ],
           }}
           {...attrs}
         />

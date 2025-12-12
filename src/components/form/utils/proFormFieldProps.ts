@@ -24,14 +24,14 @@ export const proFormFieldProps = {
     type: [String, Number, Boolean, Array, Object] as PropType<any>,
     default: undefined,
   },
-  /** 标签文本 */
-  label: [String, Function] as PropType<string | (() => VNode)>,
+  /** 标签文本 - 与 TDesign FormItem label 类型兼容 */
+  label: [String, Function] as PropType<FormItemProps['label']>,
   /** 表单验证规则 */
   rules: Array as PropType<FormItemProps['rules']>,
   /** 是否必填 */
   required: Boolean,
-  /** 帮助提示信息 */
-  help: [String, Function] as PropType<string | (() => VNode)>,
+  /** 帮助提示信息 - 与 TDesign FormItem help 类型兼容 */
+  help: [String, Object, Function] as PropType<FormItemProps['help']>,
   /** 额外信息 */
   extra: [String, Function] as PropType<string | (() => VNode)>,
   /** 字段宽度 */
@@ -98,7 +98,12 @@ export const proFormFieldProps = {
 /**
  * ProForm 通用 emits
  */
-export const proFormFieldEmits = ['update:modelValue', 'change', 'blur', 'focus'] as const
+export const proFormFieldEmits = [
+  'update:modelValue',
+  'change',
+  'blur',
+  'focus',
+] as const
 
 /**
  * 从 attrs 中过滤掉 ProTable columns 配置属性
@@ -147,7 +152,9 @@ export function filterAttrs(attrs: Record<string, any>): Record<string, any> {
  * ProForm 字段 props 的 key 列表
  * 用于从 props 中分离出 ProForm 特有属性和 TDesign 组件属性
  */
-export const proFormFieldPropsKeys = Object.keys(proFormFieldProps) as Array<keyof typeof proFormFieldProps>
+export const proFormFieldPropsKeys = Object.keys(proFormFieldProps) as Array<
+  keyof typeof proFormFieldProps
+>
 
 /**
  * 从 props 中提取 ProForm 专用属性
@@ -155,7 +162,7 @@ export const proFormFieldPropsKeys = Object.keys(proFormFieldProps) as Array<key
 export function extractProFormProps<T extends Record<string, any>>(props: T) {
   const proFormProps: Record<string, any> = {}
   const componentProps: Record<string, any> = {}
-  
+
   for (const key of Object.keys(props)) {
     if (proFormFieldPropsKeys.includes(key as any)) {
       proFormProps[key] = props[key]
@@ -163,6 +170,6 @@ export function extractProFormProps<T extends Record<string, any>>(props: T) {
       componentProps[key] = props[key]
     }
   }
-  
+
   return { proFormProps, componentProps }
 }

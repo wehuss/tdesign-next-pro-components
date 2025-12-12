@@ -8,7 +8,7 @@ import {
   proFormFieldEmits,
   proFormFieldProps,
 } from '../../utils/proFormFieldProps'
-import { ProFormItem } from '../FormItem'
+import { ProFormItem } from '../form-item'
 
 /**
  * ProFormCheckbox 组件
@@ -20,7 +20,9 @@ export const ProFormCheckbox = defineComponent({
   props: {
     ...proFormFieldProps,
     options: {
-      type: Array as PropType<Array<{ label: string; value: any; disabled?: boolean }>>,
+      type: Array as PropType<
+        Array<{ label: string; value: any; disabled?: boolean }>
+      >,
       default: () => [],
     },
     fieldProps: {
@@ -54,7 +56,7 @@ export const ProFormCheckbox = defineComponent({
           valueEnum={props.valueEnum}
           fieldProps={{
             ...props.fieldProps,
-            options: props.options ?? props.fieldProps?.options
+            options: props.options ?? props.fieldProps?.options,
           }}
           {...attrs}
         />

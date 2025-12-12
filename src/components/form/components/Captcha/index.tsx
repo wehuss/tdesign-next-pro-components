@@ -8,7 +8,7 @@ import {
   type PropType,
   type VNode,
 } from 'vue'
-import { ProFormItem } from '../FormItem'
+import { ProFormItem } from '../form-item'
 
 /**
  * 验证码输入框组件的 ref 类型
