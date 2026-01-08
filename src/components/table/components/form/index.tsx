@@ -6,7 +6,7 @@
 
 import type { PropType, VNode } from 'vue'
 import { computed, defineComponent, ref, watch } from 'vue'
-import { LightFilter, QueryFilter } from '../../../form'
+import { LightFilter, ProFormField, QueryFilter } from '../../../form'
 import type { ProTableColumn, SearchConfig } from '../../types'
 import './style.less'
 
@@ -27,13 +27,14 @@ export interface TableFormProps {
 // 从列配置生成表单项
 const genFormItemsFromColumns = (
   columns: ProTableColumn[],
-  type: string = 'table'
+  _type: string = 'table'
 ): { key: string; column: ProTableColumn }[] => {
   return columns
     .filter(column => {
-      // 过滤掉不需要在搜索表单中显示的列
-      if (column.form?.searchForm === false) return false
-      if (type === 'form' && column.form?.searchForm === false) return false
+      // 只有配置了 form 属性的列才会在搜索表单中显示
+      if (!column.form) return false
+      // 如果明确设置 searchForm: false 则不显示
+      if (column.form.searchForm === false) return false
       return true
     })
     .map((column, index) => ({
@@ -167,18 +168,25 @@ export default defineComponent({
     // 渲染表单项
     const renderFormItems = (): VNode[] => {
       return formItems.value.map(({ key, column }) => {
-        const valueType = column.valueType || 'text'
-        const formConfig = column.form || {}
+        const form = column.form
+        // 从 form 配置中获取 valueType，如果未配置则使用列的 valueType，默认为 'text'
+        const valueType = form?.valueType || column.valueType || 'text'
 
-        // 这里简化处理，实际应该根据 valueType 渲染对应的表单组件
-        // 完整实现需要集成 ProFormField 组件
         return (
-          <div key={key} class="t-pro-table-form-item">
-            {/* 表单项占位，实际应该渲染 ProFormField */}
-            <span data-value-type={valueType} data-form-config={formConfig}>
-              {column.title}
-            </span>
-          </div>
+          <ProFormField
+            key={key}
+            name={column.colKey}
+            label={column.title as string}
+            valueType={valueType as string}
+            valueEnum={form?.valueEnum || column.valueEnum}
+            fieldProps={form?.fieldProps}
+            formItemProps={form}
+            placeholder={form?.placeholder}
+            rules={form?.rules}
+            required={form?.required}
+            disabled={form?.disabled}
+            readonly={form?.readonly}
+          />
         ) as VNode
       })
     }

@@ -56,12 +56,7 @@ export const proFormFieldProps = {
   dataFormat: String,
   /** LightFilter 相关属性 */
   lightProps: Object,
-  /** 前置装饰 */
-  addonBefore: [String, Function] as PropType<string | (() => VNode)>,
-  /** 后置装饰 */
-  addonAfter: [String, Function] as PropType<string | (() => VNode)>,
-  /** 装饰容器样式 */
-  addonWarpStyle: Object,
+
   /** 是否次要 */
   secondary: Boolean,
   /** 栅格列配置 */

@@ -60,9 +60,7 @@ const FILTERED_ATTRS = [
   'convertValue',
   'dataFormat',
   'lightProps',
-  'addonBefore',
-  'addonAfter',
-  'addonWarpStyle',
+
   'secondary',
   'colProps',
   'rowProps',
@@ -149,12 +147,7 @@ export interface ProFormItemProps {
   }
   /** 字段唯一标识 */
   proFormFieldKey?: string | number
-  /** 前置元素 */
-  addonBefore?: string | VNode | (() => VNode)
-  /** 后置元素 */
-  addonAfter?: string | VNode | (() => VNode)
-  /** 前后置元素包装样式 */
-  addonWarpStyle?: Record<string, any>
+
   /** 获取时转换值 */
   convertValue?: (value: any, namePath: string | string[]) => any
   /** 宽度 */
@@ -209,12 +202,7 @@ export const ProFormItem = defineComponent({
       default: () => ({}),
     },
     proFormFieldKey: [String, Number],
-    addonBefore: [String, Function] as PropType<string | (() => VNode)>,
-    addonAfter: [String, Function] as PropType<string | (() => VNode)>,
-    addonWarpStyle: {
-      type: Object,
-      default: () => ({}),
-    },
+
     convertValue: Function as PropType<ProFormItemProps['convertValue']>,
     width: [Number, String] as PropType<ProFormItemProps['width']>,
     disabled: {
@@ -376,36 +364,7 @@ export const ProFormItem = defineComponent({
         )
       }
 
-      // 处理前置后置元素
-      const addonBefore =
-        typeof props.addonBefore === 'function'
-          ? (props.addonBefore as Function)()
-          : props.addonBefore
-      const addonAfter =
-        typeof props.addonAfter === 'function'
-          ? (props.addonAfter as Function)()
-          : props.addonAfter
-
-      if (!addonBefore && !addonAfter) {
-        return wrappedChildren
-      }
-
-      return (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            ...props.addonWarpStyle,
-          }}
-        >
-          {addonBefore && (
-            <div style={{ marginRight: '8px' }}>{addonBefore}</div>
-          )}
-          {wrappedChildren}
-          {addonAfter && <div style={{ marginLeft: '8px' }}>{addonAfter}</div>}
-        </div>
-      )
+      return wrappedChildren
     }
 
     // 过滤后的 attrs，移除不应传递给 TDesign FormItem 的属性

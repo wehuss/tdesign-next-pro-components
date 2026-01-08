@@ -104,9 +104,7 @@ export const ProFormField = defineComponent({
     'secondary': Boolean,
     'colProps': Object,
     'lightProps': Object,
-    'addonBefore': [String, Object],
-    'addonAfter': [String, Object],
-    'addonWarpStyle': Object,
+
     // v-model
     'modelValue': null,
     'onUpdate:modelValue': Function,
@@ -192,9 +190,6 @@ export const ProFormField = defineComponent({
             transform={props.transform as any}
             dataFormat={props.dataFormat}
             lightProps={props.lightProps}
-            addonBefore={props.addonBefore}
-            addonAfter={props.addonAfter}
-            addonWarpStyle={props.addonWarpStyle}
             secondary={props.secondary}
             colProps={props.colProps}
             {...mergedFormItemProps.value}
@@ -242,9 +237,6 @@ export const ProFormField = defineComponent({
           transform={props.transform as any}
           dataFormat={props.dataFormat}
           lightProps={props.lightProps}
-          addonBefore={props.addonBefore}
-          addonAfter={props.addonAfter}
-          addonWarpStyle={props.addonWarpStyle}
           secondary={props.secondary}
           colProps={props.colProps}
           {...mergedFormItemProps.value}

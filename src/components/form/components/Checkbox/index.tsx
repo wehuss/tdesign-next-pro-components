@@ -78,9 +78,6 @@ export const ProFormCheckbox = defineComponent({
           transform={props.transform}
           dataFormat={props.dataFormat}
           lightProps={props.lightProps}
-          addonBefore={props.addonBefore}
-          addonAfter={props.addonAfter}
-          addonWarpStyle={props.addonWarpStyle}
           secondary={props.secondary}
           colProps={props.colProps}
           {...props.formItemProps}

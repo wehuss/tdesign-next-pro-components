@@ -17,6 +17,7 @@ import {
   watch,
 } from 'vue'
 import TableAlert from './components/alert'
+import TableFormRender from './components/form'
 import TableToolBar from './components/toolbar'
 import { useFetchData } from './hooks/useFetchData'
 import './style/index.less'
@@ -469,8 +470,26 @@ const ProTable = defineComponent({
     return () => {
       const { ghost, cardBordered, toolbar, headerTitle } = props
 
-      // 搜索表单节点（暂时为空，稍后实现）
-      const searchNode = null
+      // 检查是否有列配置了 form 属性
+      const hasFormColumns = (props.columns as ProTableColumn[]).some(
+        column => column.form !== undefined
+      )
+
+      // 搜索表单节点 - 只有当 search 不为 false 且有列配置了 form 属性时才渲染
+      const searchNode =
+        props.search !== false && hasFormColumns ? (
+          <TableFormRender
+            ref={searchFormRef}
+            columns={props.columns as ProTableColumn[]}
+            search={props.search}
+            loading={action._refs.loading.value}
+            onSubmit={onFormSearchSubmit}
+            onReset={onFormSearchReset}
+            manualRequest={props.manual || props.manualRequest}
+            ghost={ghost}
+            bordered={cardBordered}
+          />
+        ) : null
 
       // 工具栏节点
       const toolbarNode =

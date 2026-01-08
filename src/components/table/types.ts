@@ -1,12 +1,12 @@
 import type {
   EnhancedTableProps,
-  FormItemProps,
   PaginationProps,
   PrimaryTableCol,
   TableRowData,
 } from 'tdesign-vue-next'
 import type { Ref, VNode } from 'vue'
 import type { ProFieldValueEnumType, ProFieldValueType } from '../field/types'
+import type { ProFormItemProps } from '../form/components'
 
 export type ProNode = string | ((...args: unknown[]) => VNode)
 
@@ -39,7 +39,7 @@ export interface FilterInfo {
   [key: string]: (string | number)[] | null
 }
 
-export interface ProTableColumnFormItem extends FormItemProps {
+export interface ProTableColumnFormItem extends ProFormItemProps {
   valueType: ProFieldValueType
   valueEnum?: ProFieldValueEnumType
   render?: VNode
@@ -63,9 +63,9 @@ export interface ProTableColumn<T extends TableRowData = TableRowData>
   // hideInForm?: boolean
   // hideInSearch?: boolean
   form?: ProTableColumnFormItem & {
-    searchForm?: boolean | ProTableColumnFormItem
-    updateForm?: boolean | ProTableColumnFormItem
-    createForm?: boolean | ProTableColumnFormItem
+    searchForm?: false | ProTableColumnFormItem
+    updateForm?: false | ProTableColumnFormItem
+    createForm?: false | ProTableColumnFormItem
   }
 
   // 编辑相关

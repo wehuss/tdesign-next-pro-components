@@ -31,6 +31,13 @@ const BREAKPOINTS = {
     [1352, 3, 'horizontal'],
     [Infinity, 4, 'horizontal'],
   ],
+  horizontal: [
+    [513, 1, 'vertical'],
+    [701, 2, 'vertical'],
+    [1062, 3, 'horizontal'],
+    [1352, 3, 'horizontal'],
+    [Infinity, 4, 'horizontal'],
+  ],
 }
 
 export type SpanConfig =
@@ -94,6 +101,7 @@ const getSpanConfig = (
     return { span, layout: layout || 'horizontal' }
   }
 
+  console.log('layout', layout)
   const spanConfig =
     BREAKPOINTS[(layout as 'default' | 'vertical') || 'default']
   const breakPoint = spanConfig.find(item => width < (item[0] as number) + 16)

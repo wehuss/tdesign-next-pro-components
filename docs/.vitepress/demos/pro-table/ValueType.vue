@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import type { ProTableColumn } from '@/components/table'
-  import ProTable from '@/components/table'
+import ProTable from '@/components/table'
 
   const columns: ProTableColumn[] = [
     {
@@ -27,8 +27,11 @@
       valueType: 'select',
       width: 100,
       valueEnum: {
-        active: { text: '启用', status: 'success' },
-        inactive: { text: '禁用', status: 'error' },
+        active: { text: '启用', theme: 'success' },
+        inactive: { text: '禁用', theme: 'danger' },
+      },
+      form:{
+        valueType:'text'
       },
     },
     {
