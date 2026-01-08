@@ -6,10 +6,7 @@
 import { Space, Tag } from 'tdesign-vue-next'
 import type { CSSProperties, VNodeChild } from 'vue'
 import { h } from 'vue'
-import type {
-  ProFieldValueEnumMap,
-  ProFieldValueEnumType,
-} from '../../components/field/types'
+import type { ProFieldValueEnumMap, ProFieldValueEnumType } from '../../components/field/types'
 
 /**
  * 获取类型的 type
@@ -33,14 +30,10 @@ type StatusProps = {
   children?: VNodeChild
 }
 
-export const ProFieldTagColor = ({
-  color,
-  children,
-}: StatusProps & { color: string }) => h(Tag, { color }, () => children)
+export const ProFieldTagColor = ({ color, children }: StatusProps & { color: string }) =>
+  h(Tag, { color }, () => children)
 
-export const objectToMap = (
-  value: ProFieldValueEnumType | undefined
-): ProFieldValueEnumMap => {
+export const objectToMap = (value: ProFieldValueEnumType | undefined): ProFieldValueEnumMap => {
   if (getType(value) === 'map') {
     return value as ProFieldValueEnumMap
   }
@@ -93,13 +86,11 @@ type ProFieldStatusType =
 export const proFieldParsingText = (
   text: string | number | (string | number)[],
   valueEnumParams: ProFieldValueEnumType,
-  key?: number | string
+  key?: number | string,
 ): VNodeChild => {
   if (Array.isArray(text)) {
     return h(Space, { key, split: ',', size: 'small', wrap: true }, () =>
-      text.map((value, index) =>
-        proFieldParsingText(value, valueEnumParams, index)
-      )
+      text.map((value, index) => proFieldParsingText(value, valueEnumParams, index)),
     )
   }
 

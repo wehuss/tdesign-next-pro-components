@@ -48,19 +48,13 @@ export const columnSort =
 
     // 左固定列优先级最高
     // 如果 a 是左固定而 b 不是，或者 b 是右固定而 a 不是，a 排在前面
-    if (
-      (aFixed === 'left' && bFixed !== 'left') ||
-      (bFixed === 'right' && aFixed !== 'right')
-    ) {
+    if ((aFixed === 'left' && bFixed !== 'left') || (bFixed === 'right' && aFixed !== 'right')) {
       return -2
     }
 
     // 右固定列优先级最低
     // 如果 b 是左固定而 a 不是，或者 a 是右固定而 b 不是，b 排在前面
-    if (
-      (bFixed === 'left' && aFixed !== 'left') ||
-      (aFixed === 'right' && bFixed !== 'right')
-    ) {
+    if ((bFixed === 'left' && aFixed !== 'left') || (aFixed === 'right' && bFixed !== 'right')) {
       return 2
     }
 
@@ -90,7 +84,7 @@ export const columnSort =
  */
 export const getColumnSortWeight = (
   column: SortableColumn,
-  columnsMap: Record<string, ColumnsState>
+  columnsMap: Record<string, ColumnsState>,
 ): number => {
   const { fixed, index, key, colKey } = column
   const columnKey = key || colKey || `${index}`

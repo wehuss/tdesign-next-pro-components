@@ -50,7 +50,7 @@ export const FieldTimeRange = defineComponent({
 
     expose({
       getDataEntryRef,
-      dataEntryRef
+      dataEntryRef,
     })
 
     // 格式化时间范围显示

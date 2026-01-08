@@ -1,18 +1,8 @@
 import { ProField } from '@/components/field/component'
-import type {
-  ProFieldValueEnumType,
-  ProFieldValueType,
-} from '@/components/field/types'
-import {
-  computed,
-  defineComponent,
-  inject,
-  useModel,
-  type PropType,
-  type VNode,
-} from 'vue'
-import { EditOrReadOnlyContextKey } from '../../BaseForm/EditOrReadOnlyContext'
-import { useFieldContext } from '../../FieldContext'
+import type { ProFieldValueEnumType, ProFieldValueType } from '@/components/field/types'
+import { computed, defineComponent, inject, useModel, type PropType, type VNode } from 'vue'
+import { EditOrReadOnlyContextKey } from '../../base-form/edit-or-read-only-context'
+import { useFieldContext } from '../../field-context'
 import { ProFormItem } from '../form-item'
 import type { SearchTransformKeyFn } from '../types'
 
@@ -24,91 +14,87 @@ export const ProFormField = defineComponent({
   name: 'ProFormField',
   props: {
     // 基础属性
-    'name': [String, Array] as PropType<string | string[]>,
-    'label': String,
-    'rules': Array,
-    'required': Boolean,
-    'help': String,
-    'extra': String,
-    'width': [String, Number],
-    'ignoreFormItem': Boolean,
-    'disabled': Boolean,
-    'readonly': Boolean,
-    'placeholder': [String, Array] as PropType<string | string[]>,
-    'emptyText': {
+    name: [String, Array] as PropType<string | string[]>,
+    label: String,
+    rules: Array,
+    required: Boolean,
+    help: String,
+    extra: String,
+    width: [String, Number],
+    ignoreFormItem: Boolean,
+    disabled: Boolean,
+    readonly: Boolean,
+    placeholder: [String, Array] as PropType<string | string[]>,
+    emptyText: {
       type: String,
       default: '-',
     },
     // valueType 和 valueEnum
-    'valueType': {
+    valueType: {
       type: String as PropType<ProFieldValueType>,
       default: 'text',
     },
-    'valueEnum': {
+    valueEnum: {
       type: [Object, Map] as unknown as () => ProFieldValueEnumType,
       default: undefined,
     },
     // 渲染模式
-    'mode': {
+    mode: {
       type: String as PropType<'edit' | 'read' | 'update'>,
       default: undefined,
     },
     // 字段属性
-    'fieldProps': {
+    fieldProps: {
       type: Object,
       default: () => ({}),
     },
-    'formItemProps': {
+    formItemProps: {
       type: Object,
       default: () => ({}),
     },
     // ProField 属性
-    'proFieldProps': {
+    proFieldProps: {
       type: Object,
       default: () => ({}),
     },
     // 自定义渲染
-    'render': Function as PropType<
-      (text: any, props: any, dom: VNode) => VNode | null
-    >,
-    'formItemRender': Function as PropType<
-      (text: any, props: any, dom: VNode) => VNode | null
-    >,
+    render: Function as PropType<(text: any, props: any, dom: VNode) => VNode | null>,
+    formItemRender: Function as PropType<(text: any, props: any, dom: VNode) => VNode | null>,
     // 值转换
-    'transform': Function as PropType<SearchTransformKeyFn>,
-    'convertValue': Function,
-    'dataFormat': String,
+    transform: Function as PropType<SearchTransformKeyFn>,
+    convertValue: Function,
+    dataFormat: String,
     // 请求相关
-    'request': Function,
-    'params': Object,
-    'debounceTime': {
+    request: Function,
+    params: Object,
+    debounceTime: {
       type: Number,
       default: 300,
     },
     // 依赖值
-    'dependenciesValues': Object,
-    'originDependencies': Object,
+    dependenciesValues: Object,
+    originDependencies: Object,
     // 其他
-    'isDefaultDom': Boolean,
-    'plain': Boolean,
-    'text': null,
-    'cacheForSwr': {
+    isDefaultDom: Boolean,
+    plain: Boolean,
+    text: null,
+    cacheForSwr: {
       type: Boolean,
       default: false,
     },
-    'valuePropName': {
+    valuePropName: {
       type: String,
       default: 'value',
     },
     // 布局
-    'secondary': Boolean,
-    'colProps': Object,
-    'lightProps': Object,
+    secondary: Boolean,
+    colProps: Object,
+    lightProps: Object,
 
     // v-model
-    'modelValue': null,
+    modelValue: null,
     'onUpdate:modelValue': Function,
-    'onChange': Function,
+    onChange: Function,
   },
   emits: ['update:modelValue', 'change'],
   setup(props, { emit, slots }) {
@@ -131,8 +117,7 @@ export const ProFormField = defineComponent({
       if (props.readonly) return 'read'
       // 最后使用上下文
       const contextMode =
-        typeof editOrReadOnlyContext.mode === 'object' &&
-        'value' in editOrReadOnlyContext.mode
+        typeof editOrReadOnlyContext.mode === 'object' && 'value' in editOrReadOnlyContext.mode
           ? editOrReadOnlyContext.mode.value
           : editOrReadOnlyContext.mode
       return contextMode || 'edit'

@@ -46,7 +46,7 @@ export const FieldTime = defineComponent({
 
     expose({
       getDataEntryRef,
-      dataEntryRef
+      dataEntryRef,
     })
 
     // 格式化时间显示
@@ -68,7 +68,7 @@ export const FieldTime = defineComponent({
               today.getDate(),
               hours,
               minutes,
-              seconds || 0
+              seconds || 0,
             )
           } else {
             date = new Date(value)
@@ -85,10 +85,7 @@ export const FieldTime = defineComponent({
         const minutes = String(date.getMinutes()).padStart(2, '0')
         const seconds = String(date.getSeconds()).padStart(2, '0')
 
-        return props.format
-          .replace('HH', hours)
-          .replace('mm', minutes)
-          .replace('ss', seconds)
+        return props.format.replace('HH', hours).replace('mm', minutes).replace('ss', seconds)
       } catch {
         return '-'
       }
@@ -106,11 +103,7 @@ export const FieldTime = defineComponent({
           ref={dataEntryRef}
           v-model={modelValue.value}
           format={props.format}
-          placeholder={
-            Array.isArray(props.placeholder)
-              ? props.placeholder[0]
-              : props.placeholder
-          }
+          placeholder={Array.isArray(props.placeholder) ? props.placeholder[0] : props.placeholder}
           disabled={props.disabled}
           {...props.fieldProps}
         />

@@ -62,7 +62,7 @@ export const FieldSlider = defineComponent({
 
     expose({
       getDataEntryRef,
-      dataEntryRef
+      dataEntryRef,
     })
 
     // 格式化滑块值显示

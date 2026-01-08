@@ -1,11 +1,4 @@
-import {
-  inject,
-  provide,
-  reactive,
-  type ComputedRef,
-  type InjectionKey,
-  type Ref,
-} from 'vue'
+import { inject, provide, reactive, type ComputedRef, type InjectionKey, type Ref } from 'vue'
 
 /**
  * 编辑/只读模式类型
@@ -28,10 +21,7 @@ export interface EditOrReadOnlyContextValue {
  */
 export interface ReactiveEditOrReadOnlyContextValue {
   /** 当前模式（响应式） */
-  mode:
-    | ComputedRef<EditOrReadOnlyMode>
-    | Ref<EditOrReadOnlyMode>
-    | EditOrReadOnlyMode
+  mode: ComputedRef<EditOrReadOnlyMode> | Ref<EditOrReadOnlyMode> | EditOrReadOnlyMode
 }
 
 /** 默认上下文值 */
@@ -55,11 +45,7 @@ export const useEditOrReadOnlyContext = (): EditOrReadOnlyContextValue => {
   if (context && typeof context.mode === 'object' && 'value' in context.mode) {
     return reactive({
       get mode() {
-        return (
-          context.mode as
-            | ComputedRef<EditOrReadOnlyMode>
-            | Ref<EditOrReadOnlyMode>
-        ).value
+        return (context.mode as ComputedRef<EditOrReadOnlyMode> | Ref<EditOrReadOnlyMode>).value
       },
     }) as EditOrReadOnlyContextValue
   }
@@ -72,7 +58,7 @@ export const useEditOrReadOnlyContext = (): EditOrReadOnlyContextValue => {
  * @param value 上下文值，支持响应式
  */
 export const provideEditOrReadOnlyContext = (
-  value: EditOrReadOnlyContextValue | ReactiveEditOrReadOnlyContextValue
+  value: EditOrReadOnlyContextValue | ReactiveEditOrReadOnlyContextValue,
 ) => {
   provide(EditOrReadOnlyContextKey, value)
 }
@@ -83,7 +69,7 @@ export const provideEditOrReadOnlyContext = (
  * @returns 响应式上下文值
  */
 export const createEditOrReadOnlyContext = (
-  modeRef: ComputedRef<EditOrReadOnlyMode> | Ref<EditOrReadOnlyMode>
+  modeRef: ComputedRef<EditOrReadOnlyMode> | Ref<EditOrReadOnlyMode>,
 ): ReactiveEditOrReadOnlyContextValue => {
   return {
     mode: modeRef,

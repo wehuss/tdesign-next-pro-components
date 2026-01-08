@@ -100,11 +100,7 @@ export const FieldSecond = defineComponent({
         <InputNumber
           ref={dataEntryRef}
           v-model={modelValue.value}
-          placeholder={
-            Array.isArray(props.placeholder)
-              ? props.placeholder[0]
-              : props.placeholder
-          }
+          placeholder={Array.isArray(props.placeholder) ? props.placeholder[0] : props.placeholder}
           disabled={props.disabled}
           min={0}
           style={{ width: '100%' }}

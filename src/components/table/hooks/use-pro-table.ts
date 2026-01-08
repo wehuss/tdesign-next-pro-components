@@ -7,12 +7,7 @@ import { isEmpty } from '@/utils'
 import type { TableRowData } from 'tdesign-vue-next'
 import type { Ref } from 'vue'
 import { computed, ref, watch, watchEffect } from 'vue'
-import type {
-  ActionRef,
-  PaginationParams,
-  ProTableColumn,
-  ProTableProps,
-} from '../types'
+import type { ActionRef, PaginationParams, ProTableColumn, ProTableProps } from '../types'
 import { genProColumnToColumn } from '../utils'
 
 export interface UseProTableOptions<T extends TableRowData = TableRowData> {
@@ -57,7 +52,7 @@ export interface UseProTableResult<T extends TableRowData = TableRowData> {
  * ProTable 核心 Hook
  */
 export function useProTable<T extends TableRowData = TableRowData>(
-  options: UseProTableOptions<T>
+  options: UseProTableOptions<T>,
 ): UseProTableResult<T> {
   const {
     columns,
@@ -128,9 +123,7 @@ export function useProTable<T extends TableRowData = TableRowData>(
 
     try {
       const requestParams = getRequestParams()
-      const response = await request(
-        requestParams as T & { current: number; pageSize: number }
-      )
+      const response = await request(requestParams as T & { current: number; pageSize: number })
 
       if (response.success !== false) {
         let finalData = response.data || []
@@ -251,7 +244,7 @@ export function useProTable<T extends TableRowData = TableRowData>(
         fetchData()
       }
     },
-    { deep: true }
+    { deep: true },
   )
 
   // 监听搜索参数变化
@@ -262,7 +255,7 @@ export function useProTable<T extends TableRowData = TableRowData>(
         fetchData()
       }
     },
-    { deep: true }
+    { deep: true },
   )
 
   // 监听外部参数变化
@@ -273,7 +266,7 @@ export function useProTable<T extends TableRowData = TableRowData>(
         fetchData()
       }
     },
-    { deep: true }
+    { deep: true },
   )
 
   // 初始化数据加载

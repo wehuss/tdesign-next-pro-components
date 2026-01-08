@@ -83,14 +83,14 @@ export const LightWrapper = defineComponent({
   name: 'LightWrapper',
   props: {
     label: {
-      type: [String, Function] as PropType<string | (()=>VNode)>,
+      type: [String, Function] as PropType<string | (() => VNode)>,
     },
     disabled: {
       type: Boolean,
       default: false,
     },
     placeholder: {
-      type: [String, Function] as PropType<string | (()=>VNode)>,
+      type: [String, Function] as PropType<string | (() => VNode)>,
     },
     size: {
       type: String as PropType<SizeType>,
@@ -167,10 +167,10 @@ export const LightWrapper = defineComponent({
     // 监听外部值变化，同步到临时值
     watch(
       () => props.value,
-      newVal => {
+      (newVal) => {
         tempValue.value = newVal
       },
-      { immediate: true }
+      { immediate: true },
     )
 
     // 处理值变化
@@ -208,16 +208,13 @@ export const LightWrapper = defineComponent({
         props.valueType !== 'digitRange' &&
         !props.labelFormatter
       ) {
-        return dateArrayFormatter(
-          labelValue,
-          dateFormatterMap[props.valueType] || 'YYYY-MM-DD'
-        )
+        return dateArrayFormatter(labelValue, dateFormatterMap[props.valueType] || 'YYYY-MM-DD')
       }
 
       // 处理数组值（如多选）
       if (Array.isArray(labelValue)) {
         return labelValue
-          .map(item => {
+          .map((item) => {
             if (typeof item === 'object' && item?.label && item?.value) {
               return item.label
             }
@@ -255,9 +252,7 @@ export const LightWrapper = defineComponent({
         return (
           <span class="t-pro-light-wrapper-value">
             {prefix}
-            <span class="t-pro-light-wrapper-value-text">
-              {formattedText.value}
-            </span>
+            <span class="t-pro-light-wrapper-value-text">{formattedText.value}</span>
           </span>
         )
       }
@@ -274,15 +269,10 @@ export const LightWrapper = defineComponent({
     // 渲染标签触发器
     const renderLabel = () => {
       const sizeClass = sizeClassMap[props.size || 'medium']
-      const variantClass =
-        props.variant !== 'borderless' ? 't-pro-light-wrapper--bordered' : ''
+      const variantClass = props.variant !== 'borderless' ? 't-pro-light-wrapper--bordered' : ''
       const activeClass = hasValue.value ? 't-pro-light-wrapper--active' : ''
-      const disabledClass = props.disabled
-        ? 't-pro-light-wrapper--disabled'
-        : ''
-      const clearableClass = props.allowClear
-        ? 't-pro-light-wrapper--clearable'
-        : ''
+      const disabledClass = props.disabled ? 't-pro-light-wrapper--disabled' : ''
+      const clearableClass = props.allowClear ? 't-pro-light-wrapper--clearable' : ''
 
       return (
         <span
@@ -343,11 +333,11 @@ export const LightWrapper = defineComponent({
       if (!children || children.length === 0) return null
 
       // 克隆子元素并注入props
-      const clonedChildren = children.map(child => {
+      const clonedChildren = children.map((child) => {
         if (typeof child === 'object' && child !== null) {
           return cloneVNode(child, {
             [props.valuePropName]: tempValue.value,
-            'onChange': handleTempChange,
+            onChange: handleTempChange,
             'onUpdate:modelValue': handleTempChange,
           })
         }

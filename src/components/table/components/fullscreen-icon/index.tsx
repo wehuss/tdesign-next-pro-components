@@ -85,10 +85,7 @@ export default defineComponent({
 
       // 添加全屏状态变化监听
       document.addEventListener('fullscreenchange', handleFullscreenChange)
-      document.addEventListener(
-        'webkitfullscreenchange',
-        handleFullscreenChange
-      )
+      document.addEventListener('webkitfullscreenchange', handleFullscreenChange)
       document.addEventListener('mozfullscreenchange', handleFullscreenChange)
       document.addEventListener('MSFullscreenChange', handleFullscreenChange)
     })
@@ -98,14 +95,8 @@ export default defineComponent({
 
       // 移除全屏状态变化监听
       document.removeEventListener('fullscreenchange', handleFullscreenChange)
-      document.removeEventListener(
-        'webkitfullscreenchange',
-        handleFullscreenChange
-      )
-      document.removeEventListener(
-        'mozfullscreenchange',
-        handleFullscreenChange
-      )
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange)
+      document.removeEventListener('mozfullscreenchange', handleFullscreenChange)
       document.removeEventListener('MSFullscreenChange', handleFullscreenChange)
     })
 
@@ -117,12 +108,7 @@ export default defineComponent({
 
       return (
         <Tooltip content={tooltipContent}>
-          <Button
-            variant="text"
-            shape="square"
-            icon={() => icon}
-            onClick={toggleFullscreen}
-          />
+          <Button variant="text" shape="square" icon={() => icon} onClick={toggleFullscreen} />
         </Tooltip>
       )
     }

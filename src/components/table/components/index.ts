@@ -27,10 +27,7 @@ export type {
 } from './list-toolbar'
 
 export { default as HeaderMenu } from './header-menu'
-export type {
-  ListToolBarHeaderMenuProps,
-  ListToolBarMenuItem,
-} from './header-menu'
+export type { ListToolBarHeaderMenuProps, ListToolBarMenuItem } from './header-menu'
 
 export { default as TableFormRender } from './form'
 export type { TableFormProps } from './form'

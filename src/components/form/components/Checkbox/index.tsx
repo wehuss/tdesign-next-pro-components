@@ -3,11 +3,8 @@ import type { PropType } from 'vue'
 import { computed, defineComponent, inject, useModel } from 'vue'
 import { FieldCheckbox } from '../../../field/components/checkbox'
 import type { ProFieldMode } from '../../../field/types'
-import { EditOrReadOnlyContextKey } from '../../BaseForm/EditOrReadOnlyContext'
-import {
-  proFormFieldEmits,
-  proFormFieldProps,
-} from '../../utils/proFormFieldProps'
+import { EditOrReadOnlyContextKey } from '../../base-form/edit-or-read-only-context'
+import { proFormFieldEmits, proFormFieldProps } from '../../utils/pro-form-field-props'
 import { ProFormItem } from '../form-item'
 
 /**
@@ -20,9 +17,7 @@ export const ProFormCheckbox = defineComponent({
   props: {
     ...proFormFieldProps,
     options: {
-      type: Array as PropType<
-        Array<{ label: string; value: any; disabled?: boolean }>
-      >,
+      type: Array as PropType<Array<{ label: string; value: any; disabled?: boolean }>>,
       default: () => [],
     },
     fieldProps: {
@@ -41,8 +36,7 @@ export const ProFormCheckbox = defineComponent({
     const currentMode = computed<ProFieldMode>(() => {
       if (props.readonly) return 'read'
       const contextMode =
-        typeof editOrReadOnlyContext.mode === 'object' &&
-        'value' in editOrReadOnlyContext.mode
+        typeof editOrReadOnlyContext.mode === 'object' && 'value' in editOrReadOnlyContext.mode
           ? editOrReadOnlyContext.mode.value
           : editOrReadOnlyContext.mode
       return (contextMode as ProFieldMode) || 'edit'

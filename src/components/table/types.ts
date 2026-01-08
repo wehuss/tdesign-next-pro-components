@@ -50,12 +50,12 @@ export interface ProTableColumnFormItem extends ProFormItemProps {
 }
 
 // 列配置类型
-export interface ProTableColumn<T extends TableRowData = TableRowData>
-  extends Omit<PrimaryTableCol<T>, 'render'> {
+export interface ProTableColumn<T extends TableRowData = TableRowData> extends Omit<
+  PrimaryTableCol<T>,
+  'render'
+> {
   // ProTable 扩展属性
-  valueType?:
-    | ProFieldValueType
-    | ((record?: T, type?: string) => ProFieldValueType)
+  valueType?: ProFieldValueType | ((record?: T, type?: string) => ProFieldValueType)
   valueEnum?: ProFieldValueEnumType
 
   // 显示控制
@@ -75,12 +75,7 @@ export interface ProTableColumn<T extends TableRowData = TableRowData>
   copyable?: boolean
 
   // 文本渲染处理
-  renderText?: (
-    text: unknown,
-    record: T,
-    index: number,
-    action?: unknown
-  ) => unknown
+  renderText?: (text: unknown, record: T, index: number, action?: unknown) => unknown
 
   // 自定义渲染 - 重新定义与 PrimaryTableCol 不同的签名
   render?: (
@@ -88,7 +83,7 @@ export interface ProTableColumn<T extends TableRowData = TableRowData>
     record: T,
     index: number,
     action?: unknown,
-    schema?: unknown
+    schema?: unknown,
   ) => VNode | null
 
   // 表单项渲染
@@ -102,7 +97,7 @@ export interface ProTableColumn<T extends TableRowData = TableRowData>
       isEditable?: boolean
     },
     form?: unknown,
-    editableUtils?: unknown
+    editableUtils?: unknown,
   ) => VNode | false | null
 
   // 索引标识
@@ -137,11 +132,7 @@ export interface SearchConfig {
   showHiddenNum?: boolean
   optionRender?:
     | boolean
-    | ((
-        searchConfig: SearchConfig,
-        formProps: unknown,
-        dom: VNode[]
-      ) => VNode[])
+    | ((searchConfig: SearchConfig, formProps: unknown, dom: VNode[]) => VNode[])
   onCollapse?: (collapsed: boolean) => void
 }
 
@@ -181,13 +172,15 @@ export interface ActionRef {
 }
 
 // ProTable 主要属性类型
-export interface ProTableProps<T extends TableRowData = TableRowData>
-  extends Omit<EnhancedTableProps, 'columns' | 'pagination'> {
+export interface ProTableProps<T extends TableRowData = TableRowData> extends Omit<
+  EnhancedTableProps,
+  'columns' | 'pagination'
+> {
   // 数据相关
   request?: (
     params: T & RequestParams,
     sort?: SortInfo,
-    filter?: FilterInfo
+    filter?: FilterInfo,
   ) => Promise<RequestData<T>>
   dataSource?: T[]
   params?: Partial<T>

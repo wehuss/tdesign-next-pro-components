@@ -15,15 +15,11 @@ const SHOW_EMPTY_TEXT_LIST = ['', null, undefined]
 /**
  * 单元格渲染为表单项的属性接口
  */
-export interface CellRenderToFormItemProps<
-  T extends TableRowData = TableRowData,
-> {
+export interface CellRenderToFormItemProps<T extends TableRowData = TableRowData> {
   /** 单元格文本值 */
   text: string | number | (string | number)[]
   /** 值类型 */
-  valueType:
-    | ProFieldValueType
-    | ((record?: T, type?: string) => ProFieldValueType)
+  valueType: ProFieldValueType | ((record?: T, type?: string) => ProFieldValueType)
   /** 行索引 */
   index: number
   /** 行数据 */
@@ -72,8 +68,8 @@ export interface CellRenderToFormItemProps<
  */
 export const spellNamePath = (...rest: unknown[]): (string | number)[] => {
   return rest
-    .filter(index => index !== undefined)
-    .map(item => {
+    .filter((index) => index !== undefined)
+    .map((item) => {
       if (typeof item === 'number') {
         return item.toString()
       }
@@ -105,10 +101,7 @@ export const getFieldPropsOrFormItemProps = <T extends Record<string, unknown>>(
  * @param value 值或函数
  * @param args 函数参数
  */
-const runFunction = <T, U extends unknown[]>(
-  value: T | ((...args: U) => T),
-  ...args: U
-): T => {
+const runFunction = <T, U extends unknown[]>(value: T | ((...args: U) => T), ...args: U): T => {
   if (typeof value === 'function') {
     return (value as (...args: U) => T)(...args)
   }
@@ -155,7 +148,7 @@ const CellRenderToFormItem = defineComponent({
         props.prefixName,
         props.prefixName ? props.subName : [],
         props.prefixName ? realIndex.value : key,
-        columnKey
+        columnKey,
       )
     })
 
@@ -195,7 +188,7 @@ const CellRenderToFormItem = defineComponent({
           ...columnProps,
           rowIndex: index,
           isEditable: props.mode === 'edit',
-        }
+        },
       )
 
       return fieldProps ?? {}
@@ -234,7 +227,7 @@ const CellRenderToFormItem = defineComponent({
             isEditable: props.mode === 'edit',
           },
           undefined, // form instance
-          editableUtils
+          editableUtils,
         )
 
         // 如果返回 false 或 null，不渲染
@@ -264,8 +257,7 @@ const CellRenderToFormItem = defineComponent({
 
       // 如果 valueType === text，没必要多走一次 render
       if (
-        (!currentValueType ||
-          ['textarea', 'text'].includes(currentValueType.toString())) &&
+        (!currentValueType || ['textarea', 'text'].includes(currentValueType.toString())) &&
         // valueEnum 存在说明是个select
         !columnProps?.valueEnum &&
         mode === 'read'
@@ -278,8 +270,7 @@ const CellRenderToFormItem = defineComponent({
 
       // 如果 valueType 是函数，递归处理
       if (typeof props.valueType === 'function' && props.rowData) {
-        const resolvedValueType =
-          props.valueType(props.rowData, props.type) || 'text'
+        const resolvedValueType = props.valueType(props.rowData, props.type) || 'text'
         return (
           <ProField
             mode={props.mode}
@@ -329,9 +320,7 @@ const CellRenderToFormItem = defineComponent({
  * })
  * ```
  */
-function cellRenderToFormItem<T extends TableRowData>(
-  config: CellRenderToFormItemProps<T>
-): VNode {
+function cellRenderToFormItem<T extends TableRowData>(config: CellRenderToFormItemProps<T>): VNode {
   const { text, valueType, rowData, columnProps, type } = config
 
   // 如果 valueType === text，没必要多走一次 render

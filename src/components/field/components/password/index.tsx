@@ -46,7 +46,7 @@ export const FieldPassword = defineComponent({
 
     expose({
       getDataEntryRef,
-      dataEntryRef
+      dataEntryRef,
     })
 
     return () => {
@@ -64,11 +64,7 @@ export const FieldPassword = defineComponent({
           ref={dataEntryRef}
           type="password"
           v-model={modelValue.value}
-          placeholder={
-            Array.isArray(props.placeholder)
-              ? props.placeholder[0]
-              : props.placeholder
-          }
+          placeholder={Array.isArray(props.placeholder) ? props.placeholder[0] : props.placeholder}
           disabled={props.disabled}
           showPassword={props.visibilityToggle}
           {...props.fieldProps}

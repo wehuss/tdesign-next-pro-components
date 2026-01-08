@@ -1,28 +1,28 @@
 <script setup lang="ts">
-  import { ProForm, ProFormCaptcha, ProFormText } from '@/components/form'
-  import { MessagePlugin } from 'tdesign-vue-next'
-  import { ref } from 'vue'
+import { ProForm, ProFormCaptcha, ProFormText } from '@/components/form'
+import { MessagePlugin } from 'tdesign-vue-next'
+import { ref } from 'vue'
 
-  const formRef = ref()
-  const formData = ref({
-    phone: '',
-    captcha: '',
-  })
+const formRef = ref()
+const formData = ref({
+  phone: '',
+  captcha: '',
+})
 
-  const handleFinish = (values: any) => {
-    console.log('表单数据:', values)
+const handleFinish = (values: any) => {
+  console.log('表单数据:', values)
+}
+
+// 模拟获取验证码
+const handleGetCaptcha = async (phone: string) => {
+  if (!formData.value.phone) {
+    MessagePlugin.warning('请先输入手机号')
+    return
   }
-
-  // 模拟获取验证码
-  const handleGetCaptcha = async (phone: string) => {
-    if (!formData.value.phone) {
-      MessagePlugin.warning('请先输入手机号')
-      return
-    }
-    // 模拟发送验证码
-    console.log('发送验证码到:', phone || formData.value.phone)
-    MessagePlugin.success('验证码已发送')
-  }
+  // 模拟发送验证码
+  console.log('发送验证码到:', phone || formData.value.phone)
+  MessagePlugin.success('验证码已发送')
+}
 </script>
 
 <template>

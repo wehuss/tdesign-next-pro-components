@@ -1,5 +1,10 @@
 import { objectToMap, proFieldParsingText } from '@/utils'
-import { Checkbox, CheckboxGroup, type CheckboxGroupProps, type CheckboxProps } from 'tdesign-vue-next'
+import {
+  Checkbox,
+  CheckboxGroup,
+  type CheckboxGroupProps,
+  type CheckboxProps,
+} from 'tdesign-vue-next'
 import { computed, defineComponent, ref, useModel, type PropType } from 'vue'
 import type { ProFieldMode, ProFieldValueEnumType } from '../../types'
 
@@ -23,7 +28,7 @@ export const FieldCheckbox = defineComponent({
       default: () => ({}),
     },
     fieldProps: {
-      type: Object as PropType<CheckboxGroupProps|CheckboxProps>,
+      type: Object as PropType<CheckboxGroupProps | CheckboxProps>,
       default: () => ({}),
     },
     readonly: {
@@ -42,15 +47,15 @@ export const FieldCheckbox = defineComponent({
 
     expose({
       getDataEntryRef,
-      dataEntryRef
+      dataEntryRef,
     })
 
     // 转换 valueEnum 为选项列表
     const options = computed(() => {
       const valueEnum = objectToMap(props.valueEnum as ProFieldValueEnumType)
-      console.log('props.fieldProps ',props.fieldProps )
+      console.log('props.fieldProps ', props.fieldProps)
       if (!valueEnum || valueEnum.size === 0) {
-        if((props.fieldProps as CheckboxGroupProps)?.options) {
+        if ((props.fieldProps as CheckboxGroupProps)?.options) {
           return (props.fieldProps as CheckboxGroupProps)!.options
         }
         return []
@@ -58,10 +63,8 @@ export const FieldCheckbox = defineComponent({
 
       return Array.from(valueEnum.entries()).map(([value, config]) => ({
         value,
-        label:
-          typeof config === 'string' ? config : (config as any)?.text || value,
-        disabled:
-          typeof config === 'object' ? (config as any)?.disabled : false,
+        label: typeof config === 'string' ? config : (config as any)?.text || value,
+        disabled: typeof config === 'object' ? (config as any)?.disabled : false,
       }))
     })
 
@@ -70,10 +73,7 @@ export const FieldCheckbox = defineComponent({
       if (props.mode === 'read' || props.readonly) {
         // 如果是数组，使用 proFieldParsingText 处理多选
         if (Array.isArray(modelValue.value)) {
-          return proFieldParsingText(
-            modelValue.value,
-            props.valueEnum as ProFieldValueEnumType
-          )
+          return proFieldParsingText(modelValue.value, props.valueEnum as ProFieldValueEnumType)
         }
 
         // 单选或布尔值情况
@@ -81,15 +81,12 @@ export const FieldCheckbox = defineComponent({
           return <span>{modelValue.value ? '是' : '否'}</span>
         }
 
-        return proFieldParsingText(
-          modelValue.value,
-          props.valueEnum as ProFieldValueEnumType
-        )
+        return proFieldParsingText(modelValue.value, props.valueEnum as ProFieldValueEnumType)
       }
 
       // 编辑模式
       const hasOptions = options.value!.length > 0
-      console.log('options.value',options.value)
+      console.log('options.value', options.value)
       if (hasOptions) {
         // 有选项的情况，显示复选框组
         return (
@@ -98,7 +95,7 @@ export const FieldCheckbox = defineComponent({
             v-model={modelValue.value}
             options={options.value}
             disabled={props.disabled}
-            {...props.fieldProps as CheckboxGroupProps}
+            {...(props.fieldProps as CheckboxGroupProps)}
           />
         )
       } else {
@@ -108,7 +105,7 @@ export const FieldCheckbox = defineComponent({
             ref={dataEntryRef}
             v-model={modelValue.value}
             disabled={props.disabled}
-            {...props.fieldProps as CheckboxProps}
+            {...(props.fieldProps as CheckboxProps)}
           >
             {props.fieldProps?.label || ''}
           </Checkbox>

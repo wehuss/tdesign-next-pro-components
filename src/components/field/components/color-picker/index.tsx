@@ -84,9 +84,7 @@ export const FieldColorPicker = defineComponent({
       if (props.mode === 'read' || props.readonly) {
         const color = props.modelValue
         return (
-          <span
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
-          >
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
             <span style={getColorPreviewStyle(color)} />
             <span>{color || '-'}</span>
           </span>

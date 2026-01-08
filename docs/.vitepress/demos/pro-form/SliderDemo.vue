@@ -1,17 +1,17 @@
 <script setup lang="ts">
-  import { ProForm, ProFormSlider } from '@/components/form'
-  import { ref } from 'vue'
+import { ProForm, ProFormSlider } from '@/components/form'
+import { ref } from 'vue'
 
-  const formRef = ref()
-  const formData = ref({
-    progress: 50,
-    volume: 30,
-    range: [20, 80],
-  })
+const formRef = ref()
+const formData = ref({
+  progress: 50,
+  volume: 30,
+  range: [20, 80],
+})
 
-  const handleFinish = (values: any) => {
-    console.log('表单数据:', values)
-  }
+const handleFinish = (values: any) => {
+  console.log('表单数据:', values)
+}
 </script>
 
 <template>

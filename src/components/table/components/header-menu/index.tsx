@@ -48,25 +48,22 @@ export default defineComponent({
   setup(props) {
     // 内部状态
     const internalActiveKey = ref<string | number | undefined>(
-      props.activeKey ?? props.defaultActiveKey
+      props.activeKey ?? props.defaultActiveKey,
     )
 
     // 监听外部 activeKey 变化
     watch(
       () => props.activeKey,
-      newVal => {
+      (newVal) => {
         if (newVal !== undefined) {
           internalActiveKey.value = newVal
         }
-      }
+      },
     )
 
     // 当前激活的菜单项
     const activeItem = computed(() => {
-      return (
-        props.items?.find(item => item.key === internalActiveKey.value) ||
-        props.items?.[0]
-      )
+      return props.items?.find((item) => item.key === internalActiveKey.value) || props.items?.[0]
     })
 
     // 处理菜单项点击
@@ -78,9 +75,7 @@ export default defineComponent({
     // 渲染 inline 类型菜单
     const renderInlineMenu = () => {
       return (
-        <div
-          class={[`${props.prefixCls}-menu`, `${props.prefixCls}-inline-menu`]}
-        >
+        <div class={[`${props.prefixCls}-menu`, `${props.prefixCls}-inline-menu`]}>
           {props.items?.map((item, index) => (
             <div
               key={item.key ?? index}
@@ -89,8 +84,7 @@ export default defineComponent({
                 {
                   [`${props.prefixCls}-inline-menu-item-active`]:
                     activeItem.value?.key === item.key,
-                  [`${props.prefixCls}-inline-menu-item-disabled`]:
-                    item.disabled,
+                  [`${props.prefixCls}-inline-menu-item-disabled`]: item.disabled,
                 },
               ]}
               onClick={() => {
@@ -111,9 +105,9 @@ export default defineComponent({
       return (
         <Tabs
           value={String(internalActiveKey.value)}
-          onChange={key => handleClick(key as string)}
+          onChange={(key) => handleClick(key as string)}
         >
-          {props.items?.map(item => (
+          {props.items?.map((item) => (
             <Tabs.TabPanel
               key={String(item.key)}
               value={String(item.key)}
@@ -129,16 +123,13 @@ export default defineComponent({
     const renderDropdownMenu = () => {
       const dropdownOptions: DropdownOption[] =
         props.items?.map((item, index) => ({
-          content:
-            typeof item.label === 'string' ? item.label : () => item.label,
+          content: typeof item.label === 'string' ? item.label : () => item.label,
           value: item.key ?? index,
           disabled: item.disabled,
         })) || []
 
       return (
-        <div
-          class={[`${props.prefixCls}-menu`, `${props.prefixCls}-dropdownmenu`]}
-        >
+        <div class={[`${props.prefixCls}-menu`, `${props.prefixCls}-dropdownmenu`]}>
           <Dropdown
             trigger="click"
             options={dropdownOptions}

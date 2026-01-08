@@ -1,4 +1,4 @@
-import { FormItem, type FormItemProps } from 'tdesign-vue-next'
+import { FormItem, type FormItemProps } from "tdesign-vue-next";
 import {
   cloneVNode,
   computed,
@@ -12,65 +12,68 @@ import {
   type InjectionKey,
   type PropType,
   type VNode,
-} from 'vue'
-import type { ProFieldValueType } from '../../../field/types'
-import { LightWrapper } from '../../BaseForm/LightWrapper'
-import { useFieldContext, type SearchTransformKeyFn } from '../../FieldContext'
-import { useFormListContext } from '../list'
+} from "vue";
+import type { ProFieldValueType } from "../../../field/types";
+import { LightWrapper } from "../../base-form/light-wrapper";
+import {
+  useFieldContext,
+  type SearchTransformKeyFn,
+} from "../../field-context";
+import { useFormListContext } from "../list";
 
 /**
  * 需要从 attrs 中过滤掉的属性列表
  * 这些属性通常来自 ProTable columns 配置，不应该传递给 TDesign FormItem
  */
 const FILTERED_ATTRS = [
-  'title',
-  'description',
-  'dataIndex',
-  'key',
-  'hideInTable',
-  'hideInSearch',
-  'hideInForm',
-  'sorter',
-  'filters',
-  'ellipsis',
-  'copyable',
-  'order',
-  'search',
-  'editable',
-  'fixed',
-  'align',
-  'className',
-  'render',
-  'renderText',
-  'renderFormItem',
-  'children',
-  'onFilter',
-  'onCell',
-  'onHeaderCell',
-  'valueType',
-  'valueEnum',
-  'fieldProps',
-  'formItemProps',
-  'proFieldProps',
-  'request',
-  'params',
-  'debounceTime',
-  'options',
-  'transform',
-  'convertValue',
-  'dataFormat',
-  'lightProps',
+  "title",
+  "description",
+  "dataIndex",
+  "key",
+  "hideInTable",
+  "hideInSearch",
+  "hideInForm",
+  "sorter",
+  "filters",
+  "ellipsis",
+  "copyable",
+  "order",
+  "search",
+  "editable",
+  "fixed",
+  "align",
+  "className",
+  "render",
+  "renderText",
+  "renderFormItem",
+  "children",
+  "onFilter",
+  "onCell",
+  "onHeaderCell",
+  "valueType",
+  "valueEnum",
+  "fieldProps",
+  "formItemProps",
+  "proFieldProps",
+  "request",
+  "params",
+  "debounceTime",
+  "options",
+  "transform",
+  "convertValue",
+  "dataFormat",
+  "lightProps",
 
-  'secondary',
-  'colProps',
-  'rowProps',
-  'proFormFieldKey',
-  'ignoreFormItem',
-  'isListField',
-  'emptyText',
-  'getValueProps',
-  'valuePropName',
-]
+  "secondary",
+  "colProps",
+  "rowProps",
+  "proFormFieldKey",
+  "ignoreFormItem",
+  "isListField",
+  "emptyText",
+  "getValueProps",
+  "valuePropName",
+];
 
 /**
  * 过滤掉不需要传递给 TDesign FormItem 的属性
@@ -78,114 +81,114 @@ const FILTERED_ATTRS = [
  * @returns 过滤后的属性对象
  */
 function filterAttrs(attrs: Record<string, any>): Record<string, any> {
-  const result: Record<string, any> = {}
+  const result: Record<string, any> = {};
   for (const key of Object.keys(attrs)) {
     if (!FILTERED_ATTRS.includes(key)) {
-      result[key] = attrs[key]
+      result[key] = attrs[key];
     }
   }
-  return result
+  return result;
 }
 
 // FormItem 上下文
 export interface FormItemContextValue {
-  name?: string | string[]
-  label?: FormItemProps['label']
+  name?: string | string[];
+  label?: FormItemProps["label"];
 }
 
 export const FormItemContextKey: InjectionKey<FormItemContextValue> =
-  Symbol('FormItemContext')
+  Symbol("FormItemContext");
 
 export const FormItemContext = {
   provide: (value: FormItemContextValue) => {
-    provide(FormItemContextKey, value)
+    provide(FormItemContextKey, value);
   },
   inject: () => {
-    return inject(FormItemContextKey, { name: undefined, label: undefined })
+    return inject(FormItemContextKey, { name: undefined, label: undefined });
   },
-}
+};
 
 // 宽度预设映射
 const WIDTH_MAP: Record<string, string> = {
-  xs: '104px',
-  sm: '216px',
-  md: '328px',
-  lg: '440px',
-  xl: '552px',
-}
+  xs: "104px",
+  sm: "216px",
+  md: "328px",
+  lg: "440px",
+  xl: "552px",
+};
 
 export interface ProFormItemProps {
   /** 字段名 */
-  name?: string | string[]
+  name?: string | string[];
   /** 标签 - 与 TDesign FormItem label 类型兼容 */
-  label?: FormItemProps['label']
+  label?: FormItemProps["label"];
   /** 校验规则 */
-  rules?: any[]
+  rules?: any[];
   /** 是否必填 */
-  required?: boolean
+  required?: boolean;
   /** 帮助信息 - 与 TDesign FormItem help 类型兼容 */
-  help?: FormItemProps['help']
+  help?: FormItemProps["help"];
   /** 额外信息 */
-  extra?: string | VNode | (() => VNode)
+  extra?: string | VNode | (() => VNode);
   /** 是否忽略 FormItem 包装 */
-  ignoreFormItem?: boolean
+  ignoreFormItem?: boolean;
   /** 值类型 */
-  valueType?: string
+  valueType?: string;
   /** 提交时转换函数 */
-  transform?: SearchTransformKeyFn
+  transform?: SearchTransformKeyFn;
   /** 日期格式 */
-  dataFormat?: string
+  dataFormat?: string;
   /** 轻量模式属性 */
   lightProps?: {
-    light?: boolean
-    customLightMode?: boolean
-    label?: string | VNode
-    labelTrigger?: string
-    bordered?: boolean
-    size?: 'small' | 'medium' | 'large'
-    [key: string]: any
-  }
+    light?: boolean;
+    customLightMode?: boolean;
+    label?: string | VNode;
+    labelTrigger?: string;
+    bordered?: boolean;
+    size?: "small" | "medium" | "large";
+    [key: string]: any;
+  };
   /** 字段唯一标识 */
-  proFormFieldKey?: string | number
+  proFormFieldKey?: string | number;
 
   /** 获取时转换值 */
-  convertValue?: (value: any, namePath: string | string[]) => any
+  convertValue?: (value: any, namePath: string | string[]) => any;
   /** 宽度 */
-  width?: number | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | string
+  width?: number | "xs" | "sm" | "md" | "lg" | "xl" | string;
   /** 是否禁用 */
-  disabled?: boolean
+  disabled?: boolean;
   /** 是否只读 */
-  readonly?: boolean
+  readonly?: boolean;
   /** 占位符 */
-  placeholder?: string | string[]
+  placeholder?: string | string[];
   /** 空值文本 */
-  emptyText?: string
+  emptyText?: string;
   /** 是否次要 */
-  secondary?: boolean
+  secondary?: boolean;
   /** 列属性 */
-  colProps?: Record<string, any>
+  colProps?: Record<string, any>;
   /** 值属性名 */
-  valuePropName?: string
+  valuePropName?: string;
   /** 获取值属性 */
-  getValueProps?: (value: any) => Record<string, any>
+  getValueProps?: (value: any) => Record<string, any>;
   /** 是否为列表字段 */
-  isListField?: boolean
+  isListField?: boolean;
 }
 
 export const ProFormItem = defineComponent({
-  name: 'ProFormItem',
+  name: "ProFormItem",
   inheritAttrs: false,
   props: {
     name: [String, Array] as PropType<string | string[]>,
     /** 标签 - 与 TDesign FormItem label 类型兼容 */
-    label: [String, Function] as PropType<FormItemProps['label']>,
+    label: [String, Function] as PropType<FormItemProps["label"]>,
     rules: Array as PropType<any[]>,
     required: {
       type: Boolean,
       default: false,
     },
     /** 帮助信息 - 与 TDesign FormItem help 类型兼容 */
-    help: [String, Object, Function] as PropType<FormItemProps['help']>,
+    help: [String, Object, Function] as PropType<FormItemProps["help"]>,
     extra: [String, Function] as PropType<string | (() => VNode)>,
     ignoreFormItem: {
       type: Boolean,
@@ -193,18 +196,18 @@ export const ProFormItem = defineComponent({
     },
     valueType: {
       type: String as PropType<ProFieldValueType>,
-      default: 'text' as ProFieldValueType,
+      default: "text" as ProFieldValueType,
     },
     transform: Function as PropType<SearchTransformKeyFn>,
     dataFormat: String,
     lightProps: {
-      type: Object as PropType<ProFormItemProps['lightProps']>,
+      type: Object as PropType<ProFormItemProps["lightProps"]>,
       default: () => ({}),
     },
     proFormFieldKey: [String, Number],
 
-    convertValue: Function as PropType<ProFormItemProps['convertValue']>,
-    width: [Number, String] as PropType<ProFormItemProps['width']>,
+    convertValue: Function as PropType<ProFormItemProps["convertValue"]>,
+    width: [Number, String] as PropType<ProFormItemProps["width"]>,
     disabled: {
       type: Boolean,
       default: false,
@@ -216,7 +219,7 @@ export const ProFormItem = defineComponent({
     placeholder: [String, Array] as PropType<string | string[]>,
     emptyText: {
       type: String,
-      default: '-',
+      default: "-",
     },
     secondary: {
       type: Boolean,
@@ -228,7 +231,7 @@ export const ProFormItem = defineComponent({
     },
     valuePropName: {
       type: String,
-      default: 'value',
+      default: "value",
     },
     getValueProps: Function as PropType<(value: any) => Record<string, any>>,
     isListField: {
@@ -237,45 +240,45 @@ export const ProFormItem = defineComponent({
     },
   },
   setup(props, { attrs }) {
-    const fieldContext = useFieldContext()
-    const formListField = useFormListContext()
-    const slotsInstance = useSlots()
+    const fieldContext = useFieldContext();
+    const formListField = useFormListContext();
+    const slotsInstance = useSlots();
 
     // 计算最终的 name（处理 FormList 嵌套）
     const finalName = computed(() => {
-      if (props.name === undefined) return props.name
+      if (props.name === undefined) return props.name;
 
       // 如果在 FormList 中，需要合并路径
       if (formListField.name !== undefined) {
-        const baseName = Array.isArray(props.name) ? props.name : [props.name]
-        return [formListField.name, ...baseName].flat()
+        const baseName = Array.isArray(props.name) ? props.name : [props.name];
+        return [formListField.name, ...baseName].flat();
       }
 
-      return Array.isArray(props.name) ? props.name : [props.name]
-    })
+      return Array.isArray(props.name) ? props.name : [props.name];
+    });
 
     // 计算字段样式
     const fieldStyle = computed(() => {
-      const style: Record<string, any> = {}
+      const style: Record<string, any> = {};
 
       if (props.width) {
-        if (typeof props.width === 'number') {
-          style.width = `${props.width}px`
+        if (typeof props.width === "number") {
+          style.width = `${props.width}px`;
         } else if (WIDTH_MAP[props.width]) {
-          style.width = WIDTH_MAP[props.width]
+          style.width = WIDTH_MAP[props.width];
         } else {
-          style.width = props.width
+          style.width = props.width;
         }
       }
 
-      return style
-    })
+      return style;
+    });
 
     // 提供 FormItem 上下文
     FormItemContext.provide({
       name: props.name,
       label: props.label,
-    })
+    });
 
     // 注册字段类型到上下文
     onMounted(() => {
@@ -284,49 +287,49 @@ export const ProFormItem = defineComponent({
           valueType: props.valueType,
           dateFormat: props.dataFormat,
           transform: props.transform,
-        })
+        });
       }
-    })
+    });
 
     // 是否需要 LightWrapper
     const needLightWrapper = computed(() => {
-      return props.lightProps?.light && !props.lightProps?.customLightMode
-    })
+      return props.lightProps?.light && !props.lightProps?.customLightMode;
+    });
 
     // 处理值转换 - 保留用于未来扩展
     const _getValuePropsFunc = computed(() => {
       if (!props.convertValue && !props.getValueProps) {
-        return undefined
+        return undefined;
       }
 
       return (value: any) => {
-        const newValue = props.convertValue?.(value, props.name!) ?? value
+        const newValue = props.convertValue?.(value, props.name!) ?? value;
         if (props.getValueProps) {
-          return props.getValueProps(newValue)
+          return props.getValueProps(newValue);
         }
         return {
           [props.valuePropName]: newValue,
-        }
-      }
-    })
+        };
+      };
+    });
     // 避免 lint 警告
-    void _getValuePropsFunc.value
+    void _getValuePropsFunc.value;
 
     // 渲染内容
     const renderContent = () => {
-      const children = slotsInstance.default?.()
+      const children = slotsInstance.default?.();
 
       if (!children || children.length === 0) {
-        return null
+        return null;
       }
 
       // 处理子元素，注入 onChange 等属性
       const processedChildren = children.map((child, index) => {
-        if (!isVNode(child)) return child
+        if (!isVNode(child)) return child;
 
         // 检查是否是 ProForm 组件
         const isProFormComponent =
-          (child.type as any)?.displayName === 'ProFormComponent'
+          (child.type as any)?.displayName === "ProFormComponent";
 
         if (isProFormComponent) {
           // ProForm 组件，通过 fieldProps 传递属性
@@ -338,21 +341,21 @@ export const ProFormItem = defineComponent({
               readonly: props.readonly,
               placeholder: props.placeholder,
             },
-          })
+          });
         }
 
-        return child
-      })
+        return child;
+      });
 
       // 包装 LightWrapper
-      let wrappedChildren: VNode | VNode[] = processedChildren
+      let wrappedChildren: VNode | VNode[] = processedChildren;
       if (needLightWrapper.value) {
         // 转换 label 类型以兼容 LightWrapper
-        const lightWrapperLabel = props.lightProps?.label || props.label
+        const lightWrapperLabel = props.lightProps?.label || props.label;
         const convertedLabel =
-          typeof lightWrapperLabel === 'function'
+          typeof lightWrapperLabel === "function"
             ? () => (lightWrapperLabel as Function)(h)
-            : lightWrapperLabel
+            : lightWrapperLabel;
 
         wrappedChildren = (
           <LightWrapper
@@ -361,49 +364,49 @@ export const ProFormItem = defineComponent({
           >
             {processedChildren}
           </LightWrapper>
-        )
+        );
       }
 
-      return wrappedChildren
-    }
+      return wrappedChildren;
+    };
 
     // 过滤后的 attrs，移除不应传递给 TDesign FormItem 的属性
     const filteredAttrs = computed(() =>
       filterAttrs(attrs as Record<string, any>)
-    )
+    );
 
     // 计算最终的 rules（处理 required 属性）
     const finalRules = computed(() => {
-      const rules = props.rules ? [...props.rules] : []
+      const rules = props.rules ? [...props.rules] : [];
 
       // 如果设置了 required 但没有 required 规则，自动添加
       if (props.required) {
         const hasRequiredRule = rules.some(
           (rule: any) => rule && rule.required === true
-        )
+        );
         if (!hasRequiredRule) {
           rules.unshift({
             required: true,
-            message: `${props.label || props.name || '此字段'}不能为空`,
-          })
+            message: `${props.label || props.name || "此字段"}不能为空`,
+          });
         }
       }
 
-      return rules.length > 0 ? rules : undefined
-    })
+      return rules.length > 0 ? rules : undefined;
+    });
 
     return () => {
-      const children = slotsInstance.default?.()
+      const children = slotsInstance.default?.();
 
       // 如果 children 是函数，直接渲染（支持 Form.Item 的 render props 模式）
-      if (typeof children?.[0] === 'function') {
+      if (typeof children?.[0] === "function") {
         return (
           <FormItem
-            name={Array.isArray(props.name) ? props.name.join('.') : props.name}
+            name={Array.isArray(props.name) ? props.name.join(".") : props.name}
             label={props.label as string}
             rules={finalRules.value}
             help={
-              typeof props.help === 'function'
+              typeof props.help === "function"
                 ? undefined
                 : (props.help as string)
             }
@@ -413,21 +416,21 @@ export const ProFormItem = defineComponent({
           >
             {children}
           </FormItem>
-        )
+        );
       }
 
       // 如果忽略 FormItem，直接返回内容
       if (props.ignoreFormItem) {
-        return renderContent()
+        return renderContent();
       }
 
       // 计算 FormItem 的 name
       const formItemName = computed(() => {
-        if (!finalName.value) return undefined
+        if (!finalName.value) return undefined;
         return Array.isArray(finalName.value)
-          ? finalName.value.join('.')
-          : finalName.value
-      })
+          ? finalName.value.join(".")
+          : finalName.value;
+      });
 
       return (
         <FormItem
@@ -435,7 +438,7 @@ export const ProFormItem = defineComponent({
           label={props.label}
           rules={finalRules.value}
           help={
-            typeof props.help === 'function'
+            typeof props.help === "function"
               ? undefined
               : (props.help as string)
           }
@@ -445,12 +448,12 @@ export const ProFormItem = defineComponent({
         >
           {renderContent()}
         </FormItem>
-      )
-    }
+      );
+    };
   },
-})
+});
 
 // 设置 displayName
-ProFormItem.displayName = 'ProFormItem'
+ProFormItem.displayName = "ProFormItem";
 
-export default ProFormItem
+export default ProFormItem;

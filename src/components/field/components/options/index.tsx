@@ -13,11 +13,7 @@ const addArrayKeys = (nodes: VNode[]): VNode[] => {
     if (!isVNode(node)) {
       return h(Fragment, { key: index }, [node])
     }
-    return h(
-      node.type as any,
-      { key: index, ...node.props },
-      node.children as any
-    )
+    return h(node.type as any, { key: index, ...node.props }, node.children as any)
   })
 }
 

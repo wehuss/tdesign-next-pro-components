@@ -1,67 +1,64 @@
 <script setup lang="ts">
-  import {
-    ProForm,
-    ProFormDependency,
-    ProFormDigit,
-    ProFormSelect,
-    ProFormSwitch,
-    ProFormText,
-    ProFormTextArea,
-  } from '@/components/form'
-  import { MessagePlugin } from 'tdesign-vue-next'
-  import { h, ref } from 'vue'
+import {
+  ProForm,
+  ProFormDependency,
+  ProFormDigit,
+  ProFormSelect,
+  ProFormSwitch,
+  ProFormText,
+  ProFormTextArea,
+} from '@/components/form'
+import { MessagePlugin } from 'tdesign-vue-next'
+import { h, ref } from 'vue'
 
-  const formRef = ref()
-  const formData = ref({
-    userType: 'personal',
-    hasCompany: false,
-    country: '',
-    province: '',
-  })
+const formRef = ref()
+const formData = ref({
+  userType: 'personal',
+  hasCompany: false,
+  country: '',
+  province: '',
+})
 
-  const handleFinish = (values: any) => {
-    console.log('表单数据:', values)
-    MessagePlugin.success('提交成功')
-  }
+const handleFinish = (values: any) => {
+  console.log('表单数据:', values)
+  MessagePlugin.success('提交成功')
+}
 
-  // 省份数据
-  const provinceOptions: Record<
-    string,
-    Array<{ label: string; value: string }>
-  > = {
-    china: [
-      { label: '北京', value: 'beijing' },
-      { label: '上海', value: 'shanghai' },
-      { label: '广东', value: 'guangdong' },
-      { label: '浙江', value: 'zhejiang' },
-    ],
-    usa: [
-      { label: '加利福尼亚', value: 'california' },
-      { label: '纽约', value: 'newyork' },
-      { label: '德克萨斯', value: 'texas' },
-    ],
-    japan: [
-      { label: '东京', value: 'tokyo' },
-      { label: '大阪', value: 'osaka' },
-      { label: '京都', value: 'kyoto' },
-    ],
-  }
+// 省份数据
+const provinceOptions: Record<string, Array<{ label: string; value: string }>> = {
+  china: [
+    { label: '北京', value: 'beijing' },
+    { label: '上海', value: 'shanghai' },
+    { label: '广东', value: 'guangdong' },
+    { label: '浙江', value: 'zhejiang' },
+  ],
+  usa: [
+    { label: '加利福尼亚', value: 'california' },
+    { label: '纽约', value: 'newyork' },
+    { label: '德克萨斯', value: 'texas' },
+  ],
+  japan: [
+    { label: '东京', value: 'tokyo' },
+    { label: '大阪', value: 'osaka' },
+    { label: '京都', value: 'kyoto' },
+  ],
+}
 
-  // 根据用户类型获取不同的字段配置
-  const getUserTypeFields = (userType: string) => {
-    if (userType === 'enterprise') {
-      return {
-        showCompanyFields: true,
-        label: '企业名称',
-        placeholder: '请输入企业名称',
-      }
-    }
+// 根据用户类型获取不同的字段配置
+const getUserTypeFields = (userType: string) => {
+  if (userType === 'enterprise') {
     return {
-      showCompanyFields: false,
-      label: '姓名',
-      placeholder: '请输入姓名',
+      showCompanyFields: true,
+      label: '企业名称',
+      placeholder: '请输入企业名称',
     }
   }
+  return {
+    showCompanyFields: false,
+    label: '姓名',
+    placeholder: '请输入姓名',
+  }
+}
 </script>
 
 <template>
@@ -119,11 +116,7 @@
     />
 
     <!-- 开关联动：控制是否显示公司信息 -->
-    <ProFormSwitch
-      name="hasCompany"
-      label="是否有公司"
-      v-model="formData.hasCompany"
-    />
+    <ProFormSwitch name="hasCompany" label="是否有公司" v-model="formData.hasCompany" />
 
     <ProFormDependency
       :name="['hasCompany']"
@@ -173,11 +166,7 @@
     />
 
     <!-- 多字段联动：根据多个字段值计算 -->
-    <ProFormDigit
-      name="price"
-      label="单价"
-      :field-props="{ placeholder: '请输入单价', min: 0 }"
-    />
+    <ProFormDigit name="price" label="单价" :field-props="{ placeholder: '请输入单价', min: 0 }" />
 
     <ProFormDigit
       name="quantity"
@@ -200,7 +189,7 @@
                 borderRadius: '4px',
               },
             },
-            `总价: ¥${total.toFixed(2)}`
+            `总价: ¥${total.toFixed(2)}`,
           )
         }
       "

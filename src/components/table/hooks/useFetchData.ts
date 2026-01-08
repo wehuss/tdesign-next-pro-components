@@ -75,8 +75,7 @@ export interface UseFetchDataOptions<T = any> {
  */
 function mergeOptionAndPageInfo(options: UseFetchDataOptions): PageInfo {
   if (options.pageInfo) {
-    const { current, defaultCurrent, pageSize, defaultPageSize } =
-      options.pageInfo
+    const { current, defaultCurrent, pageSize, defaultPageSize } = options.pageInfo
     return {
       current: current || defaultCurrent || 1,
       total: 0,
@@ -89,10 +88,7 @@ function mergeOptionAndPageInfo(options: UseFetchDataOptions): PageInfo {
 /**
  * 数据后处理管道
  */
-function postDataPipeline<T>(
-  data: T[],
-  processors: ((data: T[]) => T[])[]
-): T[] {
+function postDataPipeline<T>(data: T[], processors: ((data: T[]) => T[])[]): T[] {
   return processors.reduce((result, processor) => processor(result), data)
 }
 
@@ -105,12 +101,9 @@ function postDataPipeline<T>(
 export function useFetchData<T = any>(
   getData:
     | undefined
-    | ((params?: {
-        pageSize: number
-        current: number
-      }) => Promise<RequestData<T>>),
+    | ((params?: { pageSize: number; current: number }) => Promise<RequestData<T>>),
   defaultData: T[] | undefined,
-  options: UseFetchDataOptions<T>
+  options: UseFetchDataOptions<T>,
 ): UseFetchDataAction<T> {
   const {
     onLoad,
@@ -241,7 +234,7 @@ export function useFetchData<T = any>(
 
       const responseData = postDataPipeline<T>(
         data,
-        [postData].filter(Boolean) as ((data: T[]) => T[])[]
+        [postData].filter(Boolean) as ((data: T[]) => T[])[],
       )
 
       // 设置表格数据
@@ -304,15 +297,14 @@ export function useFetchData<T = any>(
           }
 
           // 处理轮询
-          const needPolling =
-            typeof polling === 'function' ? polling(result) : polling
+          const needPolling = typeof polling === 'function' ? polling(result) : polling
 
           if (needPolling && !unmountedRef.value) {
             pollingTimerRef.value = setTimeout(
               () => {
                 fetchListDebounce(true)
               },
-              Math.max(needPolling as number, 2000)
+              Math.max(needPolling as number, 2000),
             )
           }
 
@@ -355,14 +347,11 @@ export function useFetchData<T = any>(
       prevPageRef.value = current
 
       // 如果数据长度小于等于 pageSize，说明是真分页，需要请求
-      if (
-        tableDataList.value &&
-        tableDataList.value.length <= pageInfoState.value.pageSize
-      ) {
+      if (tableDataList.value && tableDataList.value.length <= pageInfoState.value.pageSize) {
         abortFetch()
         fetchListDebounce(false)
       }
-    }
+    },
   )
 
   // 监听 pageSize 变化
@@ -381,7 +370,7 @@ export function useFetchData<T = any>(
       prevPageSizeRef.value = pageSize
       abortFetch()
       fetchListDebounce(false)
-    }
+    },
   )
 
   // 监听 effects 变化
@@ -395,7 +384,7 @@ export function useFetchData<T = any>(
         manualRequestRef.value = false
       }
     },
-    { deep: true }
+    { deep: true },
   )
 
   // 监听轮询配置变化
@@ -412,27 +401,27 @@ export function useFetchData<T = any>(
       if (!oldPolling && newPolling) {
         fetchListDebounce(true)
       }
-    }
+    },
   )
 
   // 监听受控数据源
   watch(
     () => options.dataSource,
-    newDataSource => {
+    (newDataSource) => {
       if (newDataSource !== undefined) {
         tableDataList.value = newDataSource
       }
-    }
+    },
   )
 
   // 监听受控加载状态
   watch(
     () => options.loading,
-    newLoading => {
+    (newLoading) => {
       if (newLoading !== undefined) {
         tableLoading.value = newLoading
       }
-    }
+    },
   )
 
   // 组件挂载时
@@ -506,8 +495,7 @@ export function useFetchData<T = any>(
     },
     reset: () => {
       const { pageInfo: optionPageInfo } = options
-      const { defaultCurrent = 1, defaultPageSize = 20 } =
-        (optionPageInfo as any) || {}
+      const { defaultCurrent = 1, defaultPageSize = 20 } = (optionPageInfo as any) || {}
 
       setPageInfo({
         current: defaultCurrent,

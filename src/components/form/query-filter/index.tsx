@@ -3,9 +3,9 @@ import {
   ChevronUpIcon,
   RefreshIcon,
   SearchIcon,
-} from 'tdesign-icons-vue-next'
-import { Button, Col, FormItem, Row, Space } from 'tdesign-vue-next'
-import type { VNode } from 'vue'
+} from "tdesign-icons-vue-next";
+import { Button, Col, FormItem, Row, Space } from "tdesign-vue-next";
+import type { VNode } from "vue";
 import {
   computed,
   defineComponent,
@@ -13,82 +13,82 @@ import {
   onUnmounted,
   ref,
   watch,
-} from 'vue'
-import { BaseForm } from '../BaseForm/BaseForm'
+} from "vue";
+import { BaseForm } from "../base-form/base-form";
 
 // 配置表单列变化的容器宽度断点
 const BREAKPOINTS = {
   vertical: [
-    [513, 1, 'vertical'],
-    [785, 2, 'vertical'],
-    [1057, 3, 'vertical'],
-    [Infinity, 4, 'vertical'],
+    [513, 1, "vertical"],
+    [785, 2, "vertical"],
+    [1057, 3, "vertical"],
+    [Infinity, 4, "vertical"],
   ],
   default: [
-    [513, 1, 'vertical'],
-    [701, 2, 'vertical'],
-    [1062, 3, 'horizontal'],
-    [1352, 3, 'horizontal'],
-    [Infinity, 4, 'horizontal'],
+    [513, 1, "vertical"],
+    [701, 2, "vertical"],
+    [1062, 3, "horizontal"],
+    [1352, 3, "horizontal"],
+    [Infinity, 4, "horizontal"],
   ],
   horizontal: [
-    [513, 1, 'vertical'],
-    [701, 2, 'vertical'],
-    [1062, 3, 'horizontal'],
-    [1352, 3, 'horizontal'],
-    [Infinity, 4, 'horizontal'],
+    [513, 1, "vertical"],
+    [701, 2, "vertical"],
+    [1062, 3, "horizontal"],
+    [1352, 3, "horizontal"],
+    [Infinity, 4, "horizontal"],
   ],
-}
+};
 
 export type SpanConfig =
   | number
   | {
-      xs: number
-      sm: number
-      md: number
-      lg: number
-      xl: number
-      xxl: number
-    }
+      xs: number;
+      sm: number;
+      md: number;
+      lg: number;
+      xl: number;
+      xxl: number;
+    };
 
 export interface QueryFilterProps {
   // 查询表单特有属性
-  defaultCollapsed?: boolean
-  collapsed?: boolean
+  defaultCollapsed?: boolean;
+  collapsed?: boolean;
   collapseRender?:
     | ((
         collapsed: boolean,
         showCollapseButton: boolean,
         hiddenNum?: number
       ) => VNode)
-    | false
+    | false;
   optionRender?:
     | ((searchConfig: any, formProps: any, dom: VNode[]) => VNode[])
-    | false
-  searchText?: string
-  resetText?: string
-  submitButtonProps?: any
-  resetButtonProps?: any
+    | false;
+  searchText?: string;
+  resetText?: string;
+  submitButtonProps?: any;
+  resetButtonProps?: any;
   // 布局相关
-  layout?: 'vertical' | 'inline' | 'horizontal'
-  span?: SpanConfig
-  labelWidth?: number | 'auto'
-  defaultColsNumber?: number
-  defaultFormItemsNumber?: number
-  searchGutter?: number
-  split?: boolean
+  layout?: "vertical" | "inline" | "horizontal";
+  span?: SpanConfig;
+  labelWidth?: number | "auto";
+  defaultColsNumber?: number;
+  defaultFormItemsNumber?: number;
+  searchGutter?: number;
+  split?: boolean;
   // 是否显示隐藏数量
-  showHiddenNum?: boolean
+  showHiddenNum?: boolean;
   // 是否忽略规则
-  ignoreRules?: boolean
+  ignoreRules?: boolean;
   // 是否保留隐藏字段
-  preserve?: boolean
+  preserve?: boolean;
   // 容器样式
-  containerStyle?: Record<string, any>
+  containerStyle?: Record<string, any>;
   // 事件回调
-  onCollapse?: (collapsed: boolean) => void
-  onSearch?: (values: any) => void
-  onReset?: (values: any) => void
+  onCollapse?: (collapsed: boolean) => void;
+  onSearch?: (values: any) => void;
+  onReset?: (values: any) => void;
 }
 
 // 获取 span 配置
@@ -97,27 +97,29 @@ const getSpanConfig = (
   width: number,
   span?: SpanConfig
 ): { span: number; layout: string } => {
-  if (span && typeof span === 'number') {
-    return { span, layout: layout || 'horizontal' }
+  if (span && typeof span === "number") {
+    return { span, layout: layout || "horizontal" };
   }
 
-  console.log('layout', layout)
+  console.log("layout", layout);
   const spanConfig =
-    BREAKPOINTS[(layout as 'default' | 'vertical') || 'default']
-  const breakPoint = spanConfig.find(item => width < (item[0] as number) + 16)
+    BREAKPOINTS[(layout as "default" | "vertical") || "default"];
+  const breakPoint = spanConfig.find(
+    (item) => width < (item[0] as number) + 16
+  );
 
   if (!breakPoint) {
-    return { span: 8, layout: 'horizontal' }
+    return { span: 8, layout: "horizontal" };
   }
 
   return {
     span: 24 / (breakPoint[1] as number),
     layout: breakPoint[2] as string,
-  }
-}
+  };
+};
 
 export const QueryFilter = defineComponent({
-  name: 'QueryFilter',
+  name: "QueryFilter",
   props: {
     // QueryFilter 特有属性
     defaultCollapsed: {
@@ -138,11 +140,11 @@ export const QueryFilter = defineComponent({
     },
     searchText: {
       type: String,
-      default: '搜索',
+      default: "搜索",
     },
     resetText: {
       type: String,
-      default: '重置',
+      default: "重置",
     },
     submitButtonProps: {
       type: Object,
@@ -154,7 +156,7 @@ export const QueryFilter = defineComponent({
     },
     layout: {
       type: String,
-      default: 'horizontal',
+      default: "horizontal",
     },
     span: {
       type: [Number, Object],
@@ -203,22 +205,22 @@ export const QueryFilter = defineComponent({
       type: Function,
     },
   },
-  emits: ['update:collapsed', 'collapse', 'search', 'reset', 'finish'],
+  emits: ["update:collapsed", "collapse", "search", "reset", "finish"],
   setup(props, { slots, emit, expose }) {
-    const formRef = ref()
-    const containerRef = ref<HTMLDivElement>()
-    const containerWidth = ref(1024)
-    const internalCollapsed = ref(props.collapsed ?? props.defaultCollapsed)
+    const formRef = ref();
+    const containerRef = ref<HTMLDivElement>();
+    const containerWidth = ref(1024);
+    const internalCollapsed = ref(props.collapsed ?? props.defaultCollapsed);
 
     // 监听外部 collapsed 变化
     watch(
       () => props.collapsed,
-      newVal => {
+      (newVal) => {
         if (newVal !== undefined) {
-          internalCollapsed.value = newVal
+          internalCollapsed.value = newVal;
         }
       }
-    )
+    );
 
     // 计算 span 配置
     const spanSize = computed(() =>
@@ -227,72 +229,72 @@ export const QueryFilter = defineComponent({
         containerWidth.value + 16,
         props.span as SpanConfig
       )
-    )
+    );
 
     // 计算显示数量
     const showLength = computed(() => {
       if (props.defaultFormItemsNumber !== undefined) {
-        return props.defaultFormItemsNumber
+        return props.defaultFormItemsNumber;
       }
       if (props.defaultColsNumber !== undefined) {
-        const oneRowControlsNumber = 24 / spanSize.value.span - 1
+        const oneRowControlsNumber = 24 / spanSize.value.span - 1;
         return props.defaultColsNumber > oneRowControlsNumber
           ? oneRowControlsNumber
-          : props.defaultColsNumber
+          : props.defaultColsNumber;
       }
-      return Math.max(1, 24 / spanSize.value.span - 1)
-    })
+      return Math.max(1, 24 / spanSize.value.span - 1);
+    });
 
     // 切换折叠状态
     const toggleCollapsed = () => {
-      const newCollapsed = !internalCollapsed.value
-      internalCollapsed.value = newCollapsed
-      emit('update:collapsed', newCollapsed)
-      ;(props.onCollapse as any)?.(newCollapsed)
-      emit('collapse', newCollapsed)
-    }
+      const newCollapsed = !internalCollapsed.value;
+      internalCollapsed.value = newCollapsed;
+      emit("update:collapsed", newCollapsed);
+      (props.onCollapse as any)?.(newCollapsed);
+      emit("collapse", newCollapsed);
+    };
 
     // 处理搜索
     const handleSearch = async () => {
       try {
-        const values = formRef.value?.getFieldsValue?.() || {}
-        ;(props.onSearch as any)?.(values)
-        emit('search', values)
-        emit('finish', values)
+        const values = formRef.value?.getFieldsValue?.() || {};
+        (props.onSearch as any)?.(values);
+        emit("search", values);
+        emit("finish", values);
       } catch (error) {
-        console.error('Query filter search error:', error)
+        console.error("Query filter search error:", error);
       }
-    }
+    };
 
     // 处理重置
     const handleReset = () => {
-      formRef.value?.reset?.()
-      const values = formRef.value?.getFieldsValue?.() || {}
-      ;(props.onReset as any)?.(values)
-      emit('reset', values)
-    }
+      formRef.value?.reset?.();
+      const values = formRef.value?.getFieldsValue?.() || {};
+      (props.onReset as any)?.(values);
+      emit("reset", values);
+    };
 
     // 监听容器宽度变化
-    let resizeObserver: ResizeObserver | null = null
+    let resizeObserver: ResizeObserver | null = null;
 
     onMounted(() => {
       if (containerRef.value) {
-        containerWidth.value = containerRef.value.offsetWidth
+        containerWidth.value = containerRef.value.offsetWidth;
 
-        resizeObserver = new ResizeObserver(entries => {
+        resizeObserver = new ResizeObserver((entries) => {
           for (const entry of entries) {
             if (entry.contentRect.width > 17) {
-              containerWidth.value = entry.contentRect.width
+              containerWidth.value = entry.contentRect.width;
             }
           }
-        })
-        resizeObserver.observe(containerRef.value)
+        });
+        resizeObserver.observe(containerRef.value);
       }
-    })
+    });
 
     onUnmounted(() => {
-      resizeObserver?.disconnect()
-    })
+      resizeObserver?.disconnect();
+    });
 
     // 暴露方法
     expose({
@@ -301,54 +303,57 @@ export const QueryFilter = defineComponent({
       validate: () => formRef.value?.validate(),
       getFieldsValue: () => formRef.value?.getFieldsValue(),
       setFieldsValue: (values: any) => formRef.value?.setFieldsValue(values),
-    })
+    });
 
     // 内容渲染
     const contentRender = (items: VNode[], submitter: VNode | null) => {
       // 处理表单项
-      let totalSpan = 0
-      let totalSize = 0
-      let hiddenCount = 0
+      let totalSpan = 0;
+      let totalSize = 0;
+      let hiddenCount = 0;
 
       const processedItems = (items || []).map((item: any, index: number) => {
-        const colSize = item?.props?.colSize ?? 1
-        const colSpan = Math.min(spanSize.value.span * colSize, 24)
-        totalSpan += colSpan
-        totalSize += colSize
+        const colSize = item?.props?.colSize ?? 1;
+        const colSpan = Math.min(spanSize.value.span * colSize, 24);
+        totalSpan += colSpan;
+        totalSize += colSize;
 
         const hidden =
           item?.props?.hidden ||
-          (internalCollapsed.value && totalSize > showLength.value && index > 0)
+          (internalCollapsed.value &&
+            totalSize > showLength.value &&
+            index > 0);
 
         if (hidden) {
-          hiddenCount++
+          hiddenCount++;
           if (!props.preserve) {
-            return null
+            return null;
           }
         }
 
-        const itemKey = item?.key || item?.props?.name || index
+        const itemKey = item?.key || item?.props?.name || index;
 
         return (
           <Col
             key={itemKey}
             span={colSpan}
-            style={{ display: hidden ? 'none' : undefined }}
+            style={{ display: hidden ? "none" : undefined }}
             class="pro-query-filter-row-split"
           >
             {item}
           </Col>
-        )
-      })
+        );
+      });
 
       // 计算 offset
-      const currentSpan = totalSpan % 24
-      const submitterSpan = spanSize.value.span
-      const offsetSpan = currentSpan + submitterSpan
-      const offset = offsetSpan > 24 ? 24 - submitterSpan : 24 - offsetSpan
+      const currentSpan = totalSpan % 24;
+      const submitterSpan = spanSize.value.span;
+      const offsetSpan = currentSpan + submitterSpan;
+      const offset = offsetSpan > 24 ? 24 - submitterSpan : 24 - offsetSpan;
 
       // 是否需要显示折叠按钮
-      const needCollapseRender = totalSpan >= 24 || totalSize > showLength.value
+      const needCollapseRender =
+        totalSpan >= 24 || totalSize > showLength.value;
 
       // 默认操作按钮
       const defaultActions = [
@@ -370,12 +375,12 @@ export const QueryFilter = defineComponent({
         >
           {props.resetText}
         </Button>,
-      ]
+      ];
 
       // 折叠按钮
       const collapseButton =
         props.collapseRender !== false && needCollapseRender ? (
-          typeof props.collapseRender === 'function' ? (
+          typeof props.collapseRender === "function" ? (
             (props.collapseRender as any)(
               internalCollapsed.value,
               needCollapseRender,
@@ -386,32 +391,32 @@ export const QueryFilter = defineComponent({
               key="collapse"
               variant="text"
               onClick={toggleCollapsed}
-              style={{ paddingLeft: '8px' }}
+              style={{ paddingLeft: "8px" }}
             >
-              {internalCollapsed.value ? '展开' : '收起'}
+              {internalCollapsed.value ? "展开" : "收起"}
               {props.showHiddenNum && hiddenCount > 0 && (
-                <span style={{ marginLeft: '4px' }}>({hiddenCount})</span>
+                <span style={{ marginLeft: "4px" }}>({hiddenCount})</span>
               )}
               {internalCollapsed.value ? (
-                <ChevronDownIcon style={{ marginLeft: '4px' }} />
+                <ChevronDownIcon style={{ marginLeft: "4px" }} />
               ) : (
-                <ChevronUpIcon style={{ marginLeft: '4px' }} />
+                <ChevronUpIcon style={{ marginLeft: "4px" }} />
               )}
             </Button>
           )
-        ) : null
+        ) : null;
 
       // 操作区域
       const actionsNode =
         props.optionRender !== false
-          ? typeof props.optionRender === 'function'
+          ? typeof props.optionRender === "function"
             ? (props.optionRender as any)(
                 { resetText: props.resetText, searchText: props.searchText },
                 props,
                 defaultActions
               )
             : defaultActions
-          : null
+          : null;
 
       return (
         <Row
@@ -425,7 +430,7 @@ export const QueryFilter = defineComponent({
               key="submitter"
               span={submitterSpan}
               offset={offset}
-              style={{ textAlign: 'end' }}
+              style={{ textAlign: "end" }}
             >
               <FormItem label=" " class="pro-query-filter-actions">
                 <Space>
@@ -436,8 +441,8 @@ export const QueryFilter = defineComponent({
             </Col>
           )}
         </Row>
-      )
-    }
+      );
+    };
 
     return () => (
       <div
@@ -447,21 +452,21 @@ export const QueryFilter = defineComponent({
       >
         <BaseForm
           ref={formRef}
-          layout={spanSize.value.layout as 'vertical' | 'inline'}
+          layout={spanSize.value.layout as "vertical" | "inline"}
           isKeyPressSubmit
           class="pro-query-filter"
           onReset={handleReset}
           contentRender={contentRender}
           submitter={false}
           fieldProps={{
-            style: { width: '100%' },
+            style: { width: "100%" },
           }}
         >
           {slots.default?.()}
         </BaseForm>
       </div>
-    )
+    );
   },
-})
+});
 
-export default QueryFilter
+export default QueryFilter;

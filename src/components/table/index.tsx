@@ -7,15 +7,7 @@
 import useListeners from '@/hooks/listeners'
 import { Card, EnhancedTable, type PaginationProps } from 'tdesign-vue-next'
 import type { App, PropType, Ref, VNode } from 'vue'
-import {
-  computed,
-  defineComponent,
-  onBeforeUnmount,
-  provide,
-  ref,
-  useModel,
-  watch,
-} from 'vue'
+import { computed, defineComponent, onBeforeUnmount, provide, ref, useModel, watch } from 'vue'
 import TableAlert from './components/alert'
 import TableFormRender from './components/form'
 import TableToolBar from './components/toolbar'
@@ -38,14 +30,9 @@ export const ProTableContextKey = Symbol('ProTableContext')
 // ProTable 上下文类型
 export interface ProTableContext {
   actionRef: Ref<ActionRef | undefined>
-  columnsMap: Ref<
-    Record<string, { show?: boolean; fixed?: 'left' | 'right'; order?: number }>
-  >
+  columnsMap: Ref<Record<string, { show?: boolean; fixed?: 'left' | 'right'; order?: number }>>
   setColumnsMap: (
-    map: Record<
-      string,
-      { show?: boolean; fixed?: 'left' | 'right'; order?: number }
-    >
+    map: Record<string, { show?: boolean; fixed?: 'left' | 'right'; order?: number }>,
   ) => void
 }
 
@@ -60,7 +47,7 @@ const ProTable = defineComponent({
       (
         params: Record<string, any> & { current: number; pageSize: number },
         sort?: SortInfo,
-        filter?: FilterInfo
+        filter?: FilterInfo,
       ) => Promise<RequestData<any>>
     >,
     dataSource: Array as PropType<any[]>,
@@ -184,10 +171,7 @@ const ProTable = defineComponent({
 
     // 列状态管理
     const columnsMap = ref<
-      Record<
-        string,
-        { show?: boolean; fixed?: 'left' | 'right'; order?: number }
-      >
+      Record<string, { show?: boolean; fixed?: 'left' | 'right'; order?: number }>
     >({})
 
     // 排序和筛选状态
@@ -206,7 +190,7 @@ const ProTable = defineComponent({
     // 处理选择变化
     const handleSelectionChange = (
       keys: (string | number)[],
-      context: { selectedRowData: any[] }
+      context: { selectedRowData: any[] },
     ) => {
       internalSelectedRowKeys.value = keys
       selectedRows.value = context.selectedRowData || []
@@ -239,11 +223,7 @@ const ProTable = defineComponent({
         // 删除内部时间戳
         delete (actionParams as any)._timestamp
 
-        const response = await props.request!(
-          actionParams as any,
-          proSort.value,
-          proFilter.value
-        )
+        const response = await props.request!(actionParams as any, proSort.value, proFilter.value)
 
         return response
       }
@@ -255,8 +235,7 @@ const ProTable = defineComponent({
         return false
       }
 
-      const paginationConfig =
-        typeof props.pagination === 'object' ? props.pagination : {}
+      const paginationConfig = typeof props.pagination === 'object' ? props.pagination : {}
 
       return {
         defaultCurrent: 1,
@@ -272,7 +251,7 @@ const ProTable = defineComponent({
       pageInfo: fetchPagination.value,
       loading: props.loading,
       dataSource: props.dataSource,
-      onDataSourceChange: data => {
+      onDataSourceChange: (data) => {
         props.onDataSourceChange?.(data)
         emit('update:dataSource', data)
       },
@@ -281,8 +260,7 @@ const ProTable = defineComponent({
       onRequestError: props.onRequestError,
       postData: props.postData,
       revalidateOnFocus: props.revalidateOnFocus,
-      manual:
-        props.manual || props.manualRequest || formSearch.value === undefined,
+      manual: props.manual || props.manualRequest || formSearch.value === undefined,
       polling: props.polling as number | undefined,
       effects: [
         JSON.stringify(props.params),
@@ -291,11 +269,10 @@ const ProTable = defineComponent({
         JSON.stringify(proSort.value),
       ],
       debounceTime: props.debounceTime,
-      onPageInfoChange: pageInfo => {
+      onPageInfoChange: (pageInfo) => {
         if (!props.pagination || !fetchData.value) return
 
-        const paginationConfig =
-          typeof props.pagination === 'object' ? props.pagination : {}
+        const paginationConfig = typeof props.pagination === 'object' ? props.pagination : {}
 
         // 触发分页回调
         paginationConfig.onChange?.(pageInfo as any)
@@ -310,7 +287,7 @@ const ProTable = defineComponent({
         if (props.request && !props.manual && !props.manualRequest) {
           action.reload()
         }
-      }
+      },
     )
 
     // 监听 params 变化
@@ -322,7 +299,7 @@ const ProTable = defineComponent({
           action.setPageInfo({ current: 1 })
         }
       },
-      { deep: true }
+      { deep: true },
     )
 
     // 转换列配置
@@ -342,8 +319,7 @@ const ProTable = defineComponent({
         return false
       }
 
-      const defaultPagination =
-        typeof props.pagination === 'object' ? props.pagination : {}
+      const defaultPagination = typeof props.pagination === 'object' ? props.pagination : {}
 
       return {
         ...defaultPagination,
@@ -441,8 +417,7 @@ const ProTable = defineComponent({
 
     // 筛选变化处理
     const onFilterChange = (filterConfig: FilterInfo) => {
-      if (JSON.stringify(filterConfig) === JSON.stringify(proFilter.value))
-        return
+      if (JSON.stringify(filterConfig) === JSON.stringify(proFilter.value)) return
       proFilter.value = filterConfig || {}
     }
 
@@ -450,7 +425,7 @@ const ProTable = defineComponent({
     provide<ProTableContext>(ProTableContextKey, {
       actionRef: actionRef as any,
       columnsMap,
-      setColumnsMap: map => {
+      setColumnsMap: (map) => {
         columnsMap.value = map
       },
     })
@@ -472,7 +447,7 @@ const ProTable = defineComponent({
 
       // 检查是否有列配置了 form 属性
       const hasFormColumns = (props.columns as ProTableColumn[]).some(
-        column => column.form !== undefined
+        (column) => column.form !== undefined,
       )
 
       // 搜索表单节点 - 只有当 search 不为 false 且有列配置了 form 属性时才渲染
@@ -527,8 +502,7 @@ const ProTable = defineComponent({
         if (props.rowSelection === false || props.rowSelection === undefined) {
           return undefined
         }
-        const config =
-          typeof props.rowSelection === 'object' ? props.rowSelection : {}
+        const config = typeof props.rowSelection === 'object' ? props.rowSelection : {}
         return {
           ...config,
           selectedRowKeys: selectedRowKeys.value,
@@ -546,14 +520,9 @@ const ProTable = defineComponent({
           loading={action._refs.loading.value}
           rowKey={props.rowKey}
           pagination={paginationConfig.value || undefined}
-          selectedRowKeys={
-            rowSelectionConfig.value ? selectedRowKeys.value : undefined
-          }
+          selectedRowKeys={rowSelectionConfig.value ? selectedRowKeys.value : undefined}
           v-model:columnControllerVisible={columnControllerVisible.value}
-          onSelectChange={(
-            keys: (string | number)[],
-            context: { selectedRowData: any[] }
-          ) => {
+          onSelectChange={(keys: (string | number)[], context: { selectedRowData: any[] }) => {
             handleSelectionChange(keys, context)
           }}
           onSortChange={(sort: any) => {

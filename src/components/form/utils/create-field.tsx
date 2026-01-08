@@ -1,16 +1,8 @@
-import {
-  computed,
-  defineComponent,
-  inject,
-  onBeforeUnmount,
-  onMounted,
-  useModel,
-  watch,
-} from 'vue'
+import { computed, defineComponent, inject, onBeforeUnmount, onMounted, useModel, watch } from 'vue'
 import type { ProFieldValueEnumType } from '../../field/types'
-import { EditOrReadOnlyContextKey } from '../BaseForm/EditOrReadOnlyContext'
+import { EditOrReadOnlyContextKey } from '../base-form/edit-or-read-only-context'
 import { ProFormItem } from '../components/form-item'
-import { useFieldContext } from '../FieldContext'
+import { useFieldContext } from '../field-context'
 
 /**
  * 创建表单字段组件的配置
@@ -84,68 +76,68 @@ export function createField(config: CreateFieldConfig) {
     inheritAttrs: false,
     props: {
       // 基础属性
-      'name': [String, Array],
-      'label': String,
-      'rules': Array,
-      'required': Boolean,
-      'help': String,
-      'extra': String,
-      'width': [String, Number],
-      'ignoreFormItem': Boolean,
+      name: [String, Array],
+      label: String,
+      rules: Array,
+      required: Boolean,
+      help: String,
+      extra: String,
+      width: [String, Number],
+      ignoreFormItem: Boolean,
       // valueType 和 valueEnum 支持
-      'valueType': {
+      valueType: {
         type: String,
         default: config.valueType,
       },
-      'valueEnum': {
+      valueEnum: {
         type: [Object, Map] as unknown as () => ProFieldValueEnumType,
         default: undefined,
       },
       // 值转换
-      'transform': Function,
-      'convertValue': Function,
-      'dataFormat': String,
+      transform: Function,
+      convertValue: Function,
+      dataFormat: String,
       // 样式和布局
-      'lightProps': Object,
+      lightProps: Object,
 
-      'disabled': Boolean,
-      'readonly': Boolean,
-      'placeholder': [String, Array],
-      'emptyText': {
+      disabled: Boolean,
+      readonly: Boolean,
+      placeholder: [String, Array],
+      emptyText: {
         type: String,
         default: '-',
       },
-      'secondary': Boolean,
-      'colProps': Object,
-      'rowProps': Object,
+      secondary: Boolean,
+      colProps: Object,
+      rowProps: Object,
       // 字段属性
-      'fieldProps': {
+      fieldProps: {
         type: Object,
         default: () => ({}),
       },
-      'formItemProps': {
+      formItemProps: {
         type: Object,
         default: () => ({}),
       },
       // 选项数据
-      'options': Array,
+      options: Array,
       // 请求相关
-      'request': Function,
-      'params': Object,
-      'debounceTime': {
+      request: Function,
+      params: Object,
+      debounceTime: {
         type: Number,
         default: 300,
       },
       // ProField 属性
-      'proFieldProps': Object,
+      proFieldProps: Object,
       // v-model
-      'modelValue': null,
+      modelValue: null,
       'onUpdate:modelValue': Function,
-      'onChange': Function,
-      'onBlur': Function,
-      'onFocus': Function,
+      onChange: Function,
+      onBlur: Function,
+      onFocus: Function,
       // 初始值（用于重置）
-      'initialValue': null,
+      initialValue: null,
     },
     emits: ['update:modelValue', 'change', 'blur', 'focus'],
     setup(props: any, { slots, emit, attrs }) {
@@ -164,8 +156,7 @@ export function createField(config: CreateFieldConfig) {
       const currentMode = computed(() => {
         if (props.readonly) return 'read'
         const contextMode =
-          typeof editOrReadOnlyContext.mode === 'object' &&
-          'value' in editOrReadOnlyContext.mode
+          typeof editOrReadOnlyContext.mode === 'object' && 'value' in editOrReadOnlyContext.mode
             ? editOrReadOnlyContext.mode.value
             : editOrReadOnlyContext.mode
         return contextMode || 'edit'
@@ -222,10 +213,10 @@ export function createField(config: CreateFieldConfig) {
       // 监听值变化，通知表单上下文
       watch(
         () => modelValue.value,
-        newValue => {
+        (newValue) => {
           // 触发 change 事件
           emit('change', newValue)
-        }
+        },
       )
 
       return () => {

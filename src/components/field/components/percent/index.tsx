@@ -61,7 +61,7 @@ export const FieldPercent = defineComponent({
 
     expose({
       getDataEntryRef,
-      dataEntryRef
+      dataEntryRef,
     })
     // 格式化百分比显示
     const formatPercent = (value: any) => {
@@ -75,9 +75,7 @@ export const FieldPercent = defineComponent({
     }
 
     // 获取进度条状态
-    const getProgressStatus = (
-      value: number
-    ): 'success' | 'error' | 'warning' | undefined => {
+    const getProgressStatus = (value: number): 'success' | 'error' | 'warning' | undefined => {
       if (value >= 100) return 'success'
       if (value >= 30) return undefined // normal
       if (value >= 60) return 'warning'
@@ -112,11 +110,7 @@ export const FieldPercent = defineComponent({
         <InputNumber
           ref={dataEntryRef}
           v-model={modelValue.value}
-          placeholder={
-            Array.isArray(props.placeholder)
-              ? props.placeholder[0]
-              : props.placeholder
-          }
+          placeholder={Array.isArray(props.placeholder) ? props.placeholder[0] : props.placeholder}
           disabled={props.disabled}
           decimalPlaces={props.precision}
           min={props.min}

@@ -77,10 +77,7 @@ export const FieldCascader = defineComponent({
         if (!options?.length) return valuesMap
 
         for (const option of options) {
-          valuesMap.set(
-            option[valuePropsName] as string | number,
-            option[labelPropsName] as string
-          )
+          valuesMap.set(option[valuePropsName] as string | number, option[labelPropsName] as string)
           if (option[childrenPropsName]) {
             traverseOptions(option[childrenPropsName] as CascaderOption[])
           }
@@ -96,14 +93,13 @@ export const FieldCascader = defineComponent({
       if (!value) return ''
 
       const valueEnum = objectToMap(
-        (props.valueEnum as ProFieldValueEnumType) || optionsValueEnum.value
+        (props.valueEnum as ProFieldValueEnumType) || optionsValueEnum.value,
       )
 
       if (Array.isArray(value)) {
         // 级联选择的值通常是数组，取最后一个值显示
-        const labels = value.map(v => {
-          const item =
-            valueEnum.get(v as string | number) || valueEnum.get(String(v))
+        const labels = value.map((v) => {
+          const item = valueEnum.get(v as string | number) || valueEnum.get(String(v))
           return typeof item === 'string' ? item : (item as any)?.text || v
         })
         return labels.join(' / ')
@@ -115,9 +111,7 @@ export const FieldCascader = defineComponent({
     return () => {
       // 只读模式显示选项文本
       if (props.mode === 'read' || props.readonly) {
-        const displayText = getDisplayText(
-          modelValue.value as CascaderValueType
-        )
+        const displayText = getDisplayText(modelValue.value as CascaderValueType)
         return <span>{displayText}</span>
       }
 
@@ -127,11 +121,7 @@ export const FieldCascader = defineComponent({
           ref={dataEntryRef}
           v-model={modelValue.value}
           options={props.options}
-          placeholder={
-            Array.isArray(props.placeholder)
-              ? props.placeholder[0]
-              : props.placeholder
-          }
+          placeholder={Array.isArray(props.placeholder) ? props.placeholder[0] : props.placeholder}
           disabled={props.disabled}
           {...props.fieldProps}
         />

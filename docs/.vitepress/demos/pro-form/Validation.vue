@@ -1,50 +1,46 @@
 <script setup lang="ts">
-  import {
-    ProForm,
-    ProFormDigit,
-    ProFormSelect,
-    ProFormText,
-    ProFormTextArea,
-  } from '@/components/form'
-  import { MessagePlugin } from 'tdesign-vue-next'
-  import { ref } from 'vue'
+import {
+  ProForm,
+  ProFormDigit,
+  ProFormSelect,
+  ProFormText,
+  ProFormTextArea,
+} from '@/components/form'
+import { MessagePlugin } from 'tdesign-vue-next'
+import { ref } from 'vue'
 
-  const formRef = ref()
+const formRef = ref()
 
-  const handleFinish = (values: any) => {
-    console.log('表单数据:', values)
-    MessagePlugin.success('验证通过，提交成功')
-  }
+const handleFinish = (values: any) => {
+  console.log('表单数据:', values)
+  MessagePlugin.success('验证通过，提交成功')
+}
 
-  const handleFinishFailed = (errors: any) => {
-    console.log('验证失败:', errors)
-    MessagePlugin.error('表单验证失败，请检查输入')
-  }
+const handleFinishFailed = (errors: any) => {
+  console.log('验证失败:', errors)
+  MessagePlugin.error('表单验证失败，请检查输入')
+}
 
-  // 自定义验证器：检查用户名是否已存在
-  const checkUsername = (val: string) => {
-    return new Promise<boolean>(resolve => {
-      setTimeout(() => {
-        // 模拟检查用户名是否已存在
-        const existingUsers = ['admin', 'test', 'user']
-        resolve(!existingUsers.includes(val))
-      }, 500)
-    })
-  }
+// 自定义验证器：检查用户名是否已存在
+const checkUsername = (val: string) => {
+  return new Promise<boolean>((resolve) => {
+    setTimeout(() => {
+      // 模拟检查用户名是否已存在
+      const existingUsers = ['admin', 'test', 'user']
+      resolve(!existingUsers.includes(val))
+    }, 500)
+  })
+}
 
-  // 自定义验证器：检查两次密码是否一致
-  const validateConfirmPassword = (val: string) => {
-    const password = formRef.value?.getFieldValue?.('password')
-    return val === password
-  }
+// 自定义验证器：检查两次密码是否一致
+const validateConfirmPassword = (val: string) => {
+  const password = formRef.value?.getFieldValue?.('password')
+  return val === password
+}
 </script>
 
 <template>
-  <ProForm
-    ref="formRef"
-    @finish="handleFinish"
-    @finishFailed="handleFinishFailed"
-  >
+  <ProForm ref="formRef" @finish="handleFinish" @finishFailed="handleFinishFailed">
     <!-- 必填验证 -->
     <ProFormText
       name="username"

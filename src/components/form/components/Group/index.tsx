@@ -1,7 +1,7 @@
 import { ChevronRightIcon } from 'tdesign-icons-vue-next'
 import { Space } from 'tdesign-vue-next'
 import { computed, defineComponent, ref, type PropType, type VNode } from 'vue'
-import { useFieldContext } from '../../FieldContext'
+import { useFieldContext } from '../../field-context'
 
 export interface ProFormGroupProps {
   /** 分组标题 */
@@ -83,9 +83,7 @@ export const ProFormGroup = defineComponent({
       type: Object,
       default: () => ({}),
     },
-    titleRender: Function as PropType<
-      (title: VNode | string | undefined, props: any) => VNode
-    >,
+    titleRender: Function as PropType<(title: VNode | string | undefined, props: any) => VNode>,
     extra: [String, Object] as PropType<VNode | string>,
     labelLayout: {
       type: String as PropType<'inline' | 'twoLine'>,
@@ -226,7 +224,7 @@ export const ProFormGroup = defineComponent({
               }}
             >
               {titleContent}
-              <span onClick={e => e.stopPropagation()}>{extra}</span>
+              <span onClick={(e) => e.stopPropagation()}>{extra}</span>
             </div>
           ) : (
             titleContent
@@ -248,10 +246,7 @@ export const ProFormGroup = defineComponent({
           align={mergedProps.value.align}
           breakLine={mergedProps.value.wrap}
           {...mergedProps.value.spaceProps}
-          class={[
-            'pro-form-group-container',
-            mergedProps.value.spaceProps?.class,
-          ]}
+          class={['pro-form-group-container', mergedProps.value.spaceProps?.class]}
           style={{
             rowGap: 0,
             ...mergedProps.value.spaceProps?.style,
@@ -267,8 +262,7 @@ export const ProFormGroup = defineComponent({
         class={[
           'pro-form-group',
           {
-            'pro-form-group-two-line':
-              mergedProps.value.labelLayout === 'twoLine',
+            'pro-form-group-two-line': mergedProps.value.labelLayout === 'twoLine',
           },
         ]}
         style={mergedProps.value.style}
@@ -276,10 +270,7 @@ export const ProFormGroup = defineComponent({
         {renderTitle()}
         <div
           style={{
-            display:
-              mergedProps.value.collapsible && isCollapsed.value
-                ? 'none'
-                : undefined,
+            display: mergedProps.value.collapsible && isCollapsed.value ? 'none' : undefined,
           }}
         >
           {renderContent()}

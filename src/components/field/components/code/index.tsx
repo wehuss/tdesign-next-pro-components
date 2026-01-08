@@ -112,11 +112,7 @@ export const FieldCode = defineComponent({
         <Textarea
           ref={dataEntryRef}
           v-model={modelValue.value}
-          placeholder={
-            Array.isArray(props.placeholder)
-              ? props.placeholder[0]
-              : props.placeholder
-          }
+          placeholder={Array.isArray(props.placeholder) ? props.placeholder[0] : props.placeholder}
           disabled={props.disabled}
           autosize={{ minRows: 5, maxRows: 20 }}
           {...props.fieldProps}

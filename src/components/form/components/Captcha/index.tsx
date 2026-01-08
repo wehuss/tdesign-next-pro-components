@@ -28,50 +28,48 @@ export const ProFormCaptcha = defineComponent({
   name: 'ProFormCaptcha',
   props: {
     // 基础属性
-    'name': [String, Array] as PropType<string | string[]>,
-    'label': String,
-    'rules': Array,
-    'required': Boolean,
-    'help': String,
-    'extra': String,
-    'width': [String, Number],
-    'ignoreFormItem': Boolean,
-    'disabled': Boolean,
-    'readonly': Boolean,
-    'placeholder': {
+    name: [String, Array] as PropType<string | string[]>,
+    label: String,
+    rules: Array,
+    required: Boolean,
+    help: String,
+    extra: String,
+    width: [String, Number],
+    ignoreFormItem: Boolean,
+    disabled: Boolean,
+    readonly: Boolean,
+    placeholder: {
       type: String,
       default: '请输入验证码',
     },
     // 字段属性
-    'fieldProps': {
+    fieldProps: {
       type: Object,
       default: () => ({}),
     },
     // 验证码特有属性
-    'countDown': {
+    countDown: {
       type: Number,
       default: 60,
     },
-    'phoneName': [String, Array] as PropType<string | string[]>,
-    'onGetCaptcha': {
+    phoneName: [String, Array] as PropType<string | string[]>,
+    onGetCaptcha: {
       type: Function as PropType<(mobile: string) => Promise<void>>,
       required: true,
     },
-    'onTiming': Function as PropType<(count: number) => void>,
-    'captchaTextRender': {
-      type: Function as PropType<
-        (timing: boolean, count: number) => VNode | string
-      >,
+    onTiming: Function as PropType<(count: number) => void>,
+    captchaTextRender: {
+      type: Function as PropType<(timing: boolean, count: number) => VNode | string>,
       default: (timing: boolean, count: number) => {
         return timing ? `${count} 秒后重新获取` : '获取验证码'
       },
     },
-    'captchaProps': {
+    captchaProps: {
       type: Object,
       default: () => ({}),
     },
     // v-model
-    'modelValue': String,
+    modelValue: String,
     'onUpdate:modelValue': Function,
   },
   emits: ['update:modelValue', 'change'],
@@ -90,7 +88,7 @@ export const ProFormCaptcha = defineComponent({
     // 内部值
     const innerValue = computed({
       get: () => props.modelValue,
-      set: val => emit('update:modelValue', val),
+      set: (val) => emit('update:modelValue', val),
     })
 
     // 清理定时器
@@ -132,9 +130,7 @@ export const ProFormCaptcha = defineComponent({
 
         // 如果设置了 phoneName，先验证手机号
         if (props.phoneName && formInstance) {
-          const phoneNamePath = Array.isArray(props.phoneName)
-            ? props.phoneName
-            : [props.phoneName]
+          const phoneNamePath = Array.isArray(props.phoneName) ? props.phoneName : [props.phoneName]
 
           await formInstance.validate({ fields: phoneNamePath })
           const mobile = formInstance.getFieldValue?.(phoneNamePath) || ''
@@ -154,11 +150,11 @@ export const ProFormCaptcha = defineComponent({
     // 监听 countDown 变化
     watch(
       () => props.countDown,
-      newVal => {
+      (newVal) => {
         if (!timing.value) {
           count.value = newVal
         }
-      }
+      },
     )
 
     // 组件卸载时清理定时器

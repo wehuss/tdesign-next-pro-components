@@ -3,11 +3,8 @@ import type { PropType } from 'vue'
 import { computed, defineComponent, inject, useModel } from 'vue'
 import { FieldMoney } from '../../../field/components/money'
 import type { ProFieldMode } from '../../../field/types'
-import { EditOrReadOnlyContextKey } from '../../BaseForm/EditOrReadOnlyContext'
-import {
-  proFormFieldEmits,
-  proFormFieldProps,
-} from '../../utils/proFormFieldProps'
+import { EditOrReadOnlyContextKey } from '../../base-form/edit-or-read-only-context'
+import { proFormFieldEmits, proFormFieldProps } from '../../utils/pro-form-field-props'
 import { ProFormItem } from '../form-item'
 
 /**
@@ -40,8 +37,7 @@ export const ProFormMoney = defineComponent({
     const currentMode = computed<ProFieldMode>(() => {
       if (props.readonly) return 'read'
       const contextMode =
-        typeof editOrReadOnlyContext.mode === 'object' &&
-        'value' in editOrReadOnlyContext.mode
+        typeof editOrReadOnlyContext.mode === 'object' && 'value' in editOrReadOnlyContext.mode
           ? editOrReadOnlyContext.mode.value
           : editOrReadOnlyContext.mode
       return (contextMode as ProFieldMode) || 'edit'

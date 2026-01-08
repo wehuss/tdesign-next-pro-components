@@ -16,7 +16,7 @@ const components = [ProField, ProTable]
 
 // 全量安装函数
 function install(app: App): void {
-  components.forEach(component => {
+  components.forEach((component) => {
     if (component.install) {
       component.install(app)
     } else if (component.name) {

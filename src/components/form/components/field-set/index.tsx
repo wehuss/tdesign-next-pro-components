@@ -1,12 +1,5 @@
 import { Space } from 'tdesign-vue-next'
-import {
-  cloneVNode,
-  computed,
-  defineComponent,
-  isVNode,
-  type PropType,
-  type VNode,
-} from 'vue'
+import { cloneVNode, computed, defineComponent, isVNode, type PropType, type VNode } from 'vue'
 
 export interface ProFormFieldSetProps {
   /** 字段值（数组形式） */
@@ -40,9 +33,7 @@ export interface ProFormFieldSetProps {
 function getValueFromEvent(valuePropName: string, ...args: any[]) {
   const event = args[0]
   if (event && event.target && valuePropName in event.target) {
-    return (event.target as HTMLInputElement)[
-      valuePropName as keyof HTMLInputElement
-    ]
+    return (event.target as HTMLInputElement)[valuePropName as keyof HTMLInputElement]
   }
   return event
 }
@@ -89,9 +80,7 @@ export const ProFormFieldSet = defineComponent({
     },
     convertValue: Function as PropType<ProFormFieldSetProps['convertValue']>,
     transform: Function as PropType<ProFormFieldSetProps['transform']>,
-    children: [Function, Object, Array] as PropType<
-      ProFormFieldSetProps['children']
-    >,
+    children: [Function, Object, Array] as PropType<ProFormFieldSetProps['children']>,
   },
   setup(props, { slots }) {
     // 处理单个字段值变化
@@ -128,8 +117,7 @@ export const ProFormFieldSet = defineComponent({
 
         // 检查是否是 ProForm 组件
         const isProFormItem =
-          (item.type as any)?.displayName === 'ProFormComponent' ||
-          (item.props as any)?.readonly
+          (item.type as any)?.displayName === 'ProFormComponent' || (item.props as any)?.readonly
 
         if (isProFormItem) {
           // ProForm 组件，通过 fieldProps 传递 onChange

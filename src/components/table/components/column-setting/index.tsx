@@ -4,12 +4,7 @@
  * 参考 ant-design/pro-components ColumnSetting 组件
  */
 
-import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  LockOnIcon,
-  SettingIcon,
-} from 'tdesign-icons-vue-next'
+import { ChevronDownIcon, ChevronUpIcon, LockOnIcon, SettingIcon } from 'tdesign-icons-vue-next'
 import {
   Button,
   Checkbox,
@@ -40,10 +35,7 @@ export interface ColumnSettingProps {
 }
 
 // 生成列的唯一 key
-const genColumnKey = (
-  key: string | number | undefined,
-  index: number | string
-): string => {
+const genColumnKey = (key: string | number | undefined, index: number | string): string => {
   if (key !== undefined && key !== null) {
     return String(key)
   }
@@ -62,9 +54,7 @@ export default defineComponent({
       default: () => ({}),
     },
     onColumnsMapChange: {
-      type: Function as PropType<
-        (columnsMap: Record<string, ColumnsState>) => void
-      >,
+      type: Function as PropType<(columnsMap: Record<string, ColumnsState>) => void>,
     },
     checkable: {
       type: Boolean,
@@ -100,16 +90,16 @@ export default defineComponent({
     // 监听外部 columnsMap 变化
     watch(
       () => props.columnsMap,
-      newVal => {
+      (newVal) => {
         localColumnsMap.value = { ...newVal }
       },
-      { deep: true }
+      { deep: true },
     )
 
     // 初始化默认列配置
     watch(
       () => props.columns,
-      columns => {
+      (columns) => {
         const map: Record<string, ColumnsState> = {}
         columns.forEach((col, index) => {
           const key = genColumnKey(col.colKey, index)
@@ -125,7 +115,7 @@ export default defineComponent({
           localColumnsMap.value = { ...map }
         }
       },
-      { immediate: true }
+      { immediate: true },
     )
 
     // 更新列配置
@@ -136,10 +126,7 @@ export default defineComponent({
     }
 
     // 处理列显示/隐藏
-    const handleColumnCheck = (
-      checkedKeys: TreeNodeValue[],
-      context: { node: TreeNodeModel }
-    ) => {
+    const handleColumnCheck = (checkedKeys: TreeNodeValue[], context: { node: TreeNodeModel }) => {
       const key = context.node.value as string
       const newMap = { ...localColumnsMap.value }
       newMap[key] = {
@@ -163,10 +150,7 @@ export default defineComponent({
     }
 
     // 处理固定列
-    const handleFixColumn = (
-      key: string,
-      fixed: 'left' | 'right' | undefined
-    ) => {
+    const handleFixColumn = (key: string, fixed: 'left' | 'right' | undefined) => {
       const newMap = { ...localColumnsMap.value }
       newMap[key] = {
         ...newMap[key],
@@ -187,7 +171,7 @@ export default defineComponent({
 
       const newMap = { ...localColumnsMap.value }
       const keys = Object.keys(newMap).sort(
-        (a, b) => (newMap[a].order || 0) - (newMap[b].order || 0)
+        (a, b) => (newMap[a].order || 0) - (newMap[b].order || 0),
       )
 
       const dragIndex = keys.indexOf(dragKey)
@@ -229,7 +213,7 @@ export default defineComponent({
     const checkedKeys = computed(() => {
       return props.columns
         .map((col, index) => genColumnKey(col.colKey, index))
-        .filter(key => localColumnsMap.value[key]?.show !== false)
+        .filter((key) => localColumnsMap.value[key]?.show !== false)
     })
 
     // 计算是否全选
@@ -239,19 +223,14 @@ export default defineComponent({
 
     // 计算是否部分选中
     const isIndeterminate = computed(() => {
-      return (
-        checkedKeys.value.length > 0 &&
-        checkedKeys.value.length < props.columns.length
-      )
+      return checkedKeys.value.length > 0 && checkedKeys.value.length < props.columns.length
     })
 
     // 按固定位置分组的列
     const groupedColumns = computed(() => {
       const leftList: { key: string; col: ProTableColumn; index: number }[] = []
-      const rightList: { key: string; col: ProTableColumn; index: number }[] =
-        []
-      const normalList: { key: string; col: ProTableColumn; index: number }[] =
-        []
+      const rightList: { key: string; col: ProTableColumn; index: number }[] = []
+      const normalList: { key: string; col: ProTableColumn; index: number }[] = []
 
       props.columns.forEach((col, index) => {
         const key = genColumnKey(col.colKey, index)
@@ -283,9 +262,7 @@ export default defineComponent({
     })
 
     // 渲染树节点
-    const renderTreeData = (
-      list: { key: string; col: ProTableColumn; index: number }[]
-    ) => {
+    const renderTreeData = (list: { key: string; col: ProTableColumn; index: number }[]) => {
       return list.map(({ key, col }) => ({
         value: key,
         label: col.title || col.colKey || key,
@@ -303,11 +280,8 @@ export default defineComponent({
         <span class="t-pro-table-column-setting-item-option">
           <Tooltip content="固定在左侧">
             <span
-              class={[
-                't-pro-table-column-setting-item-option-icon',
-                { active: fixed === 'left' },
-              ]}
-              onClick={e => {
+              class={['t-pro-table-column-setting-item-option-icon', { active: fixed === 'left' }]}
+              onClick={(e) => {
                 e.stopPropagation()
                 handleFixColumn(key, fixed === 'left' ? undefined : 'left')
               }}
@@ -317,11 +291,8 @@ export default defineComponent({
           </Tooltip>
           <Tooltip content="不固定">
             <span
-              class={[
-                't-pro-table-column-setting-item-option-icon',
-                { active: !fixed },
-              ]}
-              onClick={e => {
+              class={['t-pro-table-column-setting-item-option-icon', { active: !fixed }]}
+              onClick={(e) => {
                 e.stopPropagation()
                 handleFixColumn(key, undefined)
               }}
@@ -331,11 +302,8 @@ export default defineComponent({
           </Tooltip>
           <Tooltip content="固定在右侧">
             <span
-              class={[
-                't-pro-table-column-setting-item-option-icon',
-                { active: fixed === 'right' },
-              ]}
-              onClick={e => {
+              class={['t-pro-table-column-setting-item-option-icon', { active: fixed === 'right' }]}
+              onClick={(e) => {
                 e.stopPropagation()
                 handleFixColumn(key, 'right')
               }}
@@ -351,15 +319,13 @@ export default defineComponent({
     const renderColumnList = (
       title: string,
       list: { key: string; col: ProTableColumn; index: number }[],
-      showTitle = true
+      showTitle = true,
     ) => {
       if (list.length === 0) return null
 
       return (
         <div class="t-pro-table-column-setting-list">
-          {showTitle && (
-            <div class="t-pro-table-column-setting-list-title">{title}</div>
-          )}
+          {showTitle && <div class="t-pro-table-column-setting-list-title">{title}</div>}
           <Tree
             data={renderTreeData(list)}
             checkable={props.checkable}
@@ -373,9 +339,7 @@ export default defineComponent({
             v-slots={{
               label: ({ node }: { node: TreeNodeModel }) => (
                 <div class="t-pro-table-column-setting-item">
-                  <span class="t-pro-table-column-setting-item-title">
-                    {node.label}
-                  </span>
+                  <span class="t-pro-table-column-setting-item-title">{node.label}</span>
                   {renderFixedOptions(node.value as string)}
                 </div>
               ),
@@ -414,12 +378,7 @@ export default defineComponent({
           )}
           <Space>
             {props.checkedReset && (
-              <Button
-                variant="text"
-                theme="primary"
-                size="small"
-                onClick={handleReset}
-              >
+              <Button variant="text" theme="primary" size="small" onClick={handleReset}>
                 重置
               </Button>
             )}
@@ -435,9 +394,7 @@ export default defineComponent({
           <Button
             variant="text"
             shape="square"
-            icon={() =>
-              props.settingIcon ? props.settingIcon : <SettingIcon />
-            }
+            icon={() => (props.settingIcon ? props.settingIcon : <SettingIcon />)}
           />
         </Tooltip>
       )

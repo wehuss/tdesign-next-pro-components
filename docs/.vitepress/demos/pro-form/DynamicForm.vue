@@ -1,35 +1,29 @@
 <script setup lang="ts">
-  import {
-    ProForm,
-    ProFormDigit,
-    ProFormList,
-    ProFormSelect,
-    ProFormText,
-  } from '@/components/form'
-  import { MessagePlugin } from 'tdesign-vue-next'
-  import { h, ref } from 'vue'
+import { ProForm, ProFormDigit, ProFormList, ProFormSelect, ProFormText } from '@/components/form'
+import { MessagePlugin } from 'tdesign-vue-next'
+import { h, ref } from 'vue'
 
-  const formRef = ref()
+const formRef = ref()
 
-  const handleFinish = (values: any) => {
-    console.log('表单数据:', values)
-    MessagePlugin.success('提交成功')
-  }
+const handleFinish = (values: any) => {
+  console.log('表单数据:', values)
+  MessagePlugin.success('提交成功')
+}
 
-  // 技能等级选项
-  const skillLevelOptions = [
-    { label: '入门', value: 'beginner' },
-    { label: '熟练', value: 'intermediate' },
-    { label: '精通', value: 'expert' },
-  ]
+// 技能等级选项
+const skillLevelOptions = [
+  { label: '入门', value: 'beginner' },
+  { label: '熟练', value: 'intermediate' },
+  { label: '精通', value: 'expert' },
+]
 
-  // 联系方式类型选项
-  const contactTypeOptions = [
-    { label: '手机', value: 'phone' },
-    { label: '邮箱', value: 'email' },
-    { label: '微信', value: 'wechat' },
-    { label: 'QQ', value: 'qq' },
-  ]
+// 联系方式类型选项
+const contactTypeOptions = [
+  { label: '手机', value: 'phone' },
+  { label: '邮箱', value: 'email' },
+  { label: '微信', value: 'wechat' },
+  { label: 'QQ', value: 'qq' },
+]
 </script>
 
 <template>
@@ -82,7 +76,7 @@
                 fieldProps: { placeholder: '请输入联系方式' },
                 style: { flex: 1 },
               }),
-            ]
+            ],
           )
         }
       "
@@ -132,7 +126,7 @@
                 fieldProps: { placeholder: '年', min: 0, max: 50 },
                 style: { width: '100px' },
               }),
-            ]
+            ],
           )
         }
       "
@@ -188,7 +182,7 @@
                     fieldProps: { placeholder: '请输入职位' },
                     style: { flex: 1 },
                   }),
-                ]
+                ],
               ),
               h(
                 'div',
@@ -212,14 +206,14 @@
                     },
                     style: { width: '150px' },
                   }),
-                ]
+                ],
               ),
               h(ProFormText, {
                 name: [field.name, 'description'],
                 label: '工作描述',
                 fieldProps: { placeholder: '简要描述工作内容' },
               }),
-            ]
+            ],
           )
         }
       "
@@ -250,28 +244,28 @@
 </template>
 
 <style scoped>
-  :deep(.pro-form-list-item) {
-    margin-bottom: 8px;
-  }
+:deep(.pro-form-list-item) {
+  margin-bottom: 8px;
+}
 
-  :deep(.pro-form-list-action) {
-    display: flex;
-    gap: 8px;
-    margin-left: 8px;
-    padding-top: 4px;
-  }
+:deep(.pro-form-list-action) {
+  display: flex;
+  gap: 8px;
+  margin-left: 8px;
+  padding-top: 4px;
+}
 
-  :deep(.pro-form-list-action-icon) {
-    cursor: pointer;
-    color: #666;
-    transition: color 0.2s;
-  }
+:deep(.pro-form-list-action-icon) {
+  cursor: pointer;
+  color: #666;
+  transition: color 0.2s;
+}
 
-  :deep(.pro-form-list-action-icon:hover) {
-    color: #0052d9;
-  }
+:deep(.pro-form-list-action-icon:hover) {
+  color: #0052d9;
+}
 
-  :deep(.action-remove:hover) {
-    color: #e34d59;
-  }
+:deep(.action-remove:hover) {
+  color: #e34d59;
+}
 </style>

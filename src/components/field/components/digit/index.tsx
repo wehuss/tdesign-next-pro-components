@@ -58,7 +58,7 @@ export const FieldDigit = defineComponent({
 
     expose({
       getDataEntryRef,
-      dataEntryRef
+      dataEntryRef,
     })
 
     // 格式化数字显示
@@ -82,11 +82,7 @@ export const FieldDigit = defineComponent({
         <InputNumber
           ref={dataEntryRef}
           v-model={modelValue.value}
-          placeholder={
-            Array.isArray(props.placeholder)
-              ? props.placeholder[0]
-              : props.placeholder
-          }
+          placeholder={Array.isArray(props.placeholder) ? props.placeholder[0] : props.placeholder}
           disabled={props.disabled}
           decimalPlaces={props.precision}
           min={props.min}

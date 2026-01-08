@@ -1,17 +1,17 @@
 <script setup lang="ts">
-  import { ProForm, ProFormMoney } from '@/components/form'
-  import { ref } from 'vue'
+import { ProForm, ProFormMoney } from '@/components/form'
+import { ref } from 'vue'
 
-  const formRef = ref()
-  const formData = ref({
-    salary: undefined,
-    bonus: undefined,
-    budget: undefined,
-  })
+const formRef = ref()
+const formData = ref({
+  salary: undefined,
+  bonus: undefined,
+  budget: undefined,
+})
 
-  const handleFinish = (values: any) => {
-    console.log('表单数据:', values)
-  }
+const handleFinish = (values: any) => {
+  console.log('表单数据:', values)
+}
 </script>
 
 <template>

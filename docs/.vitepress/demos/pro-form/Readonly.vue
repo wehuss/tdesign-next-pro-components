@@ -1,92 +1,91 @@
 <script setup lang="ts">
-  import {
-    ProForm,
-    ProFormCascader,
-    ProFormCheckbox,
-    ProFormDatePicker,
-    ProFormDateRangePicker,
-    ProFormDigit,
-    ProFormMoney,
-    ProFormRadio,
-    ProFormRate,
-    ProFormSelect,
-    ProFormSlider,
-    ProFormSwitch,
-    ProFormText,
-    ProFormTextArea,
-    ProFormTreeSelect,
-  } from '@/components/form'
-  import { Button, Space } from 'tdesign-vue-next'
-  import { ref } from 'vue'
+import {
+  ProForm,
+  ProFormCascader,
+  ProFormCheckbox,
+  ProFormDatePicker,
+  ProFormDateRangePicker,
+  ProFormDigit,
+  ProFormMoney,
+  ProFormRadio,
+  ProFormRate,
+  ProFormSelect,
+  ProFormSlider,
+  ProFormSwitch,
+  ProFormText,
+  ProFormTextArea,
+  ProFormTreeSelect,
+} from '@/components/form'
+import { Button, Space } from 'tdesign-vue-next'
+import { ref } from 'vue'
 
-  const formRef = ref()
-  const readonly = ref(true)
+const formRef = ref()
+const readonly = ref(true)
 
-  // 表单初始数据
-  const formData = ref({
-    username: '张三',
-    email: 'zhangsan@example.com',
-    phone: '13800138000',
-    age: 28,
-    salary: 15000,
-    gender: 'male',
-    role: 'developer',
-    department: 'frontend',
-    skills: ['vue', 'react'],
-    level: 'senior',
-    birthday: '1995-06-15',
-    workPeriod: ['2020-01-01', '2024-12-31'],
-    enabled: true,
-    rating: 4.5,
-    progress: 75,
-    area: ['guangdong', 'shenzhen'],
-    description:
-      '资深前端开发工程师，擅长 Vue.js 和 React 技术栈，有丰富的大型项目开发经验。',
-  })
+// 表单初始数据
+const formData = ref({
+  username: '张三',
+  email: 'zhangsan@example.com',
+  phone: '13800138000',
+  age: 28,
+  salary: 15000,
+  gender: 'male',
+  role: 'developer',
+  department: 'frontend',
+  skills: ['vue', 'react'],
+  level: 'senior',
+  birthday: '1995-06-15',
+  workPeriod: ['2020-01-01', '2024-12-31'],
+  enabled: true,
+  rating: 4.5,
+  progress: 75,
+  area: ['guangdong', 'shenzhen'],
+  description: '资深前端开发工程师，擅长 Vue.js 和 React 技术栈，有丰富的大型项目开发经验。',
+})
 
-  // 级联选择数据
-  const cascaderOptions = [
-    {
-      label: '广东省',
-      value: 'guangdong',
-      children: [
-        { label: '深圳市', value: 'shenzhen' },
-        { label: '广州市', value: 'guangzhou' },
-      ],
-    },
-    {
-      label: '北京市',
-      value: 'beijing',
-      children: [
-        { label: '朝阳区', value: 'chaoyang' },
-        { label: '海淀区', value: 'haidian' },
-      ],
-    },
-  ]
+// 级联选择数据
+const cascaderOptions = [
+  {
+    label: '广东省',
+    value: 'guangdong',
+    children: [
+      { label: '深圳市', value: 'shenzhen' },
+      { label: '广州市', value: 'guangzhou' },
+    ],
+  },
+  {
+    label: '北京市',
+    value: 'beijing',
+    children: [
+      { label: '朝阳区', value: 'chaoyang' },
+      { label: '海淀区', value: 'haidian' },
+    ],
+  },
+]
 
-  // 树选择数据
-  const treeSelectOptions = [
-    {
-      label: '技术部',
-      value: 'tech',
-      children: [
-        { label: '前端组', value: 'frontend' },
-        { label: '后端组', value: 'backend' },
-      ],
-    },
-    {
-      label: '产品部',
-      value: 'product',
-      children: [
-        { label: '产品设计', value: 'design' },
-        { label: '产品运营', value: 'operation' },
-      ],
-    },
-  ]
+// 树选择数据
+const treeSelectOptions = [
+  {
+    label: '技术部',
+    value: 'tech',
+    children: [
+      { label: '前端组', value: 'frontend' },
+      { label: '后端组', value: 'backend' },
+    ],
+  },
+  {
+    label: '产品部',
+    value: 'product',
+    children: [
+      { label: '产品设计', value: 'design' },
+      { label: '产品运营', value: 'operation' },
+    ],
+  },
+]
 
-  const toggleReadonly = () => {
-    readonly.value = !readonly.value
-  }
+const toggleReadonly = () => {
+  readonly.value = !readonly.value
+}
 </script>
 
 <template>
@@ -101,12 +100,7 @@
       </span>
     </Space>
 
-    <ProForm
-      ref="formRef"
-      :readonly="readonly"
-      :submitter="!readonly"
-      :initial-values="formData"
-    >
+    <ProForm ref="formRef" :readonly="readonly" :submitter="!readonly" :initial-values="formData">
       <!-- 文本输入 -->
       <ProFormText
         name="username"
@@ -221,11 +215,7 @@
       />
 
       <!-- 其他组件 -->
-      <ProFormSwitch
-        name="enabled"
-        label="在职状态"
-        v-model="formData.enabled"
-      />
+      <ProFormSwitch name="enabled" label="在职状态" v-model="formData.enabled" />
 
       <ProFormRate
         name="rating"
@@ -234,17 +224,13 @@
         :field-props="{ allowHalf: true }"
       />
 
-      <ProFormSlider
-        name="progress"
-        label="项目进度"
-        v-model="formData.progress"
-      />
+      <ProFormSlider name="progress" label="项目进度" v-model="formData.progress" />
     </ProForm>
   </div>
 </template>
 
 <style scoped>
-  :deep(.t-form__label) {
-    min-width: 100px;
-  }
+:deep(.t-form__label) {
+  min-width: 100px;
+}
 </style>

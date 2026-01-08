@@ -1,17 +1,17 @@
 <script setup lang="ts">
-  import { ProForm, ProFormCheckbox } from '@/components/form'
-  import { ref } from 'vue'
+import { ProForm, ProFormCheckbox } from '@/components/form'
+import { ref } from 'vue'
 
-  const formRef = ref()
-  const formData = ref({
-    hobbies: [],
-    skills: [],
-    permissions: [],
-  })
+const formRef = ref()
+const formData = ref({
+  hobbies: [],
+  skills: [],
+  permissions: [],
+})
 
-  const handleFinish = (values: any) => {
-    console.log('表单数据:', values)
-  }
+const handleFinish = (values: any) => {
+  console.log('表单数据:', values)
+}
 </script>
 
 <template>

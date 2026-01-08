@@ -1,32 +1,32 @@
 <script setup lang="ts">
-  import { ProField } from '@/components/field'
-  import { ref } from 'vue'
+import { ProField } from '@/components/field'
+import { ref } from 'vue'
 
-  // 各种类型的示例值
-  const textValue = ref('Hello World')
-  const passwordValue = ref('password123')
-  const digitValue = ref(12345)
-  const moneyValue = ref(99999.99)
-  const percentValue = ref(0.856)
-  const dateValue = ref('2024-01-15')
-  const dateTimeValue = ref('2024-01-15 14:30:00')
-  const timeValue = ref('14:30:00')
-  const selectValue = ref('active')
-  const switchValue = ref(true)
-  const rateValue = ref(4)
-  const progressValue = ref(75)
-  const codeValue = ref('{ "name": "test", "value": 123 }')
-  const imageValue = ref('https://tdesign.gtimg.com/site/avatar.jpg')
-  const colorValue = ref('#0052d9')
-  const secondValue = ref(3661)
-  const fromNowValue = ref('2024-01-10 10:00:00')
-  const indexValue = ref(1)
+// 各种类型的示例值
+const textValue = ref('Hello World')
+const passwordValue = ref('password123')
+const digitValue = ref(12345)
+const moneyValue = ref(99999.99)
+const percentValue = ref(0.856)
+const dateValue = ref('2024-01-15')
+const dateTimeValue = ref('2024-01-15 14:30:00')
+const timeValue = ref('14:30:00')
+const selectValue = ref('active')
+const switchValue = ref(true)
+const rateValue = ref(4)
+const progressValue = ref(75)
+const codeValue = ref('{ "name": "test", "value": 123 }')
+const imageValue = ref('https://tdesign.gtimg.com/site/avatar.jpg')
+const colorValue = ref('#0052d9')
+const secondValue = ref(3661)
+const fromNowValue = ref('2024-01-10 10:00:00')
+const indexValue = ref(1)
 
-  const statusEnum = {
-    active: { text: '启用', status: 'success' },
-    inactive: { text: '禁用', status: 'error' },
-    pending: { text: '待审核', status: 'warning' },
-  }
+const statusEnum = {
+  active: { text: '启用', status: 'success' },
+  inactive: { text: '禁用', status: 'error' },
+  pending: { text: '待审核', status: 'warning' },
+}
 </script>
 
 <template>
@@ -43,11 +43,7 @@
       <t-col :span="6">
         <div class="field-item">
           <span class="field-label">password 密码</span>
-          <ProField
-            :modelValue="passwordValue"
-            valueType="password"
-            mode="read"
-          />
+          <ProField :modelValue="passwordValue" valueType="password" mode="read" />
         </div>
       </t-col>
 
@@ -69,11 +65,7 @@
       <t-col :span="6">
         <div class="field-item">
           <span class="field-label">percent 百分比</span>
-          <ProField
-            :modelValue="percentValue"
-            valueType="percent"
-            mode="read"
-          />
+          <ProField :modelValue="percentValue" valueType="percent" mode="read" />
         </div>
       </t-col>
 
@@ -88,11 +80,7 @@
       <t-col :span="6">
         <div class="field-item">
           <span class="field-label">dateTime 日期时间</span>
-          <ProField
-            :modelValue="dateTimeValue"
-            valueType="dateTime"
-            mode="read"
-          />
+          <ProField :modelValue="dateTimeValue" valueType="dateTime" mode="read" />
         </div>
       </t-col>
 
@@ -106,11 +94,7 @@
       <t-col :span="6">
         <div class="field-item">
           <span class="field-label">fromNow 相对时间</span>
-          <ProField
-            :modelValue="fromNowValue"
-            valueType="fromNow"
-            mode="read"
-          />
+          <ProField :modelValue="fromNowValue" valueType="fromNow" mode="read" />
         </div>
       </t-col>
 
@@ -152,11 +136,7 @@
       <t-col :span="6">
         <div class="field-item">
           <span class="field-label">progress 进度</span>
-          <ProField
-            :modelValue="progressValue"
-            valueType="progress"
-            mode="read"
-          />
+          <ProField :modelValue="progressValue" valueType="progress" mode="read" />
         </div>
       </t-col>
 
@@ -184,11 +164,7 @@
       <t-col :span="6">
         <div class="field-item">
           <span class="field-label">indexBorder 带边框序号</span>
-          <ProField
-            :modelValue="indexValue"
-            valueType="indexBorder"
-            mode="read"
-          />
+          <ProField :modelValue="indexValue" valueType="indexBorder" mode="read" />
         </div>
       </t-col>
 
@@ -203,17 +179,17 @@
 </template>
 
 <style scoped>
-  .field-item {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 12px;
-    background: var(--td-bg-color-container);
-    border-radius: 6px;
-  }
+.field-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: var(--td-bg-color-container);
+  border-radius: 6px;
+}
 
-  .field-label {
-    font-size: 12px;
-    color: var(--td-text-color-secondary);
-  }
+.field-label {
+  font-size: 12px;
+  color: var(--td-text-color-secondary);
+}
 </style>

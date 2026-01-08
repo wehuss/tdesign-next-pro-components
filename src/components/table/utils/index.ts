@@ -4,11 +4,7 @@
  */
 
 // 列排序工具
-export {
-  columnSort,
-  getColumnSortWeight,
-  type SortableColumn,
-} from './column-sort'
+export { columnSort, getColumnSortWeight, type SortableColumn } from './column-sort'
 
 // 列渲染工具
 export {

@@ -8,7 +8,7 @@ import type { ProFieldMode } from '../../types'
  * @returns 状态
  */
 const getProgressStatus = (
-  percent: number
+  percent: number,
 ): 'success' | 'error' | 'warning' | 'active' | undefined => {
   if (percent === 100) {
     return 'success'
@@ -103,11 +103,7 @@ export const FieldProgress = defineComponent({
         <InputNumber
           ref={dataEntryRef}
           v-model={modelValue.value}
-          placeholder={
-            Array.isArray(props.placeholder)
-              ? props.placeholder[0]
-              : props.placeholder
-          }
+          placeholder={Array.isArray(props.placeholder) ? props.placeholder[0] : props.placeholder}
           disabled={props.disabled}
           min={0}
           max={100}

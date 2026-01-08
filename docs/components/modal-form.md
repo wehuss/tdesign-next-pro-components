@@ -6,18 +6,18 @@ ModalForm 是结合了 Modal 和 ProForm 的组件，用于在弹窗中展示表
 
 ```vue
 <script setup lang="ts">
-  import { ref } from 'vue'
-  import { Button } from 'tdesign-vue-next'
-  import { ModalForm, ProFormText, ProFormSelect } from 'tdesign-pro-components'
+import { ref } from 'vue'
+import { Button } from 'tdesign-vue-next'
+import { ModalForm, ProFormText, ProFormSelect } from 'tdesign-pro-components'
 
-  const visible = ref(false)
+const visible = ref(false)
 
-  const handleSubmit = async (values: any) => {
-    console.log('表单数据:', values)
-    // 模拟提交
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    return true // 返回 true 关闭弹窗
-  }
+const handleSubmit = async (values: any) => {
+  console.log('表单数据:', values)
+  // 模拟提交
+  await new Promise((resolve) => setTimeout(resolve, 1000))
+  return true // 返回 true 关闭弹窗
+}
 </script>
 
 <template>
@@ -47,13 +47,13 @@ ModalForm 是结合了 Modal 和 ProForm 的组件，用于在弹窗中展示表
 
 ```vue
 <script setup lang="ts">
-  import { ModalForm, ProFormText } from 'tdesign-pro-components'
-  import { Button } from 'tdesign-vue-next'
+import { ModalForm, ProFormText } from 'tdesign-pro-components'
+import { Button } from 'tdesign-vue-next'
 
-  const handleSubmit = async (values: any) => {
-    console.log('表单数据:', values)
-    return true
-  }
+const handleSubmit = async (values: any) => {
+  console.log('表单数据:', values)
+  return true
+}
 </script>
 
 <template>
@@ -73,23 +73,23 @@ ModalForm 是结合了 Modal 和 ProForm 的组件，用于在弹窗中展示表
 
 ```vue
 <script setup lang="ts">
-  import { ref, computed } from 'vue'
-  import { ModalForm, ProFormText, ProFormSelect } from 'tdesign-pro-components'
+import { ref, computed } from 'vue'
+import { ModalForm, ProFormText, ProFormSelect } from 'tdesign-pro-components'
 
-  const visible = ref(false)
-  const currentRecord = ref<any>(null)
+const visible = ref(false)
+const currentRecord = ref<any>(null)
 
-  const initialValues = computed(() => currentRecord.value || {})
+const initialValues = computed(() => currentRecord.value || {})
 
-  const handleEdit = (record: any) => {
-    currentRecord.value = record
-    visible.value = true
-  }
+const handleEdit = (record: any) => {
+  currentRecord.value = record
+  visible.value = true
+}
 
-  const handleSubmit = async (values: any) => {
-    console.log('更新数据:', values)
-    return true
-  }
+const handleSubmit = async (values: any) => {
+  console.log('更新数据:', values)
+  return true
+}
 </script>
 
 <template>
@@ -133,23 +133,18 @@ ModalForm 是结合了 Modal 和 ProForm 的组件，用于在弹窗中展示表
 
 ```vue
 <script setup lang="ts">
-  import { ref } from 'vue'
-  import { ModalForm, ProFormText } from 'tdesign-pro-components'
+import { ref } from 'vue'
+import { ModalForm, ProFormText } from 'tdesign-pro-components'
 
-  const formRef = ref()
+const formRef = ref()
 
-  const handleCustomSubmit = () => {
-    formRef.value?.submit()
-  }
+const handleCustomSubmit = () => {
+  formRef.value?.submit()
+}
 </script>
 
 <template>
-  <ModalForm
-    ref="formRef"
-    title="自定义按钮"
-    :submitter="false"
-    @finish="handleSubmit"
-  >
+  <ModalForm ref="formRef" title="自定义按钮" :submitter="false" @finish="handleSubmit">
     <template #trigger>
       <Button>打开</Button>
     </template>

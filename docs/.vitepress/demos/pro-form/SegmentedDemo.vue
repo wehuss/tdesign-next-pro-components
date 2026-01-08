@@ -1,17 +1,17 @@
 <script setup lang="ts">
-  import { ProForm, ProFormSegmented } from '@/components/form'
-  import { ref } from 'vue'
+import { ProForm, ProFormSegmented } from '@/components/form'
+import { ref } from 'vue'
 
-  const formRef = ref()
-  const formData = ref({
-    status: 'pending',
-    size: 'medium',
-    view: 'list',
-  })
+const formRef = ref()
+const formData = ref({
+  status: 'pending',
+  size: 'medium',
+  view: 'list',
+})
 
-  const handleFinish = (values: any) => {
-    console.log('表单数据:', values)
-  }
+const handleFinish = (values: any) => {
+  console.log('表单数据:', values)
+}
 </script>
 
 <template>

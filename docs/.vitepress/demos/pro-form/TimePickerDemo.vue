@@ -1,21 +1,17 @@
 <script setup lang="ts">
-  import {
-    ProForm,
-    ProFormTimePicker,
-    ProFormTimeRangePicker,
-  } from '@/components/form'
-  import { ref } from 'vue'
+import { ProForm, ProFormTimePicker, ProFormTimeRangePicker } from '@/components/form'
+import { ref } from 'vue'
 
-  const formRef = ref()
-  const formData = ref({
-    workTime: '',
-    meetingTime: '',
-    timeRange: [],
-  })
+const formRef = ref()
+const formData = ref({
+  workTime: '',
+  meetingTime: '',
+  timeRange: [],
+})
 
-  const handleFinish = (values: any) => {
-    console.log('表单数据:', values)
-  }
+const handleFinish = (values: any) => {
+  console.log('表单数据:', values)
+}
 </script>
 
 <template>

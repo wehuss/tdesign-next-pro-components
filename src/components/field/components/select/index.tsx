@@ -47,7 +47,7 @@ export const FieldSelect = defineComponent({
 
     expose({
       getDataEntryRef,
-      dataEntryRef
+      dataEntryRef,
     })
 
     // 转换 valueEnum 为选项列表
@@ -58,16 +58,12 @@ export const FieldSelect = defineComponent({
         return []
       }
 
-      return Array.from(valueEnum.entries()).map(entry => {
+      return Array.from(valueEnum.entries()).map((entry) => {
         const [value, config] = entry as any[]
         return {
           value,
-          label:
-            typeof config === 'string'
-              ? config
-              : (config as any)?.text || value,
-          disabled:
-            typeof config === 'object' ? (config as any)?.disabled : false,
+          label: typeof config === 'string' ? config : (config as any)?.text || value,
+          disabled: typeof config === 'object' ? (config as any)?.disabled : false,
         }
       })
     })
@@ -75,10 +71,7 @@ export const FieldSelect = defineComponent({
     return () => {
       // 只读模式显示选项文本
       if (props.mode === 'read' || props.readonly) {
-        return proFieldParsingText(
-          modelValue.value,
-          props.valueEnum as ProFieldValueEnumType
-        )
+        return proFieldParsingText(modelValue.value, props.valueEnum as ProFieldValueEnumType)
       }
 
       // 编辑模式显示下拉选择框
@@ -87,11 +80,7 @@ export const FieldSelect = defineComponent({
           ref={dataEntryRef}
           v-model={modelValue.value}
           options={options.value}
-          placeholder={
-            Array.isArray(props.placeholder)
-              ? props.placeholder[0]
-              : props.placeholder
-          }
+          placeholder={Array.isArray(props.placeholder) ? props.placeholder[0] : props.placeholder}
           disabled={props.disabled}
           {...props.fieldProps}
         />

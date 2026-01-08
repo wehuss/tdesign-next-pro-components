@@ -40,10 +40,7 @@ export interface TableAlertProps<T = any> {
 }
 
 // 默认的选项渲染函数
-const defaultAlertOptionRender = (props: {
-  intl: IntlType
-  onCleanSelected: () => void
-}) => {
+const defaultAlertOptionRender = (props: { intl: IntlType; onCleanSelected: () => void }) => {
   const { intl, onCleanSelected } = props
   return (
     <Link theme="primary" onClick={onCleanSelected}>
@@ -63,9 +60,7 @@ const defaultAlertInfoRender = <T,>(props: {
   return (
     <Space>
       <span>{intl.getMessage('alert.selected', '已选择')}</span>
-      <span class="t-pro-table-alert-info-highlight">
-        {selectedRowKeys.length}
-      </span>
+      <span class="t-pro-table-alert-info-highlight">{selectedRowKeys.length}</span>
       <span>{intl.getMessage('alert.item', '项')}</span>
     </Space>
   )
@@ -181,9 +176,7 @@ export default defineComponent({
             <div class="t-pro-table-alert-info">
               <div class="t-pro-table-alert-info-content">{infoContent}</div>
               {renderOption.value && (
-                <div class="t-pro-table-alert-info-option">
-                  {renderOption.value}
-                </div>
+                <div class="t-pro-table-alert-info-option">{renderOption.value}</div>
               )}
             </div>
           </div>

@@ -56,7 +56,7 @@ app.mount('#app')
 
 ```vue
 <script setup lang="ts">
-  import { ProTable, ProField, ProForm } from 'tdesign-pro-components'
+import { ProTable, ProField, ProForm } from 'tdesign-pro-components'
 </script>
 ```
 

@@ -9,14 +9,14 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'TDesignProComponents',
-      fileName: format => `index.${format}.js`,
+      fileName: (format) => `index.${format}.js`,
       formats: ['es', 'cjs', 'umd'],
     },
     rollupOptions: {
       external: ['vue', 'tdesign-vue-next', 'tdesign-icons-vue-next'],
       output: {
         globals: {
-          'vue': 'Vue',
+          vue: 'Vue',
           'tdesign-vue-next': 'TDesign',
           'tdesign-icons-vue-next': 'TDesignIcons',
         },

@@ -1,36 +1,36 @@
-import { Drawer } from 'tdesign-vue-next'
-import type { VNode } from 'vue'
-import { cloneVNode, defineComponent, ref, watch } from 'vue'
-import { BaseForm } from '../BaseForm/BaseForm'
-import type { SubmitterProps } from '../BaseForm/Submitter'
-import type { ProFormProps } from '../ProForm'
+import { Drawer } from "tdesign-vue-next";
+import type { VNode } from "vue";
+import { cloneVNode, defineComponent, ref, watch } from "vue";
+import { BaseForm } from "../base-form/base-form";
+import type { SubmitterProps } from "../base-form/submitter";
+import type { ProFormProps } from "../pro-form";
 
 export interface DrawerFormProps extends ProFormProps {
   // Drawer 相关属性
-  visible?: boolean
-  open?: boolean // 兼容 antd 的 open 属性
-  title?: string
-  width?: string | number
-  placement?: 'left' | 'right' | 'top' | 'bottom'
-  destroyOnClose?: boolean
-  maskClosable?: boolean
-  closable?: boolean
-  confirmLoading?: boolean
+  visible?: boolean;
+  open?: boolean; // 兼容 antd 的 open 属性
+  title?: string;
+  width?: string | number;
+  placement?: "left" | "right" | "top" | "bottom";
+  destroyOnClose?: boolean;
+  maskClosable?: boolean;
+  closable?: boolean;
+  confirmLoading?: boolean;
   // 提交超时
-  submitTimeout?: number
+  submitTimeout?: number;
   // 触发器相关
-  trigger?: VNode
+  trigger?: VNode;
   // Drawer 配置
-  drawerProps?: Record<string, any>
+  drawerProps?: Record<string, any>;
   // 事件回调
-  onOpenChange?: (open: boolean) => void
-  onVisibleChange?: (visible: boolean) => void
-  onCancel?: () => void
-  onOk?: () => void
+  onOpenChange?: (open: boolean) => void;
+  onVisibleChange?: (visible: boolean) => void;
+  onCancel?: () => void;
+  onOk?: () => void;
 }
 
 export const DrawerForm = defineComponent({
-  name: 'DrawerForm',
+  name: "DrawerForm",
   props: {
     // 继承 BaseForm 的所有属性
     ...BaseForm.props,
@@ -51,8 +51,8 @@ export const DrawerForm = defineComponent({
       default: 800,
     },
     placement: {
-      type: String as () => 'left' | 'right' | 'top' | 'bottom',
-      default: 'right',
+      type: String as () => "left" | "right" | "top" | "bottom",
+      default: "right",
     },
     destroyOnClose: {
       type: Boolean,
@@ -101,118 +101,118 @@ export const DrawerForm = defineComponent({
     },
   },
   emits: [
-    'update:visible',
-    'update:open',
-    'openChange',
-    'visibleChange',
-    'cancel',
-    'ok',
-    'finish',
-    'finishFailed',
+    "update:visible",
+    "update:open",
+    "openChange",
+    "visibleChange",
+    "cancel",
+    "ok",
+    "finish",
+    "finishFailed",
   ],
   setup(props, { slots, emit, expose }) {
-    const formRef = ref()
-    const footerRef = ref<HTMLDivElement | null>(null)
+    const formRef = ref();
+    const footerRef = ref<HTMLDivElement | null>(null);
     // 支持 open 和 visible 两种属性
-    const propsOpen = props.open ?? props.visible ?? false
-    const internalOpen = ref(propsOpen)
-    const loading = ref(false)
+    const propsOpen = props.open ?? props.visible ?? false;
+    const internalOpen = ref(propsOpen);
+    const loading = ref(false);
 
     // 监听外部 open/visible 变化
     watch(
       () => props.open ?? props.visible,
-      newVal => {
+      (newVal) => {
         if (newVal !== undefined) {
-          internalOpen.value = newVal
+          internalOpen.value = newVal;
         }
       }
-    )
+    );
 
     // 监听内部 open 变化
-    watch(internalOpen, newVal => {
-      emit('update:visible', newVal)
-      emit('update:open', newVal)
-      props.onOpenChange?.(newVal)
-      props.onVisibleChange?.(newVal)
-      emit('openChange', newVal)
-      emit('visibleChange', newVal)
-    })
+    watch(internalOpen, (newVal) => {
+      emit("update:visible", newVal);
+      emit("update:open", newVal);
+      props.onOpenChange?.(newVal);
+      props.onVisibleChange?.(newVal);
+      emit("openChange", newVal);
+      emit("visibleChange", newVal);
+    });
 
     // 显示抽屉
     const show = () => {
-      internalOpen.value = true
-    }
+      internalOpen.value = true;
+    };
 
     // 隐藏抽屉
     const hide = () => {
-      internalOpen.value = false
-    }
+      internalOpen.value = false;
+    };
 
     // 重置表单
     const resetFields = () => {
       if (props.destroyOnClose && formRef.value) {
-        formRef.value.reset?.()
+        formRef.value.reset?.();
       }
-    }
+    };
 
     // 处理取消
     const handleCancel = () => {
       // 提交表单loading时，阻止抽屉关闭
-      if (props.submitTimeout && loading.value) return
-      props.onCancel?.()
-      emit('cancel')
-      hide()
-    }
+      if (props.submitTimeout && loading.value) return;
+      props.onCancel?.();
+      emit("cancel");
+      hide();
+    };
 
     // 处理表单提交
     const handleFinish = async (values: any) => {
-      const response = props.onFinish?.(values)
+      const response = props.onFinish?.(values);
 
       if (props.submitTimeout && response instanceof Promise) {
-        loading.value = true
+        loading.value = true;
         const timer = setTimeout(() => {
-          loading.value = false
-        }, props.submitTimeout)
+          loading.value = false;
+        }, props.submitTimeout);
 
         try {
-          const result = await response
-          clearTimeout(timer)
-          loading.value = false
+          const result = await response;
+          clearTimeout(timer);
+          loading.value = false;
           // 返回真值，关闭抽屉
           if (result) {
-            emit('finish', values)
-            hide()
+            emit("finish", values);
+            hide();
           }
-          return result
+          return result;
         } catch (error) {
-          clearTimeout(timer)
-          loading.value = false
-          throw error
+          clearTimeout(timer);
+          loading.value = false;
+          throw error;
         }
       }
 
-      const result = await response
+      const result = await response;
       // 返回真值，关闭抽屉
       if (result) {
-        emit('finish', values)
-        hide()
+        emit("finish", values);
+        hide();
       }
-      return result
-    }
+      return result;
+    };
 
     // 处理表单提交失败
     const handleFinishFailed = (errorInfo: any) => {
-      emit('finishFailed', errorInfo)
-    }
+      emit("finishFailed", errorInfo);
+    };
 
     // 处理抽屉关闭后
     const handleAfterClose = (open: boolean) => {
       if (!open && props.destroyOnClose) {
-        resetFields()
+        resetFields();
       }
-      props.drawerProps?.afterOpenChange?.(open)
-      props.onOpenChange?.(open)
-    }
+      props.drawerProps?.afterOpenChange?.(open);
+      props.onOpenChange?.(open);
+    };
 
     // 暴露方法
     expose({
@@ -225,18 +225,18 @@ export const DrawerForm = defineComponent({
       validate: () => formRef.value?.validate(),
       getFieldsValue: () => formRef.value?.getFieldsValue(),
       setFieldsValue: (values: any) => formRef.value?.setFieldsValue(values),
-    })
+    });
 
     // 构建 submitter 配置
     const getSubmitterConfig = () => {
       if (props.submitter === false) {
-        return false
+        return false;
       }
 
       const defaultConfig: SubmitterProps = {
         searchConfig: {
-          submitText: '确认',
-          resetText: '取消',
+          submitText: "确认",
+          resetText: "取消",
         },
         resetButtonProps: {
           disabled: props.submitTimeout ? loading.value : false,
@@ -245,13 +245,13 @@ export const DrawerForm = defineComponent({
         submitButtonProps: {
           loading: loading.value,
         },
-      }
+      };
 
       return {
         ...defaultConfig,
-        ...(typeof props.submitter === 'object' ? props.submitter : {}),
-      }
-    }
+        ...(typeof props.submitter === "object" ? props.submitter : {}),
+      };
+    };
 
     // 内容渲染
     const contentRender = (formDom: any, submitter: any) => {
@@ -264,22 +264,22 @@ export const DrawerForm = defineComponent({
             submitter
           )}
         </>
-      )
-    }
+      );
+    };
 
     // 渲染触发器
     const renderTrigger = () => {
-      if (!props.trigger) return null
+      if (!props.trigger) return null;
 
       return cloneVNode(props.trigger, {
         onClick: (e: Event) => {
-          show()
+          show();
           // 调用原有的 onClick
-          const originalOnClick = (props.trigger as any)?.props?.onClick
-          originalOnClick?.(e)
+          const originalOnClick = (props.trigger as any)?.props?.onClick;
+          originalOnClick?.(e);
         },
-      })
-    }
+      });
+    };
 
     return () => (
       <>
@@ -303,8 +303,8 @@ export const DrawerForm = defineComponent({
                     <div
                       ref={footerRef}
                       style={{
-                        display: 'flex',
-                        justifyContent: 'flex-end',
+                        display: "flex",
+                        justifyContent: "flex-end",
                       }}
                     />
                   )
@@ -328,8 +328,8 @@ export const DrawerForm = defineComponent({
         {/* 触发器 */}
         {renderTrigger()}
       </>
-    )
+    );
   },
-})
+});
 
-export default DrawerForm
+export default DrawerForm;

@@ -87,11 +87,7 @@ describe('Column Render and Cell Render', () => {
     // The function returns a VNode (span element) containing the empty text
     expect(result).toBeTruthy()
     // Check that the VNode contains the expected text
-    if (
-      typeof result === 'object' &&
-      result !== null &&
-      '__v_isVNode' in result
-    ) {
+    if (typeof result === 'object' && result !== null && '__v_isVNode' in result) {
       expect((result as any).children).toContain('暂无数据')
     }
   })

@@ -37,10 +37,7 @@ export interface ColumnToColumnParams<T extends TableRowData> {
  * @param key 用户设置的key
  * @param index 序列号
  */
-export const genColumnKey = (
-  key?: string | number,
-  index?: number | string
-): string => {
+export const genColumnKey = (key?: string | number, index?: number | string): string => {
   if (key) {
     return Array.isArray(key) ? key.join('-') : key.toString()
   }
@@ -51,9 +48,7 @@ export const genColumnKey = (
  * 将 ProTable - column - dataIndex 转为字符串形式
  * @param dataIndex Column 中的 dataIndex
  */
-export const parseDataIndex = (
-  dataIndex: ProTableColumn['colKey']
-): string | undefined => {
+export const parseDataIndex = (dataIndex: ProTableColumn['colKey']): string | undefined => {
   if (Array.isArray(dataIndex)) {
     return dataIndex.join(',')
   }
@@ -65,7 +60,7 @@ export const parseDataIndex = (
  * @param sorter 排序配置
  */
 export const isLocaleSorter = <T extends TableRowData>(
-  sorter: ProTableColumn<T>['sorter']
+  sorter: ProTableColumn<T>['sorter'],
 ): boolean => {
   return typeof sorter === 'function'
 }
@@ -77,7 +72,7 @@ export const isLocaleSorter = <T extends TableRowData>(
  */
 export const parseProSortOrder = <T extends TableRowData>(
   proSort: Record<string, 'asc' | 'desc' | null>,
-  columnProps: ProTableColumn<T>
+  columnProps: ProTableColumn<T>,
 ): 'asc' | 'desc' | undefined => {
   const { sorter, colKey } = columnProps
 
@@ -109,11 +104,9 @@ export const checkUndefinedOrNull = (value: unknown): boolean =>
  * 移除对象中的 undefined 和空数组
  * @param obj 要处理的对象
  */
-export const omitUndefinedAndEmptyArr = <T extends Record<string, unknown>>(
-  obj: T
-): T => {
+export const omitUndefinedAndEmptyArr = <T extends Record<string, unknown>>(obj: T): T => {
   const result = {} as T
-  Object.keys(obj).forEach(key => {
+  Object.keys(obj).forEach((key) => {
     const value = obj[key]
     if (value !== undefined) {
       if (Array.isArray(value) && value.length === 0) {
@@ -131,7 +124,7 @@ export const omitUndefinedAndEmptyArr = <T extends Record<string, unknown>>(
  * @returns 平铺后的列配置
  */
 export const flattenColumns = <T extends TableRowData>(
-  data: ProTableColumn<T>[]
+  data: ProTableColumn<T>[],
 ): ProTableColumn<T>[] => {
   const _columns: ProTableColumn<T>[] = []
 
@@ -154,7 +147,7 @@ export const flattenColumns = <T extends TableRowData>(
  */
 export function genProColumnToColumn<T extends TableRowData>(
   params: ColumnToColumnParams<T>,
-  parents?: ProTableColumn<T>
+  parents?: ProTableColumn<T>,
 ): ColumnToColumnReturnType<T> {
   const {
     columns,
@@ -184,7 +177,7 @@ export function genProColumnToColumn<T extends TableRowData>(
       // 生成列的唯一 key
       const columnKey = genColumnKey(
         colKey?.toString(),
-        [parents?.colKey, columnsIndex].filter(Boolean).join('-')
+        [parents?.colKey, columnsIndex].filter(Boolean).join('-'),
       )
 
       // 这些都没有，说明是普通的表格不需要 pro 管理
@@ -244,23 +237,21 @@ export function genProColumnToColumn<T extends TableRowData>(
             row !== null &&
             Reflect.has(row as object, keyName as string)
           ) {
-            uniqueKey = (row as Record<string, unknown>)[keyName as string] as
-              | string
-              | number
+            uniqueKey = (row as Record<string, unknown>)[keyName as string] as string | number
             const parentInfo = subNameRecord.get(uniqueKey) || []
 
             // 记录子行的路径
-            const childrenData = (row as Record<string, unknown>)[
-              childrenColumnName
-            ] as T[] | undefined
+            const childrenData = (row as Record<string, unknown>)[childrenColumnName] as
+              | T[]
+              | undefined
             childrenData?.forEach((item: T) => {
-              const itemUniqueKey = (item as Record<string, unknown>)[
-                keyName as string
-              ] as string | number
+              const itemUniqueKey = (item as Record<string, unknown>)[keyName as string] as
+                | string
+                | number
               if (!subNameRecord.has(itemUniqueKey)) {
                 subNameRecord.set(
                   itemUniqueKey,
-                  parentInfo.concat([String(rowIndex), childrenColumnName])
+                  parentInfo.concat([String(rowIndex), childrenColumnName]),
                 )
               }
             })
@@ -287,16 +278,16 @@ export function genProColumnToColumn<T extends TableRowData>(
                 ...params,
                 columns: children as ProTableColumn<T>[],
               },
-              { ...columnProps, colKey: columnKey } as ProTableColumn<T>
+              { ...columnProps, colKey: columnKey } as ProTableColumn<T>,
             )
           : undefined,
       }
 
-      return omitUndefinedAndEmptyArr(
-        tempColumns as Record<string, unknown>
-      ) as PrimaryTableCol<T> | { index?: number }
+      return omitUndefinedAndEmptyArr(tempColumns as Record<string, unknown>) as
+        | PrimaryTableCol<T>
+        | { index?: number }
     })
-    ?.filter(item => {
+    ?.filter((item) => {
       const config = columnsMap[(item as PrimaryTableCol<T>).colKey || ''] || {
         show: true,
       }

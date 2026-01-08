@@ -7,8 +7,7 @@ export interface GridContextValue {
   colProps?: Record<string, any>
 }
 
-export const GridContextKey: InjectionKey<GridContextValue> =
-  Symbol('GridContext')
+export const GridContextKey: InjectionKey<GridContextValue> = Symbol('GridContext')
 
 export const useGridContext = () => {
   return inject(GridContextKey, {} as GridContextValue)
@@ -52,12 +51,7 @@ export const useGridHelpers = (config: ProFormGridConfig) => {
         return () => slots.default?.()
       }
 
-      return () =>
-        h(
-          Col,
-          { ...gridContext.colProps, ...props.colProps },
-          slots.default?.()
-        )
+      return () => h(Col, { ...gridContext.colProps, ...props.colProps }, slots.default?.())
     },
   })
 

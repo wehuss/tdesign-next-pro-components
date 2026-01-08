@@ -50,7 +50,7 @@ export const FieldDate = defineComponent({
 
     expose({
       getDataEntryRef,
-      dataEntryRef
+      dataEntryRef,
     })
 
     // 格式化日期显示
@@ -74,10 +74,7 @@ export const FieldDate = defineComponent({
         const month = String(date.getMonth() + 1).padStart(2, '0')
         const day = String(date.getDate()).padStart(2, '0')
 
-        return props.format
-          .replace('YYYY', String(year))
-          .replace('MM', month)
-          .replace('DD', day)
+        return props.format.replace('YYYY', String(year)).replace('MM', month).replace('DD', day)
       } catch {
         return '-'
       }
@@ -96,11 +93,7 @@ export const FieldDate = defineComponent({
           v-model={modelValue.value}
           format={props.format}
           valueFormat={props.valueFormat}
-          placeholder={
-            Array.isArray(props.placeholder)
-              ? props.placeholder[0]
-              : props.placeholder
-          }
+          placeholder={Array.isArray(props.placeholder) ? props.placeholder[0] : props.placeholder}
           disabled={props.disabled}
           {...props.fieldProps}
         />

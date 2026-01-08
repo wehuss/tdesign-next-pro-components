@@ -80,10 +80,7 @@ const getSettingItem = (setting: VNode | ListToolBarSetting) => {
   if (tooltip) {
     return (
       <Tooltip content={tooltip}>
-        <span
-          class="t-pro-list-toolbar-setting-item"
-          onClick={() => onClick?.(key)}
-        >
+        <span class="t-pro-list-toolbar-setting-item" onClick={() => onClick?.(key)}>
           {iconNode}
         </span>
       </Tooltip>
@@ -91,10 +88,7 @@ const getSettingItem = (setting: VNode | ListToolBarSetting) => {
   }
 
   return (
-    <span
-      class="t-pro-list-toolbar-setting-item"
-      onClick={() => onClick?.(key)}
-    >
+    <span class="t-pro-list-toolbar-setting-item" onClick={() => onClick?.(key)}>
       {iconNode}
     </span>
   )
@@ -112,9 +106,7 @@ export default defineComponent({
     title: [String, Object] as PropType<string | VNode>,
     subTitle: [String, Object] as PropType<string | VNode>,
     tooltip: String,
-    search: [Object, Boolean] as PropType<
-      ListToolBarSearchProps | VNode | boolean
-    >,
+    search: [Object, Boolean] as PropType<ListToolBarSearchProps | VNode | boolean>,
     onSearch: Function as PropType<(keyWords: string) => void>,
     actions: Array as PropType<VNode[]>,
     settings: Array as PropType<(VNode | ListToolBarSetting)[]>,
@@ -179,12 +171,8 @@ export default defineComponent({
 
       return (
         <div class={`${props.prefixCls}-title`}>
-          {props.title && (
-            <span class={`${props.prefixCls}-title-text`}>{props.title}</span>
-          )}
-          {props.subTitle && (
-            <span class={`${props.prefixCls}-title-sub`}>{props.subTitle}</span>
-          )}
+          {props.title && <span class={`${props.prefixCls}-title-text`}>{props.title}</span>}
+          {props.subTitle && <span class={`${props.prefixCls}-title-sub`}>{props.subTitle}</span>}
           {props.tooltip && (
             <Tooltip content={props.tooltip}>
               <span class={`${props.prefixCls}-title-tip`}>?</span>
@@ -196,8 +184,7 @@ export default defineComponent({
 
     // 渲染左侧内容
     const renderLeft = () => {
-      const hasMenu =
-        props.menu && props.menu.items && props.menu.items.length > 0
+      const hasMenu = props.menu && props.menu.items && props.menu.items.length > 0
 
       if (!hasMenu && (hasTitle.value || !props.search)) {
         return <div class={`${props.prefixCls}-left`}>{renderTitle()}</div>
@@ -209,17 +196,13 @@ export default defineComponent({
             `${props.prefixCls}-left`,
             {
               [`${props.prefixCls}-left-has-tabs`]: props.menu?.type === 'tab',
-              [`${props.prefixCls}-left-has-dropdown`]:
-                props.menu?.type === 'dropdown',
-              [`${props.prefixCls}-left-has-inline-menu`]:
-                props.menu?.type === 'inline',
+              [`${props.prefixCls}-left-has-dropdown`]: props.menu?.type === 'dropdown',
+              [`${props.prefixCls}-left-has-inline-menu`]: props.menu?.type === 'inline',
             },
           ]}
         >
           {hasTitle.value && !hasMenu && renderTitle()}
-          {hasMenu && (
-            <HeaderMenu {...props.menu} prefixCls={props.prefixCls} />
-          )}
+          {hasMenu && <HeaderMenu {...props.menu} prefixCls={props.prefixCls} />}
           {!hasTitle.value && props.search && (
             <div class={`${props.prefixCls}-search`}>{renderSearch()}</div>
           )}
@@ -282,7 +265,7 @@ export default defineComponent({
               onChange={handleTabChange}
               style={{ width: '100%' }}
             >
-              {props.tabs.items.map(item => (
+              {props.tabs.items.map((item) => (
                 <Tabs.TabPanel
                   key={item.key}
                   value={item.key}

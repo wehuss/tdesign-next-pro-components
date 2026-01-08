@@ -1,17 +1,17 @@
 <script setup lang="ts">
-  import { ProForm, ProFormRadio } from '@/components/form'
-  import { ref } from 'vue'
+import { ProForm, ProFormRadio } from '@/components/form'
+import { ref } from 'vue'
 
-  const formRef = ref()
-  const formData = ref({
-    gender: '',
-    size: '',
-    status: '',
-  })
+const formRef = ref()
+const formData = ref({
+  gender: '',
+  size: '',
+  status: '',
+})
 
-  const handleFinish = (values: any) => {
-    console.log('表单数据:', values)
-  }
+const handleFinish = (values: any) => {
+  console.log('表单数据:', values)
+}
 </script>
 
 <template>

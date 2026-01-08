@@ -18,22 +18,13 @@ import { valueTypeToComponentMap } from './value-type-map.tsx'
 export const defaultRenderText = (
   modelValue: ProFieldTextType,
   valueType: ProFieldValueType = 'text',
-  props: ProFieldRenderProps = {}
+  props: ProFieldRenderProps = {},
 ): VNode | null => {
   const { mode = 'read', emptyText = '-' } = props
 
   // 处理空值情况
-  if (
-    emptyText !== false &&
-    mode === 'read' &&
-    valueType !== 'option' &&
-    valueType !== 'switch'
-  ) {
-    if (
-      typeof modelValue !== 'boolean' &&
-      typeof modelValue !== 'number' &&
-      !modelValue
-    ) {
+  if (emptyText !== false && mode === 'read' && valueType !== 'option' && valueType !== 'switch') {
+    if (typeof modelValue !== 'boolean' && typeof modelValue !== 'number' && !modelValue) {
       return <>{emptyText}</>
     }
   }
@@ -47,8 +38,7 @@ export const defaultRenderText = (
   }
 
   // 根据模式选择对应的渲染函数
-  const renderFunc =
-    mode === 'read' ? componentConfig.render : componentConfig.formItemRender
+  const renderFunc = mode === 'read' ? componentConfig.render : componentConfig.formItemRender
 
   if (!renderFunc) {
     return <>{String(modelValue)}</>
@@ -112,21 +102,13 @@ export const ProField = defineComponent({
     },
     render: {
       type: Function as PropType<
-        (
-          modelValue: ProFieldTextType,
-          props: ProFieldRenderProps,
-          dom: VNode
-        ) => VNode | null
+        (modelValue: ProFieldTextType, props: ProFieldRenderProps, dom: VNode) => VNode | null
       >,
       default: undefined,
     },
     formItemRender: {
       type: Function as PropType<
-        (
-          modelValue: ProFieldTextType,
-          props: ProFieldRenderProps,
-          dom: VNode
-        ) => VNode | null
+        (modelValue: ProFieldTextType, props: ProFieldRenderProps, dom: VNode) => VNode | null
       >,
       default: undefined,
     },
@@ -147,10 +129,10 @@ export const ProField = defineComponent({
         fieldProps: {
           ...props.fieldProps,
           // 传递 v-model 相关属性给子组件
-          'modelValue': props.modelValue,
+          modelValue: props.modelValue,
           'onUpdate:modelValue': handleChange,
-          'placeholder': props.placeholder,
-          'disabled': props.disabled,
+          placeholder: props.placeholder,
+          disabled: props.disabled,
         },
         placeholder: props.placeholder,
         valueEnum: props.valueEnum as any,
@@ -162,14 +144,9 @@ export const ProField = defineComponent({
       }
 
       // 如果有自定义渲染函数，使用自定义渲染
-      const customRender =
-        props.mode === 'read' ? props.render : props.formItemRender
+      const customRender = props.mode === 'read' ? props.render : props.formItemRender
       if (customRender) {
-        const defaultDom = defaultRenderText(
-          props.modelValue,
-          props.valueType,
-          renderProps
-        )
+        const defaultDom = defaultRenderText(props.modelValue, props.valueType, renderProps)
         return customRender(props.modelValue, renderProps, defaultDom!)
       }
 

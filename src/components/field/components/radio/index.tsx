@@ -1,10 +1,6 @@
 import { RadioGroup } from 'tdesign-vue-next'
 import { computed, defineComponent, ref, useModel } from 'vue'
-import type {
-  ProFieldMode,
-  ProFieldValueEnumMap,
-  ProFieldValueEnumObj,
-} from '../../types'
+import type { ProFieldMode, ProFieldValueEnumMap, ProFieldValueEnumObj } from '../../types'
 
 /**
  * Radio 组件 - 单选框字段
@@ -50,19 +46,14 @@ export const FieldRadio = defineComponent({
 
     expose({
       getDataEntryRef,
-      dataEntryRef
+      dataEntryRef,
     })
 
     // 转换 valueEnum 为选项列表
     const options = computed(() => {
-      const valueEnum = props.valueEnum as
-        | ProFieldValueEnumObj
-        | ProFieldValueEnumMap
+      const valueEnum = props.valueEnum as ProFieldValueEnumObj | ProFieldValueEnumMap
 
-      if (
-        !valueEnum ||
-        (typeof valueEnum === 'object' && Object.keys(valueEnum).length === 0)
-      ) {
+      if (!valueEnum || (typeof valueEnum === 'object' && Object.keys(valueEnum).length === 0)) {
         return []
       }
 
@@ -85,9 +76,7 @@ export const FieldRadio = defineComponent({
     const getDisplayText = (value: any) => {
       if (value === null || value === undefined) return '-'
 
-      const valueEnum = props.valueEnum as
-        | ProFieldValueEnumObj
-        | ProFieldValueEnumMap
+      const valueEnum = props.valueEnum as ProFieldValueEnumObj | ProFieldValueEnumMap
 
       if (!valueEnum) return String(value)
 

@@ -7,7 +7,7 @@ import type {
   ProSchema,
   SearchConvertKeyFn,
 } from '../field/types'
-import type { ProFormInstance } from './BaseForm'
+import type { ProFormInstance } from './base-form'
 import type { CaptFieldRef } from './components/captcha'
 
 export interface ProFormGridConfig {
@@ -51,9 +51,7 @@ export type ExtendsProps = {
    * 需要与 request 配合使用
    * @name 网络请求用的输出，会触发reload
    */
-  params?:
-    | ((form: ProFormInstance) => Record<string, any>)
-    | Record<string, any>
+  params?: ((form: ProFormInstance) => Record<string, any>) | Record<string, any>
 
   /** @name 需要放在formItem 时使用 */
   ignoreFormItem?: boolean
@@ -99,7 +97,7 @@ export type LightFilterFooterRender =
       /**
        * @name 清除选择
        */
-      onClear?: (e?: Event) => void
+      onClear?: (e?: Event) => void,
     ) => VNode | false)
   | false
 
@@ -176,10 +174,7 @@ export type ProFormItemProps = FormItemProps & {
 /**
  * BaseForm 的 Props 类型
  */
-export interface BaseFormProps<
-  T = Record<string, any>,
-  U = Record<string, any>,
-> {
+export interface BaseFormProps<T = Record<string, any>, U = Record<string, any>> {
   /** 表单布局 */
   layout?: 'vertical' | 'inline' | 'horizontal'
   /** 加载状态 */
@@ -225,10 +220,7 @@ export interface BaseFormProps<
   /** 是否忽略 nil 值 */
   omitNil?: boolean
   /** 日期格式化 */
-  dateFormatter?:
-    | string
-    | ((value: any, valueType: string) => string | number)
-    | false
+  dateFormatter?: string | ((value: any, valueType: string) => string | number) | false
   /** 表单初始化回调 */
   onInit?: (values: T, form: any) => void
   /** 请求参数 */

@@ -54,7 +54,7 @@ export const FieldTextArea = defineComponent({
 
     expose({
       getDataEntryRef,
-      dataEntryRef
+      dataEntryRef,
     })
 
     return () => {
@@ -63,9 +63,7 @@ export const FieldTextArea = defineComponent({
       // 只读模式显示文本，保留换行
       if (props.mode === 'read' || props.readonly) {
         return (
-          <div style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
-            {textValue || '-'}
-          </div>
+          <div style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{textValue || '-'}</div>
         )
       }
 
@@ -74,11 +72,7 @@ export const FieldTextArea = defineComponent({
         <Textarea
           ref={dataEntryRef}
           v-model={modelValue.value}
-          placeholder={
-            Array.isArray(props.placeholder)
-              ? props.placeholder[0]
-              : props.placeholder
-          }
+          placeholder={Array.isArray(props.placeholder) ? props.placeholder[0] : props.placeholder}
           disabled={props.disabled}
           rows={props.rows}
           maxlength={props.maxLength}

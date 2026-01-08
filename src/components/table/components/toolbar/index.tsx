@@ -11,14 +11,7 @@ import {
   SettingIcon,
   ViewListIcon,
 } from 'tdesign-icons-vue-next'
-import {
-  Button,
-  Dropdown,
-  Input,
-  Space,
-  Tooltip,
-  type DropdownOption,
-} from 'tdesign-vue-next'
+import { Button, Dropdown, Input, Space, Tooltip, type DropdownOption } from 'tdesign-vue-next'
 import type { PropType, VNode } from 'vue'
 import { computed, defineComponent, ref, useModel } from 'vue'
 import type { ActionRef, ProTableColumn, ToolbarConfig } from '../../types'
@@ -84,9 +77,7 @@ export default defineComponent({
     // ActionRef
     actionRef: Object as PropType<{ value: ActionRef }>,
     // 列控制器可见性变化回调
-    onColumnControllerVisibleChange: Function as PropType<
-      (visible: boolean) => void
-    >,
+    onColumnControllerVisibleChange: Function as PropType<(visible: boolean) => void>,
     // 列控制器可见性
     columnControllerVisible: {
       type: Boolean,
@@ -167,13 +158,9 @@ export default defineComponent({
     // 渲染标题
     const renderHeaderTitle = () => (
       <div class="t-pro-table-toolbar-title">
-        <span class="t-pro-table-toolbar-title-text">
-          {renderProNode(props.headerTitle)}
-        </span>
+        <span class="t-pro-table-toolbar-title-text">{renderProNode(props.headerTitle)}</span>
         {props.subTitle && (
-          <span class="t-pro-table-toolbar-title-sub">
-            {renderProNode(props.subTitle)}
-          </span>
+          <span class="t-pro-table-toolbar-title-sub">{renderProNode(props.subTitle)}</span>
         )}
         {props.tooltip && (
           <Tooltip content={props.tooltip}>
@@ -190,8 +177,7 @@ export default defineComponent({
         return null
       }
 
-      const searchConfig =
-        typeof options.search === 'object' ? options.search : {}
+      const searchConfig = typeof options.search === 'object' ? options.search : {}
       const placeholder = searchConfig.placeholder || '请输入关键词'
 
       return (
@@ -225,10 +211,8 @@ export default defineComponent({
             <Button
               variant="text"
               shape="square"
-              icon={() =>
-                options.reloadIcon ? options.reloadIcon : <RefreshIcon />
-              }
-              onClick={e => {
+              icon={() => (options.reloadIcon ? options.reloadIcon : <RefreshIcon />)}
+              onClick={(e) => {
                 if (typeof options.reload === 'function') {
                   options.reload(e as MouseEvent)
                 } else {
@@ -236,7 +220,7 @@ export default defineComponent({
                 }
               }}
             />
-          </Tooltip>
+          </Tooltip>,
         )
       }
 
@@ -258,12 +242,10 @@ export default defineComponent({
               <Button
                 variant="text"
                 shape="square"
-                icon={() =>
-                  options.densityIcon ? options.densityIcon : <ViewListIcon />
-                }
+                icon={() => (options.densityIcon ? options.densityIcon : <ViewListIcon />)}
               />
             </Tooltip>
-          </Dropdown>
+          </Dropdown>,
         )
       }
 
@@ -277,24 +259,19 @@ export default defineComponent({
               icon={() => <SettingIcon />}
               onClick={toggleColumnControllerVisible}
             />
-          </Tooltip>
+          </Tooltip>,
         )
       }
 
       // 全屏按钮
       if (options.fullScreen) {
         settings.push(
-          <Tooltip
-            content={isFullScreen.value ? '退出全屏' : '全屏'}
-            key="fullScreen"
-          >
+          <Tooltip content={isFullScreen.value ? '退出全屏' : '全屏'} key="fullScreen">
             <Button
               variant="text"
               shape="square"
-              icon={() =>
-                isFullScreen.value ? <FullscreenExitIcon /> : <FullscreenIcon />
-              }
-              onClick={e => {
+              icon={() => (isFullScreen.value ? <FullscreenExitIcon /> : <FullscreenIcon />)}
+              onClick={(e) => {
                 if (typeof options.fullScreen === 'function') {
                   options.fullScreen(e as MouseEvent)
                 } else {
@@ -302,7 +279,7 @@ export default defineComponent({
                 }
               }}
             />
-          </Tooltip>
+          </Tooltip>,
         )
       }
 
@@ -317,13 +294,10 @@ export default defineComponent({
       }
 
       // 自定义工具栏按钮
-      const customActions = actionRef?.value
-        ? toolbarRender?.(actionRef.value)
-        : null
+      const customActions = actionRef?.value ? toolbarRender?.(actionRef.value) : null
 
       // 从 toolbar 配置中获取 actions
-      const toolbarConfig =
-        typeof toolbar === 'object' ? toolbar : ({} as ToolbarConfig)
+      const toolbarConfig = typeof toolbar === 'object' ? toolbar : ({} as ToolbarConfig)
       const configActions = toolbarConfig.actions || []
 
       // 默认设置按钮

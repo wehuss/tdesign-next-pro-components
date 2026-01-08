@@ -30,7 +30,7 @@ export function createRefForward(options: RefForwardOptions) {
   }
 
   // 自动暴露指定的方法
-  exposeMethods.forEach(methodName => {
+  exposeMethods.forEach((methodName) => {
     exposeObject[methodName] = (...args: any[]) => {
       return innerRef.value?.[methodName]?.(...args)
     }

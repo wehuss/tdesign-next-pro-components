@@ -38,7 +38,7 @@ export const FieldSwitch = defineComponent({
 
     expose({
       getDataEntryRef,
-      dataEntryRef
+      dataEntryRef,
     })
 
     return () => {

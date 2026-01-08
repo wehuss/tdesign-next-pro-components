@@ -9,7 +9,7 @@ import type { ProFieldValueEnumType } from '../../field/types'
 export type SearchTransformKeyFn = (
   value: any,
   namePath: string | string[],
-  allValues: Record<string, any>
+  allValues: Record<string, any>,
 ) => string | Record<string, any>
 
 /**
@@ -93,12 +93,7 @@ export const proFormFieldProps = {
 /**
  * ProForm 通用 emits
  */
-export const proFormFieldEmits = [
-  'update:modelValue',
-  'change',
-  'blur',
-  'focus',
-] as const
+export const proFormFieldEmits = ['update:modelValue', 'change', 'blur', 'focus'] as const
 
 /**
  * 从 attrs 中过滤掉 ProTable columns 配置属性

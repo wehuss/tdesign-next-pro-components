@@ -1,43 +1,43 @@
 <script setup lang="ts">
-  import type { ProTableColumn } from '@/components/table'
-  import ProTable from '@/components/table'
+import type { ProTableColumn } from '@/components/table'
+import ProTable from '@/components/table'
 
-  const columns: ProTableColumn[] = [
-    { title: '姓名', colKey: 'name', width: 120 },
-    { title: '年龄', colKey: 'age', width: 80 },
-    { title: '邮箱', colKey: 'email', width: 200 },
-    { title: '地址', colKey: 'address' },
-  ]
+const columns: ProTableColumn[] = [
+  { title: '姓名', colKey: 'name', width: 120 },
+  { title: '年龄', colKey: 'age', width: 80 },
+  { title: '邮箱', colKey: 'email', width: 200 },
+  { title: '地址', colKey: 'address' },
+]
 
-  // 模拟生成数据
-  const generateData = (page: number, pageSize: number) => {
-    const data = []
-    const start = (page - 1) * pageSize
-    for (let i = 0; i < pageSize; i++) {
-      const index = start + i + 1
-      data.push({
-        id: index,
-        name: `用户${index}`,
-        age: 20 + (index % 30),
-        email: `user${index}@example.com`,
-        address: `地址${index}`,
-      })
-    }
-    return data
+// 模拟生成数据
+const generateData = (page: number, pageSize: number) => {
+  const data = []
+  const start = (page - 1) * pageSize
+  for (let i = 0; i < pageSize; i++) {
+    const index = start + i + 1
+    data.push({
+      id: index,
+      name: `用户${index}`,
+      age: 20 + (index % 30),
+      email: `user${index}@example.com`,
+      address: `地址${index}`,
+    })
   }
+  return data
+}
 
-  const request = async (params: { current: number; pageSize: number }) => {
-    // 模拟请求延迟
-    await new Promise(resolve => setTimeout(resolve, 300))
+const request = async (params: { current: number; pageSize: number }) => {
+  // 模拟请求延迟
+  await new Promise((resolve) => setTimeout(resolve, 300))
 
-    console.log('请求参数:', params)
+  console.log('请求参数:', params)
 
-    return {
-      data: generateData(params.current, params.pageSize),
-      total: 100, // 总共100条数据
-      success: true,
-    }
+  return {
+    data: generateData(params.current, params.pageSize),
+    total: 100, // 总共100条数据
+    success: true,
   }
+}
 </script>
 
 <template>

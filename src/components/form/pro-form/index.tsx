@@ -1,30 +1,30 @@
-import type { PropType, VNode } from 'vue'
-import { defineComponent, ref, watch } from 'vue'
-import { BaseForm } from '../BaseForm/BaseForm'
-import { EditOrReadOnlyContext } from '../BaseForm/EditOrReadOnlyContext'
-import { ProFormItem } from '../components/form-item'
-import { ProFormGroup } from '../components/group'
-import type { ProFormGroupProps } from '../typing'
+import type { PropType, VNode } from "vue";
+import { defineComponent, ref, watch } from "vue";
+import { BaseForm } from "../base-form/base-form";
+import { EditOrReadOnlyContext } from "../base-form/edit-or-read-only-context";
+import { ProFormItem } from "../components/form-item";
+import { ProFormGroup } from "../components/group";
+import type { ProFormGroupProps } from "../typing";
 
 export interface ProFormProps {
   // ProForm 特有的属性
-  title?: string
-  description?: string
-  loading?: boolean
-  submitter?: any
-  onFinish?: (values: any) => Promise<boolean | void> | boolean | void
-  onFinishFailed?: (errorInfo: any) => void
-  onReset?: () => void
+  title?: string;
+  description?: string;
+  loading?: boolean;
+  submitter?: any;
+  onFinish?: (values: any) => Promise<boolean | void> | boolean | void;
+  onFinishFailed?: (errorInfo: any) => void;
+  onReset?: () => void;
   // 内容渲染函数
   contentRender?: (
     items: VNode[],
     submitter: VNode | null,
     form: any
-  ) => VNode | VNode[]
+  ) => VNode | VNode[];
 }
 
 export const ProForm = defineComponent({
-  name: 'ProForm',
+  name: "ProForm",
   inheritAttrs: false,
   props: {
     // ProForm 特有属性
@@ -63,8 +63,8 @@ export const ProForm = defineComponent({
     },
     // BaseForm 属性
     layout: {
-      type: String as PropType<'vertical' | 'inline'>,
-      default: 'vertical',
+      type: String as PropType<"vertical" | "inline">,
+      default: "vertical",
     },
     readonly: {
       type: Boolean,
@@ -99,48 +99,48 @@ export const ProForm = defineComponent({
       default: () => ({}),
     },
   },
-  emits: ['finish', 'finishFailed', 'reset', 'valuesChange', 'init'],
+  emits: ["finish", "finishFailed", "reset", "valuesChange", "init"],
   setup(props, { slots, emit, expose }) {
-    const formRef = ref()
-    const loading = ref(props.loading)
+    const formRef = ref();
+    const loading = ref(props.loading);
 
     // 监听外部 loading 变化
     watch(
       () => props.loading,
-      newVal => {
-        loading.value = newVal
+      (newVal) => {
+        loading.value = newVal;
       }
-    )
+    );
 
     // 处理表单提交
     const handleFinish = async (values: any) => {
       if (props.onFinish) {
-        loading.value = true
+        loading.value = true;
         try {
           // 支持 onFinish 为数组形式（Vue 事件监听器可能是数组）
           const finishHandlers = Array.isArray(props.onFinish)
             ? props.onFinish
-            : [props.onFinish]
-          let result: any
+            : [props.onFinish];
+          let result: any;
           for (const handler of finishHandlers) {
-            if (typeof handler === 'function') {
-              result = await handler(values)
+            if (typeof handler === "function") {
+              result = await handler(values);
             }
           }
           if (result !== false) {
-            emit('finish', values)
+            emit("finish", values);
           }
-          return result
+          return result;
         } catch (error) {
-          console.error('Form submit error:', error)
-          throw error
+          console.error("Form submit error:", error);
+          throw error;
         } finally {
-          loading.value = false
+          loading.value = false;
         }
       } else {
-        emit('finish', values)
+        emit("finish", values);
       }
-    }
+    };
 
     // 处理表单提交失败
     const handleFinishFailed = (errorInfo: any) => {
@@ -148,37 +148,37 @@ export const ProForm = defineComponent({
         // 支持数组形式
         const handlers = Array.isArray(props.onFinishFailed)
           ? props.onFinishFailed
-          : [props.onFinishFailed]
+          : [props.onFinishFailed];
         for (const handler of handlers) {
-          if (typeof handler === 'function') {
-            handler(errorInfo)
+          if (typeof handler === "function") {
+            handler(errorInfo);
           }
         }
       }
-      emit('finishFailed', errorInfo)
-    }
+      emit("finishFailed", errorInfo);
+    };
 
     // 处理表单重置
     const handleReset = () => {
-      formRef.value?.reset()
+      formRef.value?.reset();
       if (props.onReset) {
         // 支持数组形式
         const handlers = Array.isArray(props.onReset)
           ? props.onReset
-          : [props.onReset]
+          : [props.onReset];
         for (const handler of handlers) {
-          if (typeof handler === 'function') {
-            handler()
+          if (typeof handler === "function") {
+            handler();
           }
         }
       }
-      emit('reset')
-    }
+      emit("reset");
+    };
 
     // 处理表单初始化
     const handleInit = (values: any, form: any) => {
-      emit('init', values, form)
-    }
+      emit("init", values, form);
+    };
 
     // 暴露表单实例方法
     expose({
@@ -195,7 +195,7 @@ export const ProForm = defineComponent({
       clearValidate: (fields?: string[]) =>
         formRef.value?.clearValidate(fields),
       scrollToField: (field: string) => formRef.value?.scrollToField(field),
-    })
+    });
 
     // 默认内容渲染：items + submitter
     const defaultContentRender = (items: VNode[], submitter: VNode | null) => {
@@ -204,11 +204,11 @@ export const ProForm = defineComponent({
           {items}
           {submitter}
         </>
-      )
-    }
+      );
+    };
 
     return () => {
-      const contentRender = props.contentRender || defaultContentRender
+      const contentRender = props.contentRender || defaultContentRender;
 
       return (
         <div class="pro-form">
@@ -240,20 +240,20 @@ export const ProForm = defineComponent({
             onReset={handleReset}
             onInit={handleInit}
             onValuesChange={(changedValues: any, allValues: any) => {
-              emit('valuesChange', changedValues, allValues)
+              emit("valuesChange", changedValues, allValues);
             }}
           >
             {slots.default?.()}
           </BaseForm>
         </div>
-      )
-    }
+      );
+    };
   },
-})
+});
 
 // 静态属性 - 类似 React 版本的 ProForm.Group 等
-ProForm.Group = ProFormGroup
-ProForm.Item = ProFormItem
-ProForm.EditOrReadOnlyContext = EditOrReadOnlyContext
+ProForm.Group = ProFormGroup;
+ProForm.Item = ProFormItem;
+ProForm.EditOrReadOnlyContext = EditOrReadOnlyContext;
 
-export default ProForm
+export default ProForm;

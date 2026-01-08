@@ -5,12 +5,7 @@
  */
 
 import { ViewListIcon } from 'tdesign-icons-vue-next'
-import {
-  Button,
-  Dropdown,
-  Tooltip,
-  type DropdownOption,
-} from 'tdesign-vue-next'
+import { Button, Dropdown, Tooltip, type DropdownOption } from 'tdesign-vue-next'
 import type { PropType, VNode } from 'vue'
 import { defineComponent } from 'vue'
 
@@ -55,7 +50,7 @@ export default defineComponent({
 
       return (
         <Dropdown
-          options={densityOptions.map(opt => ({
+          options={densityOptions.map((opt) => ({
             ...opt,
             // 标记当前选中项
             prefixIcon:

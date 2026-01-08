@@ -1,17 +1,17 @@
 <script setup lang="ts">
-  import { ProForm, ProFormDigit } from '@/components/form'
-  import { ref } from 'vue'
+import { ProForm, ProFormDigit } from '@/components/form'
+import { ref } from 'vue'
 
-  const formRef = ref()
-  const formData = ref({
-    age: undefined,
-    quantity: 1,
-    price: undefined,
-  })
+const formRef = ref()
+const formData = ref({
+  age: undefined,
+  quantity: 1,
+  price: undefined,
+})
 
-  const handleFinish = (values: any) => {
-    console.log('表单数据:', values)
-  }
+const handleFinish = (values: any) => {
+  console.log('表单数据:', values)
+}
 </script>
 
 <template>

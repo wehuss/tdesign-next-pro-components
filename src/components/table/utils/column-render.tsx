@@ -46,9 +46,7 @@ export interface ColumnRenderInterface<T extends TableRowData = TableRowData> {
  * 增加了 icon 的功能 render title
  * @param item 列配置
  */
-export const renderColumnsTitle = (
-  item: ProTableColumn<TableRowData>
-): string | VNode => {
+export const renderColumnsTitle = (item: ProTableColumn<TableRowData>): string | VNode => {
   const { title } = item
 
   // 获取 ellipsis 配置
@@ -76,7 +74,7 @@ export const renderColumnsTitle = (
         },
         title: title,
       },
-      title
+      title,
     )
   }
 
@@ -88,7 +86,7 @@ export function isNotEditableCell<T extends TableRowData>(
   text: unknown,
   rowData: T,
   index: number,
-  editable?: boolean | ((text: unknown, record: T, index: number) => boolean)
+  editable?: boolean | ((text: unknown, record: T, index: number) => boolean),
 ): boolean {
   if (typeof editable === 'boolean') {
     return editable === false
@@ -105,7 +103,7 @@ export function isNotEditableCell<T extends TableRowData>(
 export const genCopyable = <T extends TableRowData>(
   dom: VNode,
   columnProps?: ProTableColumn<T>,
-  _text?: unknown
+  _text?: unknown,
 ): VNode => {
   // 检查是否需要复制功能
   if (!columnProps?.copyable) {
@@ -124,11 +122,7 @@ export const genCopyable = <T extends TableRowData>(
  * @param renderDom 渲染的 DOM
  */
 export const isMergeCell = (renderDom: any): boolean => {
-  return (
-    renderDom &&
-    typeof renderDom === 'object' &&
-    renderDom.colSpan !== undefined
-  )
+  return renderDom && typeof renderDom === 'object' && renderDom.colSpan !== undefined
 }
 
 /**
@@ -141,7 +135,7 @@ export const isMergeCell = (renderDom: any): boolean => {
 export const defaultOnFilter = (
   value: string,
   record: any,
-  dataIndex: string | string[]
+  dataIndex: string | string[],
 ): boolean => {
   let recordElement: any
 
@@ -175,7 +169,7 @@ export const runFunction = <T, U extends unknown[]>(
  * @param config 渲染配置
  */
 export function columnRender<T extends TableRowData = TableRowData>(
-  config: ColumnRenderInterface<T>
+  config: ColumnRenderInterface<T>,
 ): unknown {
   const {
     columnProps,
@@ -208,10 +202,7 @@ export function columnRender<T extends TableRowData = TableRowData>(
     | ((text: unknown, record: T, index: number) => boolean)
     | undefined
 
-  const mode =
-    isEditable && !isNotEditableCell(text, rowData, index, editable)
-      ? 'edit'
-      : 'read'
+  const mode = isEditable && !isNotEditableCell(text, rowData, index, editable) ? 'edit' : 'read'
 
   // 使用 cellRenderToFormItem 来处理字段渲染
   const textDom = cellRenderToFormItem<T>({
@@ -233,8 +224,7 @@ export function columnRender<T extends TableRowData = TableRowData>(
   })
 
   // 生成可复制的 DOM（只读模式下）
-  const dom: VNode =
-    mode === 'edit' ? textDom : genCopyable(textDom, columnProps, renderTextStr)
+  const dom: VNode = mode === 'edit' ? textDom : genCopyable(textDom, columnProps, renderTextStr)
 
   /** 如果是编辑模式，并且有自定义的 formItemRender，直接使用 */
   if (mode === 'edit') {
@@ -247,8 +237,7 @@ export function columnRender<T extends TableRowData = TableRowData>(
             display: 'flex',
             alignItems: 'center',
             gap: `${marginSM}px`,
-            justifyContent:
-              columnProps.align === 'center' ? 'center' : 'flex-start',
+            justifyContent: columnProps.align === 'center' ? 'center' : 'flex-start',
           },
         },
         [
@@ -256,7 +245,7 @@ export function columnRender<T extends TableRowData = TableRowData>(
             ...rowData,
             index: columnProps.index ?? index,
           }),
-        ]
+        ],
       )
     }
     return dom
@@ -264,8 +253,7 @@ export function columnRender<T extends TableRowData = TableRowData>(
 
   // 如果没有自定义渲染函数，直接返回处理后的 DOM
   if (!columnProps.render) {
-    const isVueNode =
-      dom && typeof dom === 'object' && 'type' in dom && dom.type
+    const isVueNode = dom && typeof dom === 'object' && 'type' in dom && dom.type
     const isSimpleValue = ['string', 'number'].includes(typeof dom)
 
     return !isNil(dom) && (isVueNode || isSimpleValue) ? dom : null
@@ -284,7 +272,7 @@ export function columnRender<T extends TableRowData = TableRowData>(
       ...columnProps,
       isEditable,
       type: 'table',
-    }
+    },
   )
 
   // 如果是合并单元格的，直接返回对象
@@ -293,11 +281,7 @@ export function columnRender<T extends TableRowData = TableRowData>(
   }
 
   // 处理操作列的数组渲染
-  if (
-    renderDom &&
-    columnProps.valueType === 'option' &&
-    Array.isArray(renderDom)
-  ) {
+  if (renderDom && columnProps.valueType === 'option' && Array.isArray(renderDom)) {
     return h(
       'div',
       {
@@ -308,7 +292,7 @@ export function columnRender<T extends TableRowData = TableRowData>(
           gap: '8px',
         },
       },
-      renderDom
+      renderDom,
     )
   }
 

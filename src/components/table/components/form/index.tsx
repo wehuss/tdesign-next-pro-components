@@ -27,10 +27,10 @@ export interface TableFormProps {
 // 从列配置生成表单项
 const genFormItemsFromColumns = (
   columns: ProTableColumn[],
-  _type: string = 'table'
+  _type: string = 'table',
 ): { key: string; column: ProTableColumn }[] => {
   return columns
-    .filter(column => {
+    .filter((column) => {
       // 只有配置了 form 属性的列才会在搜索表单中显示
       if (!column.form) return false
       // 如果明确设置 searchForm: false 则不显示
@@ -46,13 +46,10 @@ const genFormItemsFromColumns = (
 // 获取表单组件类型
 const getFormCompetent = (
   isForm: boolean,
-  searchConfig?: boolean | SearchConfig
+  searchConfig?: boolean | SearchConfig,
 ): 'Form' | 'LightFilter' | 'QueryFilter' => {
   if (!isForm && searchConfig !== false) {
-    if (
-      typeof searchConfig === 'object' &&
-      (searchConfig as any).filterType === 'light'
-    ) {
+    if (typeof searchConfig === 'object' && (searchConfig as any).filterType === 'light') {
       return 'LightFilter'
     }
     return 'QueryFilter'
@@ -76,9 +73,7 @@ export default defineComponent({
       default: false,
     },
     onSubmit: {
-      type: Function as PropType<
-        (values: Record<string, any>, firstLoad?: boolean) => void
-      >,
+      type: Function as PropType<(values: Record<string, any>, firstLoad?: boolean) => void>,
     },
     onReset: {
       type: Function as PropType<(values: Record<string, any>) => void>,
@@ -113,25 +108,21 @@ export default defineComponent({
     // 监听 formRef
     watch(
       () => internalFormRef.value,
-      newRef => {
+      (newRef) => {
         if (props.formRef && newRef) {
           props.formRef.value = newRef
         }
-      }
+      },
     )
 
     // 是否是表单模式
     const isForm = computed(() => props.type === 'form')
 
     // 获取表单组件类型
-    const competentName = computed(() =>
-      getFormCompetent(isForm.value, props.search)
-    )
+    const competentName = computed(() => getFormCompetent(isForm.value, props.search))
 
     // 生成表单项
-    const formItems = computed(() =>
-      genFormItemsFromColumns(props.columns, props.type)
-    )
+    const formItems = computed(() => genFormItemsFromColumns(props.columns, props.type))
 
     // 处理提交
     const handleSubmit = (values: Record<string, any>) => {
@@ -205,8 +196,7 @@ export default defineComponent({
       }
 
       const searchConfig = getSearchConfig()
-      const FormComponent =
-        competentName.value === 'LightFilter' ? LightFilter : QueryFilter
+      const FormComponent = competentName.value === 'LightFilter' ? LightFilter : QueryFilter
 
       return (
         <div

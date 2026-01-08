@@ -11,7 +11,7 @@ export function useFieldModel<T = unknown>(
     text?: T
     modelValue?: T
   },
-  emit: (event: 'update:modelValue' | 'change', value: T) => void
+  emit: (event: 'update:modelValue' | 'change', value: T) => void,
 ) {
   // 计算当前值，优先使用 modelValue（v-model），然后是 text
   const currentValue: ComputedRef<T | undefined> = computed(() => {
@@ -35,29 +35,11 @@ export function useFieldModel<T = unknown>(
  */
 export const fieldCommonProps = {
   text: {
-    type: [
-      String,
-      Number,
-      Boolean,
-      Date,
-      Object,
-      Array,
-      null,
-      undefined,
-    ] as unknown,
+    type: [String, Number, Boolean, Date, Object, Array, null, undefined] as unknown,
     default: null,
   },
   modelValue: {
-    type: [
-      String,
-      Number,
-      Boolean,
-      Date,
-      Object,
-      Array,
-      null,
-      undefined,
-    ] as unknown,
+    type: [String, Number, Boolean, Date, Object, Array, null, undefined] as unknown,
     default: undefined,
   },
   mode: {

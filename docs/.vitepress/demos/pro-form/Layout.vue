@@ -1,18 +1,18 @@
 <script setup lang="ts">
-  import {
-    ProForm,
-    ProFormGroup,
-    ProFormSelect,
-    ProFormText,
-    ProFormTextArea,
-  } from '@/components/form'
-  import { ref } from 'vue'
+import {
+  ProForm,
+  ProFormGroup,
+  ProFormSelect,
+  ProFormText,
+  ProFormTextArea,
+} from '@/components/form'
+import { ref } from 'vue'
 
-  const formRef = ref()
+const formRef = ref()
 
-  const handleFinish = (values: any) => {
-    console.log('表单数据:', values)
-  }
+const handleFinish = (values: any) => {
+  console.log('表单数据:', values)
+}
 </script>
 
 <template>
@@ -40,12 +40,7 @@
     </ProFormGroup>
 
     <!-- 地址信息分组 - 可折叠 -->
-    <ProFormGroup
-      title="地址信息"
-      direction="horizontal"
-      :wrap="true"
-      :collapsible="true"
-    >
+    <ProFormGroup title="地址信息" direction="horizontal" :wrap="true" :collapsible="true">
       <ProFormSelect
         name="province"
         label="省"
@@ -88,16 +83,8 @@
 
     <!-- 垂直布局分组 -->
     <ProFormGroup title="其他信息" direction="vertical" size="small">
-      <ProFormText
-        name="email"
-        label="邮箱"
-        :field-props="{ placeholder: '请输入邮箱' }"
-      />
-      <ProFormText
-        name="phone"
-        label="电话"
-        :field-props="{ placeholder: '请输入电话' }"
-      />
+      <ProFormText name="email" label="邮箱" :field-props="{ placeholder: '请输入邮箱' }" />
+      <ProFormText name="phone" label="电话" :field-props="{ placeholder: '请输入电话' }" />
     </ProFormGroup>
   </ProForm>
 </template>

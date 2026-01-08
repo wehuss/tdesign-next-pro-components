@@ -1,14 +1,7 @@
 import type { FormItemProps } from 'tdesign-vue-next'
-import {
-  inject,
-  provide,
-  reactive,
-  type ComputedRef,
-  type InjectionKey,
-  type Ref,
-} from 'vue'
+import { inject, provide, reactive, type ComputedRef, type InjectionKey, type Ref } from 'vue'
 import type { ProFieldProps, ProFieldValueType } from '../field/types'
-import type { ProFormInstance } from './BaseForm'
+import type { ProFormInstance } from './base-form'
 import type { ProFormGroupProps } from './typing'
 
 /**
@@ -18,7 +11,7 @@ import type { ProFormGroupProps } from './typing'
 export type SearchTransformKeyFn = (
   value: unknown,
   namePath: string | string[],
-  allValues: Record<string, unknown>
+  allValues: Record<string, unknown>,
 ) => string | Record<string, unknown>
 
 /**
@@ -90,7 +83,7 @@ export interface FieldContextValue {
       dateFormat?: string
       /** 数据转换函数 */
       transform?: SearchTransformKeyFn
-    }
+    },
   ) => void
 
   /**
@@ -173,8 +166,7 @@ export interface FieldContextValue {
  * 响应式 FieldContext 值类型
  * 支持响应式属性
  */
-export interface ReactiveFieldContextValue
-  extends Omit<FieldContextValue, 'grid'> {
+export interface ReactiveFieldContextValue extends Omit<FieldContextValue, 'grid'> {
   /** 是否启用网格布局（响应式） */
   grid?: boolean | ComputedRef<boolean> | Ref<boolean>
 }
@@ -189,9 +181,8 @@ const defaultContextValue: FieldContextValue = {
 }
 
 /** 注入键 */
-export const FieldContextKey: InjectionKey<
-  FieldContextValue | ReactiveFieldContextValue
-> = Symbol('FieldContext')
+export const FieldContextKey: InjectionKey<FieldContextValue | ReactiveFieldContextValue> =
+  Symbol('FieldContext')
 
 /**
  * 将字段名称路径转换为字符串键
@@ -214,7 +205,7 @@ export function getFieldKey(name: string | string[]): string {
 export function setNestedValue(
   obj: Record<string, any>,
   path: string | string[],
-  value: any
+  value: any,
 ): void {
   const keys = Array.isArray(path) ? path : path.split('.')
   let current = obj
@@ -236,10 +227,7 @@ export function setNestedValue(
  * @param path 字段名称路径
  * @returns 字段值
  */
-export function getNestedValue(
-  obj: Record<string, any>,
-  path: string | string[]
-): any {
+export function getNestedValue(obj: Record<string, any>, path: string | string[]): any {
   const keys = Array.isArray(path) ? path : path.split('.')
   let current = obj
 
@@ -335,7 +323,7 @@ export function createFieldManager(fieldStore: FieldStore) {
    * 重置所有字段到初始值
    */
   const resetFields = (): void => {
-    fieldStore.forEach(registration => {
+    fieldStore.forEach((registration) => {
       if (registration.initialValue !== undefined) {
         registration.setValue(registration.initialValue)
       } else {
@@ -387,12 +375,7 @@ export const useFieldContext = (): FieldContextValue => {
   const context = inject(FieldContextKey, defaultContextValue)
 
   // 处理响应式 grid 值
-  if (
-    context &&
-    context.grid &&
-    typeof context.grid === 'object' &&
-    'value' in context.grid
-  ) {
+  if (context && context.grid && typeof context.grid === 'object' && 'value' in context.grid) {
     return {
       ...context,
       grid: (context.grid as ComputedRef<boolean> | Ref<boolean>).value,
@@ -406,9 +389,7 @@ export const useFieldContext = (): FieldContextValue => {
  * 提供 FieldContext
  * @param value 上下文值
  */
-export const provideFieldContext = (
-  value: FieldContextValue | ReactiveFieldContextValue
-) => {
+export const provideFieldContext = (value: FieldContextValue | ReactiveFieldContextValue) => {
   provide(FieldContextKey, value)
 }
 
@@ -419,7 +400,7 @@ export const provideFieldContext = (
  * @returns 完整的上下文值
  */
 export const createFieldContext = (
-  value: Partial<FieldContextValue | ReactiveFieldContextValue>
+  value: Partial<FieldContextValue | ReactiveFieldContextValue>,
 ): FieldContextValue | ReactiveFieldContextValue => {
   return {
     ...defaultContextValue,

@@ -43,19 +43,19 @@ npm install tdesign-pro-components
 
 ```vue
 <script setup lang="ts">
-  import { ProTable } from 'tdesign-pro-components'
-  import 'tdesign-pro-components/style'
+import { ProTable } from 'tdesign-pro-components'
+import 'tdesign-pro-components/style'
 
-  const columns = [
-    { title: '姓名', colKey: 'name', valueType: 'text' },
-    { title: '状态', colKey: 'status', valueType: 'select' },
-    { title: '创建时间', colKey: 'createdAt', valueType: 'dateTime' },
-  ]
+const columns = [
+  { title: '姓名', colKey: 'name', valueType: 'text' },
+  { title: '状态', colKey: 'status', valueType: 'select' },
+  { title: '创建时间', colKey: 'createdAt', valueType: 'dateTime' },
+]
 
-  const request = async params => {
-    const data = await fetchData(params)
-    return { data: data.list, total: data.total, success: true }
-  }
+const request = async (params) => {
+  const data = await fetchData(params)
+  return { data: data.list, total: data.total, success: true }
+}
 </script>
 
 <template>

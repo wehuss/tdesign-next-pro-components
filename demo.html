@@ -1,21 +1,21 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TDesign Pro Table Demo</title>
-  <link rel="stylesheet" href="https://unpkg.com/tdesign-vue-next/dist/tdesign.min.css">
-</head>
-<body>
-  <div id="app"></div>
-  <script type="module">
-    import { createApp } from 'vue'
-    import TDesign, { MessagePlugin } from 'tdesign-vue-next'
-    import ProTableDemo from './src/demo/index.tsx'
-    
-    const app = createApp(ProTableDemo)
-    app.use(TDesign)
-    app.mount('#app')
-  </script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TDesign Pro Table Demo</title>
+    <link rel="stylesheet" href="https://unpkg.com/tdesign-vue-next/dist/tdesign.min.css" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module">
+      import { createApp } from 'vue'
+      import TDesign, { MessagePlugin } from 'tdesign-vue-next'
+      import ProTableDemo from './src/demo/index.tsx'
+
+      const app = createApp(ProTableDemo)
+      app.use(TDesign)
+      app.mount('#app')
+    </script>
+  </body>
 </html>

@@ -6,19 +6,19 @@ StepsForm 是一个分步表单组件，适用于需要分步骤填写的复杂�
 
 ```vue
 <script setup lang="ts">
-  import {
-    StepsForm,
-    StepForm,
-    ProFormText,
-    ProFormSelect,
-    ProFormTextArea,
-  } from 'tdesign-pro-components'
+import {
+  StepsForm,
+  StepForm,
+  ProFormText,
+  ProFormSelect,
+  ProFormTextArea,
+} from 'tdesign-pro-components'
 
-  const handleFinish = async (values: any) => {
-    console.log('所有表单数据:', values)
-    // 提交逻辑
-    return true
-  }
+const handleFinish = async (values: any) => {
+  console.log('所有表单数据:', values)
+  // 提交逻辑
+  return true
+}
 </script>
 
 <template>
@@ -29,11 +29,7 @@ StepsForm 是一个分步表单组件，适用于需要分步骤填写的复杂�
         label="用户名"
         :rules="[{ required: true, message: '请输入用户名' }]"
       />
-      <ProFormText
-        name="email"
-        label="邮箱"
-        :rules="[{ required: true, message: '请输入邮箱' }]"
-      />
+      <ProFormText name="email" label="邮箱" :rules="[{ required: true, message: '请输入邮箱' }]" />
     </StepForm>
 
     <StepForm name="detail" title="详细信息">
@@ -61,17 +57,12 @@ StepsForm 是一个分步表单组件，适用于需要分步骤填写的复杂�
 
 ```vue
 <script setup lang="ts">
-  import {
-    StepsForm,
-    StepForm,
-    ProFormText,
-    ProFormDigit,
-  } from 'tdesign-pro-components'
+import { StepsForm, StepForm, ProFormText, ProFormDigit } from 'tdesign-pro-components'
 
-  const handleStepChange = (current: number, values: any) => {
-    console.log('当前步骤:', current)
-    console.log('当前数据:', values)
-  }
+const handleStepChange = (current: number, values: any) => {
+  console.log('当前步骤:', current)
+  console.log('当前数据:', values)
+}
 </script>
 
 <template>
@@ -113,11 +104,7 @@ StepsForm 是一个分步表单组件，适用于需要分步骤填写的复杂�
 
     <StepForm name="complete" title="完成">
       <div class="success-message">
-        <t-icon
-          name="check-circle"
-          size="48px"
-          color="var(--td-success-color)"
-        />
+        <t-icon name="check-circle" size="48px" color="var(--td-success-color)" />
         <p>信息填写完成，请确认提交</p>
       </div>
     </StepForm>
@@ -171,28 +158,28 @@ StepsForm 是一个分步表单组件，适用于需要分步骤填写的复杂�
 
 ```vue
 <script setup lang="ts">
-  import { StepsForm, StepForm, ProFormText } from 'tdesign-pro-components'
+import { StepsForm, StepForm, ProFormText } from 'tdesign-pro-components'
 
-  // 第一步提交
-  const handleStep1Submit = async (values: any) => {
-    console.log('第一步数据:', values)
-    // 可以在这里做异步验证
-    await validateUsername(values.username)
-    return true // 返回 true 进入下一步
-  }
+// 第一步提交
+const handleStep1Submit = async (values: any) => {
+  console.log('第一步数据:', values)
+  // 可以在这里做异步验证
+  await validateUsername(values.username)
+  return true // 返回 true 进入下一步
+}
 
-  // 第二步提交
-  const handleStep2Submit = async (values: any) => {
-    console.log('第二步数据:', values)
-    return true
-  }
+// 第二步提交
+const handleStep2Submit = async (values: any) => {
+  console.log('第二步数据:', values)
+  return true
+}
 
-  // 最终提交
-  const handleFinish = async (values: any) => {
-    console.log('所有数据:', values)
-    await submitForm(values)
-    return true
-  }
+// 最终提交
+const handleFinish = async (values: any) => {
+  console.log('所有数据:', values)
+  await submitForm(values)
+  return true
+}
 </script>
 
 <template>
@@ -216,15 +203,15 @@ StepsForm 是一个分步表单组件，适用于需要分步骤填写的复杂�
 
 ```vue
 <script setup lang="ts">
-  import { ref } from 'vue'
-  import { StepsForm, StepForm, ProFormText } from 'tdesign-pro-components'
-  import { Button } from 'tdesign-vue-next'
+import { ref } from 'vue'
+import { StepsForm, StepForm, ProFormText } from 'tdesign-pro-components'
+import { Button } from 'tdesign-vue-next'
 
-  const current = ref(0)
+const current = ref(0)
 
-  const goToStep = (step: number) => {
-    current.value = step
-  }
+const goToStep = (step: number) => {
+  current.value = step
+}
 </script>
 
 <template>

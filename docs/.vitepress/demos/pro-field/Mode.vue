@@ -1,9 +1,9 @@
 <script setup lang="ts">
-  import { ProField } from '@/components/field'
-  import { ref } from 'vue'
+import { ProField } from '@/components/field'
+import { ref } from 'vue'
 
-  const value = ref('示例文本')
-  const mode = ref<'read' | 'edit'>('read')
+const value = ref('示例文本')
+const mode = ref<'read' | 'edit'>('read')
 </script>
 
 <template>
@@ -14,19 +14,10 @@
     </t-radio-group>
 
     <t-space align="center">
-      <span style="width: 80px; color: var(--td-text-color-secondary)"
-        >文本：</span
-      >
-      <ProField
-        v-model="value"
-        valueType="text"
-        :mode="mode"
-        placeholder="请输入文本"
-      />
+      <span style="width: 80px; color: var(--td-text-color-secondary)">文本：</span>
+      <ProField v-model="value" valueType="text" :mode="mode" placeholder="请输入文本" />
     </t-space>
 
-    <div style="color: var(--td-text-color-secondary); font-size: 12px">
-      当前值：{{ value }}
-    </div>
+    <div style="color: var(--td-text-color-secondary); font-size: 12px">当前值：{{ value }}</div>
   </t-space>
 </template>

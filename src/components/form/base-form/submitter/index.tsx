@@ -41,7 +41,7 @@ export interface SubmitterProps<T = Record<string, any>> {
           submit: () => void
           reset: () => void
         },
-        dom: VNode[]
+        dom: VNode[],
       ) => VNode[] | VNode | false)
     | false
 }
@@ -52,12 +52,9 @@ const FORM_INSTANCE_KEY = Symbol('formInstance')
 /**
  * 从对象中移除指定的键
  */
-function omit<T extends Record<string, any>, K extends keyof T>(
-  obj: T,
-  keys: K[]
-): Omit<T, K> {
+function omit<T extends Record<string, any>, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {
   const result = { ...obj }
-  keys.forEach(key => {
+  keys.forEach((key) => {
     delete result[key]
   })
   return result
@@ -127,9 +124,7 @@ export const Submitter = defineComponent({
       // 重置按钮
       if (props.resetButtonProps !== false) {
         const resetBtnProps =
-          typeof props.resetButtonProps === 'object'
-            ? props.resetButtonProps
-            : {}
+          typeof props.resetButtonProps === 'object' ? props.resetButtonProps : {}
 
         dom.push(
           <Button
@@ -147,16 +142,14 @@ export const Submitter = defineComponent({
             }}
           >
             {resetText.value}
-          </Button>
+          </Button>,
         )
       }
 
       // 提交按钮
       if (props.submitButtonProps !== false) {
         const submitBtnProps =
-          typeof props.submitButtonProps === 'object'
-            ? props.submitButtonProps
-            : {}
+          typeof props.submitButtonProps === 'object' ? props.submitButtonProps : {}
 
         dom.push(
           <Button
@@ -175,7 +168,7 @@ export const Submitter = defineComponent({
             }}
           >
             {submitText.value}
-          </Button>
+          </Button>,
         )
       }
 
@@ -187,7 +180,7 @@ export const Submitter = defineComponent({
             submit,
             reset,
           },
-          dom
+          dom,
         )
 
         // 如果返回 false，不渲染

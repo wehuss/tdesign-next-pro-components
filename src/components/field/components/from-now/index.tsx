@@ -48,7 +48,7 @@ const getRelativeTime = (date: Date | string | number): string => {
  */
 const formatDate = (
   date: Date | string | number,
-  format: string = 'YYYY-MM-DD HH:mm:ss'
+  format: string = 'YYYY-MM-DD HH:mm:ss',
 ): string => {
   const d = new Date(date)
   if (isNaN(d.getTime())) return '-'
@@ -146,11 +146,7 @@ export const FieldFromNow = defineComponent({
         <DatePicker
           ref={dataEntryRef}
           v-model={modelValue.value}
-          placeholder={
-            Array.isArray(props.placeholder)
-              ? props.placeholder[0]
-              : props.placeholder
-          }
+          placeholder={Array.isArray(props.placeholder) ? props.placeholder[0] : props.placeholder}
           disabled={props.disabled}
           enableTimePicker
           {...props.fieldProps}

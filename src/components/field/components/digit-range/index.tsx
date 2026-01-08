@@ -2,9 +2,7 @@ import { InputNumber, Space } from 'tdesign-vue-next'
 import { defineComponent, ref, watch } from 'vue'
 import type { ProFieldMode } from '../../types'
 
-export type DigitRangeValue =
-  | [number | undefined, number | undefined]
-  | undefined
+export type DigitRangeValue = [number | undefined, number | undefined] | undefined
 
 /**
  * DigitRange 组件 - 数字范围字段
@@ -58,11 +56,11 @@ export const FieldDigitRange = defineComponent({
     // 监听外部值变化
     watch(
       () => props.modelValue,
-      newValue => {
+      (newValue) => {
         startValue.value = newValue?.[0]
         endValue.value = newValue?.[1]
       },
-      { deep: true }
+      { deep: true },
     )
 
     // 更新值

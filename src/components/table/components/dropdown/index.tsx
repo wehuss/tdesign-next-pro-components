@@ -40,26 +40,15 @@ export interface TableDropdownProps {
 /**
  * 将菜单项转换为 TDesign Dropdown 选项
  */
-const convertMenusToOptions = (
-  menus: TableDropdownMenuItem[]
-): DropdownOption[] => {
-  return menus.map(item => {
+const convertMenusToOptions = (menus: TableDropdownMenuItem[]): DropdownOption[] => {
+  return menus.map((item) => {
     const content =
       typeof item.name === 'string'
         ? item.danger
-          ? () =>
-              h(
-                'span',
-                { class: 't-pro-table-dropdown-item-danger' },
-                item.name
-              )
+          ? () => h('span', { class: 't-pro-table-dropdown-item-danger' }, item.name)
           : item.name
         : () =>
-            h(
-              'span',
-              { class: item.danger ? 't-pro-table-dropdown-item-danger' : '' },
-              [item.name]
-            )
+            h('span', { class: item.danger ? 't-pro-table-dropdown-item-danger' : '' }, [item.name])
 
     return {
       content,

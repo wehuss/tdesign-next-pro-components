@@ -66,10 +66,7 @@ export const FieldImage = defineComponent({
           <Image
             src={src}
             style={{
-              width:
-                typeof props.width === 'number'
-                  ? `${props.width}px`
-                  : props.width,
+              width: typeof props.width === 'number' ? `${props.width}px` : props.width,
               height: props.height
                 ? typeof props.height === 'number'
                   ? `${props.height}px`
@@ -87,11 +84,7 @@ export const FieldImage = defineComponent({
         <Input
           ref={dataEntryRef}
           v-model={modelValue.value}
-          placeholder={
-            Array.isArray(props.placeholder)
-              ? props.placeholder[0]
-              : props.placeholder
-          }
+          placeholder={Array.isArray(props.placeholder) ? props.placeholder[0] : props.placeholder}
           disabled={props.disabled}
           {...props.fieldProps}
         />

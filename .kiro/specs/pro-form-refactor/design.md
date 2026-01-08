@@ -320,15 +320,15 @@ describe('ProFormItem type conversion', () => {
       fc.property(
         fc.oneof(
           fc.string(),
-          fc.constant(() => h('span', 'test'))
+          fc.constant(() => h('span', 'test')),
         ),
-        label => {
+        (label) => {
           const result = convertLabel(label)
           // 验证转换结果有效
           return result !== undefined
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     )
   })
 
@@ -341,14 +341,14 @@ describe('ProFormItem type conversion', () => {
       fc.property(
         fc.oneof(
           fc.string(),
-          fc.constant(() => h('span', 'help'))
+          fc.constant(() => h('span', 'help')),
         ),
-        help => {
+        (help) => {
           const result = convertHelp(help)
           return result !== undefined
-        }
+        },
       ),
-      { numRuns: 100 }
+      { numRuns: 100 },
     )
   })
 })
@@ -363,12 +363,8 @@ describe('Folder naming convention', () => {
     const kebabCaseRegex = /^[a-z]+(-[a-z]+)*$/
 
     folders
-      .filter(f =>
-        fs
-          .statSync(path.join('src/components/form/components', f))
-          .isDirectory()
-      )
-      .forEach(folder => {
+      .filter((f) => fs.statSync(path.join('src/components/form/components', f)).isDirectory())
+      .forEach((folder) => {
         expect(folder).toMatch(kebabCaseRegex)
       })
   })
@@ -381,21 +377,15 @@ describe('Folder naming convention', () => {
 describe('Import paths', () => {
   it('should resolve all imports in index.ts', async () => {
     // 验证所有导入路径都能正确解析
-    const indexContent = fs.readFileSync(
-      'src/components/form/components/index.ts',
-      'utf-8'
-    )
+    const indexContent = fs.readFileSync('src/components/form/components/index.ts', 'utf-8')
     const importPaths = extractImportPaths(indexContent)
 
-    importPaths.forEach(importPath => {
-      const fullPath = path.resolve(
-        'src/components/form/components',
-        importPath
-      )
+    importPaths.forEach((importPath) => {
+      const fullPath = path.resolve('src/components/form/components', importPath)
       expect(
         fs.existsSync(fullPath) ||
           fs.existsSync(fullPath + '.ts') ||
-          fs.existsSync(fullPath + '/index.tsx')
+          fs.existsSync(fullPath + '/index.tsx'),
       ).toBe(true)
     })
   })

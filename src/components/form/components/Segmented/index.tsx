@@ -2,11 +2,8 @@ import type { PropType } from 'vue'
 import { computed, defineComponent, inject, useModel } from 'vue'
 import { FieldSegmented } from '../../../field/components/segmented'
 import type { ProFieldMode } from '../../../field/types'
-import { EditOrReadOnlyContextKey } from '../../BaseForm/EditOrReadOnlyContext'
-import {
-  proFormFieldEmits,
-  proFormFieldProps,
-} from '../../utils/proFormFieldProps'
+import { EditOrReadOnlyContextKey } from '../../base-form/edit-or-read-only-context'
+import { proFormFieldEmits, proFormFieldProps } from '../../utils/pro-form-field-props'
 import { ProFormItem } from '../form-item'
 
 /**
@@ -19,9 +16,7 @@ export const ProFormSegmented = defineComponent({
   props: {
     ...proFormFieldProps,
     options: {
-      type: Array as PropType<
-        Array<{ label: string; value: string | number; disabled?: boolean }>
-      >,
+      type: Array as PropType<Array<{ label: string; value: string | number; disabled?: boolean }>>,
       default: undefined,
     },
     fieldProps: {
@@ -40,8 +35,7 @@ export const ProFormSegmented = defineComponent({
     const currentMode = computed<ProFieldMode>(() => {
       if (props.readonly) return 'read'
       const contextMode =
-        typeof editOrReadOnlyContext.mode === 'object' &&
-        'value' in editOrReadOnlyContext.mode
+        typeof editOrReadOnlyContext.mode === 'object' && 'value' in editOrReadOnlyContext.mode
           ? editOrReadOnlyContext.mode.value
           : editOrReadOnlyContext.mode
       return (contextMode as ProFieldMode) || 'edit'

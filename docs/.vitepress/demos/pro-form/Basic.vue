@@ -1,38 +1,34 @@
 <script setup lang="ts">
-  import {
-    ProForm,
-    ProFormDatePicker,
-    ProFormSelect,
-    ProFormSwitch,
-    ProFormText,
-  } from '@/components/form'
-  import { MessagePlugin } from 'tdesign-vue-next'
-  import { ref } from 'vue'
+import {
+  ProForm,
+  ProFormDatePicker,
+  ProFormSelect,
+  ProFormSwitch,
+  ProFormText,
+} from '@/components/form'
+import { MessagePlugin } from 'tdesign-vue-next'
+import { ref } from 'vue'
 
-  const formData = ref({
-    username: '',
-    role: '',
-    birthday: '',
-    enabled: false,
-  })
-  const formRef = ref()
+const formData = ref({
+  username: '',
+  role: '',
+  birthday: '',
+  enabled: false,
+})
+const formRef = ref()
 
-  const handleFinish = async (values: any) => {
-    console.log('表单数据:', values)
-    MessagePlugin.success('提交成功')
-  }
+const handleFinish = async (values: any) => {
+  console.log('表单数据:', values)
+  MessagePlugin.success('提交成功')
+}
 
-  const handleFinishFailed = (errors: any) => {
-    console.log('验证失败:', errors)
-  }
+const handleFinishFailed = (errors: any) => {
+  console.log('验证失败:', errors)
+}
 </script>
 
 <template>
-  <ProForm
-    ref="formRef"
-    @finish="handleFinish"
-    @finishFailed="handleFinishFailed"
-  >
+  <ProForm ref="formRef" @finish="handleFinish" @finishFailed="handleFinishFailed">
     <ProFormText
       name="username"
       label="用户名"

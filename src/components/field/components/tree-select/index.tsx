@@ -75,10 +75,7 @@ export const FieldTreeSelect = defineComponent({
         if (!options?.length) return valuesMap
 
         for (const option of options) {
-          valuesMap.set(
-            option[valuePropsName] as string | number,
-            option[labelPropsName] as string
-          )
+          valuesMap.set(option[valuePropsName] as string | number, option[labelPropsName] as string)
           if (option[childrenPropsName]) {
             traverseOptions(option[childrenPropsName] as TreeOptionData[])
           }
@@ -93,12 +90,12 @@ export const FieldTreeSelect = defineComponent({
       // 只读模式显示选项文本
       if (props.mode === 'read' || props.readonly) {
         const valueEnum = objectToMap(
-          (props.valueEnum as ProFieldValueEnumType) || optionsValueEnum.value
+          (props.valueEnum as ProFieldValueEnumType) || optionsValueEnum.value,
         )
 
         const value = modelValue.value as TreeSelectValue
         if (Array.isArray(value)) {
-          const labels = value.map(v => {
+          const labels = value.map((v) => {
             const item = valueEnum.get(v) || valueEnum.get(String(v))
             return typeof item === 'string' ? item : (item as any)?.text || v
           })
@@ -114,11 +111,7 @@ export const FieldTreeSelect = defineComponent({
           ref={dataEntryRef}
           v-model={modelValue.value}
           data={props.data}
-          placeholder={
-            Array.isArray(props.placeholder)
-              ? props.placeholder[0]
-              : props.placeholder
-          }
+          placeholder={Array.isArray(props.placeholder) ? props.placeholder[0] : props.placeholder}
           disabled={props.disabled}
           multiple={props.multiple}
           {...props.fieldProps}

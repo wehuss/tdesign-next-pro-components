@@ -35,15 +35,13 @@ export const FieldText = defineComponent({
     },
   },
   emits: ['update:modelValue', 'change'],
-  setup(props, {
-    expose
-  }) {
+  setup(props, { expose }) {
     const modelValue = useModel(props, 'modelValue')
     const dataEntryRef = ref<InstanceType<typeof Input>>()
     const getDataEntryRef = () => dataEntryRef.value
     expose({
       getDataEntryRef,
-      dataEntryRef
+      dataEntryRef,
     })
 
     return () => {
@@ -59,11 +57,7 @@ export const FieldText = defineComponent({
         <Input
           ref={dataEntryRef}
           v-model={modelValue.value}
-          placeholder={
-            Array.isArray(props.placeholder)
-              ? props.placeholder[0]
-              : props.placeholder
-          }
+          placeholder={Array.isArray(props.placeholder) ? props.placeholder[0] : props.placeholder}
           disabled={props.disabled}
           {...props.fieldProps}
         />

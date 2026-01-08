@@ -59,8 +59,8 @@ app.mount('#app')
 
 ```vue
 <script setup lang="ts">
-  import { ProTable, ProField } from 'tdesign-pro-components'
-  import 'tdesign-pro-components/style'
+import { ProTable, ProField } from 'tdesign-pro-components'
+import 'tdesign-pro-components/style'
 </script>
 
 <template>
@@ -74,62 +74,57 @@ app.mount('#app')
 
 ```vue
 <script setup lang="ts">
-  import { ProTable } from 'tdesign-pro-components'
-  import type { ProTableColumn } from 'tdesign-pro-components'
+import { ProTable } from 'tdesign-pro-components'
+import type { ProTableColumn } from 'tdesign-pro-components'
 
-  // 定义列配置
-  const columns: ProTableColumn[] = [
-    {
-      title: '序号',
-      colKey: 'index',
-      valueType: 'indexBorder',
-      width: 80,
+// 定义列配置
+const columns: ProTableColumn[] = [
+  {
+    title: '序号',
+    colKey: 'index',
+    valueType: 'indexBorder',
+    width: 80,
+  },
+  {
+    title: '用户名',
+    colKey: 'username',
+    valueType: 'text',
+  },
+  {
+    title: '状态',
+    colKey: 'status',
+    valueType: 'select',
+    valueEnum: {
+      active: { text: '启用', status: 'success' },
+      inactive: { text: '禁用', status: 'error' },
     },
-    {
-      title: '用户名',
-      colKey: 'username',
-      valueType: 'text',
-    },
-    {
-      title: '状态',
-      colKey: 'status',
-      valueType: 'select',
-      valueEnum: {
-        active: { text: '启用', status: 'success' },
-        inactive: { text: '禁用', status: 'error' },
-      },
-    },
-    {
-      title: '创建时间',
-      colKey: 'createdAt',
-      valueType: 'dateTime',
-    },
-  ]
+  },
+  {
+    title: '创建时间',
+    colKey: 'createdAt',
+    valueType: 'dateTime',
+  },
+]
 
-  // 数据请求函数
-  const request = async (params: any) => {
-    // 模拟 API 请求
-    const response = await fetch('/api/users', {
-      method: 'POST',
-      body: JSON.stringify(params),
-    })
-    const result = await response.json()
+// 数据请求函数
+const request = async (params: any) => {
+  // 模拟 API 请求
+  const response = await fetch('/api/users', {
+    method: 'POST',
+    body: JSON.stringify(params),
+  })
+  const result = await response.json()
 
-    return {
-      data: result.list,
-      total: result.total,
-      success: true,
-    }
+  return {
+    data: result.list,
+    total: result.total,
+    success: true,
   }
+}
 </script>
 
 <template>
-  <ProTable
-    :columns="columns"
-    :request="request"
-    row-key="id"
-    header-title="用户列表"
-  />
+  <ProTable :columns="columns" :request="request" row-key="id" header-title="用户列表" />
 </template>
 ```
 

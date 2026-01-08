@@ -69,12 +69,8 @@ export const FieldSegmented = defineComponent({
 
       return Array.from(valueEnum.entries()).map(([value, config]) => ({
         value,
-        label:
-          typeof config === 'string'
-            ? config
-            : (config as any)?.text || String(value),
-        disabled:
-          typeof config === 'object' ? (config as any)?.disabled : false,
+        label: typeof config === 'string' ? config : (config as any)?.text || String(value),
+        disabled: typeof config === 'object' ? (config as any)?.disabled : false,
       }))
     })
 
@@ -96,7 +92,7 @@ export const FieldSegmented = defineComponent({
       if (props.mode === 'read' || props.readonly) {
         return proFieldParsingText(
           modelValue.value as string | number,
-          optionsValueEnum.value as ProFieldValueEnumType
+          optionsValueEnum.value as ProFieldValueEnumType,
         )
       }
 

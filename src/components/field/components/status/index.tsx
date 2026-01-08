@@ -32,14 +32,11 @@ export const FieldStatus = defineComponent({
 
     expose({
       getDataEntryRef,
-      dataEntryRef
+      dataEntryRef,
     })
     return () => {
       // 使用 proFieldParsingText 来处理 valueEnum 并显示状态
-      return proFieldParsingText(
-        props.modelValue,
-        props.valueEnum as ProFieldValueEnumType
-      )
+      return proFieldParsingText(props.modelValue, props.valueEnum as ProFieldValueEnumType)
     }
   },
 })

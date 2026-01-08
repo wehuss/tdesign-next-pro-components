@@ -7,8 +7,7 @@ import { ref, watch, type Ref } from 'vue'
 // 检查是否为空值
 export const isEmpty = (value: unknown): boolean => {
   if (value === null || value === undefined) return true
-  if (typeof value === 'string' || Array.isArray(value))
-    return value.length === 0
+  if (typeof value === 'string' || Array.isArray(value)) return value.length === 0
   if (typeof value === 'object') return Object.keys(value).length === 0
   return false
 }
@@ -22,7 +21,7 @@ export const isNil = (value: unknown): value is null | undefined => {
 export const deepClone = <T>(obj: T): T => {
   if (obj === null || typeof obj !== 'object') return obj
   if (obj instanceof Date) return new Date(obj.getTime()) as T
-  if (obj instanceof Array) return obj.map(item => deepClone(item)) as T
+  if (obj instanceof Array) return obj.map((item) => deepClone(item)) as T
   if (typeof obj === 'object') {
     const clonedObj = {} as T
     for (const key in obj) {
@@ -38,7 +37,7 @@ export const deepClone = <T>(obj: T): T => {
 // 防抖函数
 export const debounce = <T extends (...args: unknown[]) => unknown>(
   func: T,
-  wait: number
+  wait: number,
 ): ((...args: Parameters<T>) => void) => {
   let timeout: number | null = null
   return (...args: Parameters<T>) => {
@@ -50,7 +49,7 @@ export const debounce = <T extends (...args: unknown[]) => unknown>(
 // 节流函数
 export const throttle = <T extends (...args: unknown[]) => unknown>(
   func: T,
-  wait: number
+  wait: number,
 ): ((...args: Parameters<T>) => void) => {
   let lastTime = 0
   return (...args: Parameters<T>) => {
@@ -69,7 +68,7 @@ export const useDebouncedRef = <T>(source: Ref<T>, delay: number): Ref<T> => {
   let timer: number | null = null
   watch(
     source,
-    newValue => {
+    (newValue) => {
       if (timer) {
         clearTimeout(timer)
       }
@@ -77,7 +76,7 @@ export const useDebouncedRef = <T>(source: Ref<T>, delay: number): Ref<T> => {
         debouncedRef.value = newValue
       }, delay) as unknown as number
     },
-    { immediate: true }
+    { immediate: true },
   )
 
   return debouncedRef
@@ -89,18 +88,14 @@ export const useLatest = <T>(value: T): Ref<T> => {
 
   watch(
     () => value,
-    newValue => {
+    (newValue) => {
       latestRef.value = newValue
     },
-    { immediate: true, deep: true }
+    { immediate: true, deep: true },
   )
 
   return latestRef
 }
 
 // 导出 proFieldParsingText 相关函数
-export {
-  objectToMap,
-  proFieldParsingText,
-  ProFieldTagColor,
-} from './proFieldParsingText'
+export { objectToMap, proFieldParsingText, ProFieldTagColor } from './proFieldParsingText'

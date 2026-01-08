@@ -1,17 +1,17 @@
 <script setup lang="ts">
-  import { ProForm, ProFormRate } from '@/components/form'
-  import { ref } from 'vue'
+import { ProForm, ProFormRate } from '@/components/form'
+import { ref } from 'vue'
 
-  const formRef = ref()
-  const formData = ref({
-    score: 3,
-    satisfaction: 4,
-    quality: 0,
-  })
+const formRef = ref()
+const formData = ref({
+  score: 3,
+  satisfaction: 4,
+  quality: 0,
+})
 
-  const handleFinish = (values: any) => {
-    console.log('表单数据:', values)
-  }
+const handleFinish = (values: any) => {
+  console.log('表单数据:', values)
+}
 </script>
 
 <template>

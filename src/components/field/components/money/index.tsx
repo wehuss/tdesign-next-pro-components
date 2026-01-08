@@ -45,6 +45,14 @@ export const FieldMoney = defineComponent({
       type: [String, Array] as any,
       default: '请输入金额',
     },
+    min: {
+      type: Number,
+      default: undefined,
+    },
+    max: {
+      type: Number,
+      default: undefined,
+    },
   },
   emits: ['update:modelValue', 'change'],
   setup(props, { expose }) {
@@ -88,6 +96,8 @@ export const FieldMoney = defineComponent({
           placeholder={props.placeholder}
           disabled={props.disabled}
           decimalPlaces={props.precision}
+          min={props.min}
+          max={props.max}
           {...props.fieldProps}
         />
       )

@@ -54,10 +54,7 @@ export type ProFieldValueType =
   | 'segmented'
 
 /** Field 的值类型函数版本 */
-export type ProFieldValueTypeFunction = (
-  record?: unknown,
-  type?: string
-) => ProFieldValueType
+export type ProFieldValueTypeFunction = (record?: unknown, type?: string) => ProFieldValueType
 
 /** 空文本配置 */
 export type ProFieldEmptyText = string | false
@@ -103,7 +100,7 @@ export interface ProFieldRenderProps {
 export type ProFieldRenderFunction = (
   modelValue: ProFieldTextType,
   props: ProFieldRenderProps,
-  dom: VNode
+  dom: VNode,
 ) => VNode | null
 
 /** Field 组件的 Props */
@@ -170,20 +167,16 @@ export interface BaseProFieldFC {
 /** 单个 Field 组件的函数组件类型 */
 export type ProFieldFC<T = Record<string, never>> = (
   props: BaseProFieldFC & T,
-  ref?: Ref<unknown>
+  ref?: Ref<unknown>,
 ) => VNode | null
 
 /** ValueType 映射到具体的渲染配置 */
 export interface ProRenderFieldPropsType {
-  render?: (
-    modelValue: ProFieldTextType,
-    props: ProFieldRenderProps,
-    dom?: VNode
-  ) => VNode | null
+  render?: (modelValue: ProFieldTextType, props: ProFieldRenderProps, dom?: VNode) => VNode | null
   formItemRender?: (
     modelValue: ProFieldTextType,
     props: ProFieldRenderProps,
-    dom?: VNode
+    dom?: VNode,
   ) => VNode | null
 }
 

@@ -6,33 +6,24 @@ DrawerForm 是结合了 Drawer 和 ProForm 的组件，用于在抽屉中展示�
 
 ```vue
 <script setup lang="ts">
-  import { ref } from 'vue'
-  import { Button } from 'tdesign-vue-next'
-  import {
-    DrawerForm,
-    ProFormText,
-    ProFormTextArea,
-    ProFormSelect,
-  } from 'tdesign-pro-components'
+import { ref } from 'vue'
+import { Button } from 'tdesign-vue-next'
+import { DrawerForm, ProFormText, ProFormTextArea, ProFormSelect } from 'tdesign-pro-components'
 
-  const visible = ref(false)
+const visible = ref(false)
 
-  const handleSubmit = async (values: any) => {
-    console.log('表单数据:', values)
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    return true
-  }
+const handleSubmit = async (values: any) => {
+  console.log('表单数据:', values)
+  await new Promise((resolve) => setTimeout(resolve, 1000))
+  return true
+}
 </script>
 
 <template>
   <Button @click="visible = true">新建</Button>
 
   <DrawerForm v-model:visible="visible" title="新建记录" @finish="handleSubmit">
-    <ProFormText
-      name="title"
-      label="标题"
-      :rules="[{ required: true, message: '请输入标题' }]"
-    />
+    <ProFormText name="title" label="标题" :rules="[{ required: true, message: '请输入标题' }]" />
     <ProFormTextArea name="content" label="内容" :rows="6" />
     <ProFormSelect
       name="category"
@@ -126,19 +117,19 @@ DrawerForm 适合展示复杂的多步骤或多分组表单：
 
 ```vue
 <script setup lang="ts">
-  import {
-    DrawerForm,
-    ProFormText,
-    ProFormSelect,
-    ProFormDatePicker,
-    ProFormGroup,
-  } from 'tdesign-pro-components'
-  import { Divider } from 'tdesign-vue-next'
+import {
+  DrawerForm,
+  ProFormText,
+  ProFormSelect,
+  ProFormDatePicker,
+  ProFormGroup,
+} from 'tdesign-pro-components'
+import { Divider } from 'tdesign-vue-next'
 
-  const handleSubmit = async (values: any) => {
-    console.log('表单数据:', values)
-    return true
-  }
+const handleSubmit = async (values: any) => {
+  console.log('表单数据:', values)
+  return true
+}
 </script>
 
 <template>

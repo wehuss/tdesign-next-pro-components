@@ -1,32 +1,32 @@
 <script setup lang="ts">
-  import { ProForm, ProFormSelect } from '@/components/form'
-  import { ref } from 'vue'
+import { ProForm, ProFormSelect } from '@/components/form'
+import { ref } from 'vue'
 
-  const formRef = ref()
-  const formData = ref({
-    city: '',
-    cities: [],
-    country: '',
-  })
+const formRef = ref()
+const formData = ref({
+  city: '',
+  cities: [],
+  country: '',
+})
 
-  const handleFinish = (values: any) => {
-    console.log('表单数据:', values)
-  }
+const handleFinish = (values: any) => {
+  console.log('表单数据:', values)
+}
 
-  const cityOptions = [
-    { label: '北京', value: 'beijing' },
-    { label: '上海', value: 'shanghai' },
-    { label: '广州', value: 'guangzhou' },
-    { label: '深圳', value: 'shenzhen' },
-    { label: '杭州', value: 'hangzhou' },
-  ]
+const cityOptions = [
+  { label: '北京', value: 'beijing' },
+  { label: '上海', value: 'shanghai' },
+  { label: '广州', value: 'guangzhou' },
+  { label: '深圳', value: 'shenzhen' },
+  { label: '杭州', value: 'hangzhou' },
+]
 
-  const countryOptions = [
-    { label: '中国', value: 'china' },
-    { label: '美国', value: 'usa' },
-    { label: '日本', value: 'japan' },
-    { label: '韩国', value: 'korea' },
-  ]
+const countryOptions = [
+  { label: '中国', value: 'china' },
+  { label: '美国', value: 'usa' },
+  { label: '日本', value: 'japan' },
+  { label: '韩国', value: 'korea' },
+]
 </script>
 
 <template>

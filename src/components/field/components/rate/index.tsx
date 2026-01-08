@@ -53,7 +53,7 @@ export const FieldRate = defineComponent({
 
     expose({
       getDataEntryRef,
-      dataEntryRef
+      dataEntryRef,
     })
     return () => {
       // 只读模式和编辑模式都显示评分组件，但只读模式不可交互
@@ -71,10 +71,7 @@ export const FieldRate = defineComponent({
             {...props.fieldProps}
           />
           {props.showText && modelValue.value > 0 && (
-            <span>
-              {props.texts[Math.ceil(modelValue.value) - 1] ||
-                `${modelValue.value}星`}
-            </span>
+            <span>{props.texts[Math.ceil(modelValue.value) - 1] || `${modelValue.value}星`}</span>
           )}
         </div>
       )
