@@ -59,4 +59,4 @@ docs/.vitepress/dist
 # Temporary folders
 tmp/
 temp/
-raw/
+# raw/

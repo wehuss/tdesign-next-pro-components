@@ -500,7 +500,6 @@ export const BaseForm = defineComponent({
             )
         : () => (
             <>
-              {" "}
               {items}
               {submitterNode}
             </>

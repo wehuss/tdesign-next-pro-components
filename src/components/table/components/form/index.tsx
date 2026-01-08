@@ -4,61 +4,64 @@
  * 参考 ant-design/pro-components Form 组件
  */
 
-import type { PropType, VNode } from 'vue'
-import { computed, defineComponent, ref, watch } from 'vue'
-import { LightFilter, ProFormField, QueryFilter } from '../../../form'
-import type { ProTableColumn, SearchConfig } from '../../types'
-import './style.less'
+import type { PropType, VNode } from "vue";
+import { computed, defineComponent, ref, watch } from "vue";
+import { LightFilter, ProFormField, QueryFilter } from "../../../form";
+import type { ProTableColumn, SearchConfig } from "../../types";
+import "./style.less";
 
 export interface TableFormProps {
-  columns: ProTableColumn[]
-  search?: boolean | SearchConfig
-  loading?: boolean
-  onSubmit?: (values: Record<string, any>, firstLoad?: boolean) => void
-  onReset?: (values: Record<string, any>) => void
-  dateFormatter?: 'string' | 'number' | false
-  type?: 'table' | 'form'
-  formRef?: any
-  manualRequest?: boolean
-  bordered?: boolean
-  ghost?: boolean
+  columns: ProTableColumn[];
+  search?: boolean | SearchConfig;
+  loading?: boolean;
+  onSubmit?: (values: Record<string, any>, firstLoad?: boolean) => void;
+  onReset?: (values: Record<string, any>) => void;
+  dateFormatter?: "string" | "number" | false;
+  type?: "table" | "form";
+  formRef?: any;
+  manualRequest?: boolean;
+  bordered?: boolean;
+  ghost?: boolean;
 }
 
 // 从列配置生成表单项
 const genFormItemsFromColumns = (
   columns: ProTableColumn[],
-  _type: string = 'table',
+  _type: string = "table"
 ): { key: string; column: ProTableColumn }[] => {
   return columns
     .filter((column) => {
       // 只有配置了 form 属性的列才会在搜索表单中显示
-      if (!column.form) return false
+      if (!column.form) return false;
       // 如果明确设置 searchForm: false 则不显示
-      if (column.form.searchForm === false) return false
-      return true
+      if (column.form.searchForm === false) return false;
+      return true;
     })
     .map((column, index) => ({
       key: column.colKey || String(index),
       column,
-    }))
-}
+    }));
+};
 
 // 获取表单组件类型
 const getFormCompetent = (
   isForm: boolean,
-  searchConfig?: boolean | SearchConfig,
-): 'Form' | 'LightFilter' | 'QueryFilter' => {
+  searchConfig?: boolean | SearchConfig
+): "Form" | "LightFilter" | "QueryFilter" => {
   if (!isForm && searchConfig !== false) {
-    if (typeof searchConfig === 'object' && (searchConfig as any).filterType === 'light') {
-      return 'LightFilter'
+    if (
+      typeof searchConfig === "object" &&
+      (searchConfig as any).filterType === "light"
+    ) {
+      return "LightFilter";
     }
-    return 'QueryFilter'
+    return "QueryFilter";
   }
-  return 'Form'
-}
+  return "Form";
+};
 
 export default defineComponent({
-  name: 'TableFormRender',
+  name: "TableFormRender",
   props: {
     columns: {
       type: Array as PropType<ProTableColumn[]>,
@@ -73,18 +76,20 @@ export default defineComponent({
       default: false,
     },
     onSubmit: {
-      type: Function as PropType<(values: Record<string, any>, firstLoad?: boolean) => void>,
+      type: Function as PropType<
+        (values: Record<string, any>, firstLoad?: boolean) => void
+      >,
     },
     onReset: {
       type: Function as PropType<(values: Record<string, any>) => void>,
     },
     dateFormatter: {
-      type: [String, Boolean] as PropType<'string' | 'number' | false>,
-      default: 'string',
+      type: [String, Boolean] as PropType<"string" | "number" | false>,
+      default: "string",
     },
     type: {
-      type: String as PropType<'table' | 'form'>,
-      default: 'table',
+      type: String as PropType<"table" | "form">,
+      default: "table",
     },
     formRef: Object,
     manualRequest: {
@@ -100,51 +105,49 @@ export default defineComponent({
       default: false,
     },
   },
-  emits: ['submit', 'reset'],
+  emits: ["submit", "reset"],
   setup(props, { emit, expose }) {
-    const internalFormRef = ref()
-    const isFirstLoad = ref(true)
+    const internalFormRef = ref();
+    const isFirstLoad = ref(true);
 
     // 监听 formRef
     watch(
       () => internalFormRef.value,
       (newRef) => {
         if (props.formRef && newRef) {
-          props.formRef.value = newRef
+          props.formRef.value = newRef;
         }
-      },
-    )
+      }
+    );
 
     // 是否是表单模式
-    const isForm = computed(() => props.type === 'form')
+    const isForm = computed(() => props.type === "form");
 
     // 获取表单组件类型
-    const competentName = computed(() => getFormCompetent(isForm.value, props.search))
+    const competentName = computed(() =>
+      getFormCompetent(isForm.value, props.search)
+    );
 
     // 生成表单项
-    const formItems = computed(() => genFormItemsFromColumns(props.columns, props.type))
+    const formItems = computed(() =>
+      genFormItemsFromColumns(props.columns, props.type)
+    );
 
     // 处理提交
     const handleSubmit = (values: Record<string, any>) => {
-      const firstLoad = isFirstLoad.value
-      isFirstLoad.value = false
+      console.log("handleSubmit");
+      const firstLoad = isFirstLoad.value;
+      isFirstLoad.value = false;
 
-      emit('submit', values, firstLoad)
-      props.onSubmit?.(values, firstLoad)
-    }
+      emit("submit", values, firstLoad);
+      props.onSubmit?.(values, firstLoad);
+    };
 
     // 处理重置
     const handleReset = (values: Record<string, any>) => {
-      emit('reset', values)
-      props.onReset?.(values)
-    }
-
-    // 初始化时触发一次提交（如果不是手动请求模式）
-    const handleInit = (values: Record<string, any>) => {
-      if (!props.manualRequest && props.type !== 'form') {
-        handleSubmit(values)
-      }
-    }
+      emit("reset", values);
+      props.onReset?.(values);
+    };
 
     // 暴露方法
     expose({
@@ -154,14 +157,14 @@ export default defineComponent({
       setFieldsValue: (values: Record<string, any>) =>
         internalFormRef.value?.setFieldsValue?.(values),
       validate: () => internalFormRef.value?.validate?.(),
-    })
+    });
 
     // 渲染表单项
     const renderFormItems = (): VNode[] => {
       return formItems.value.map(({ key, column }) => {
-        const form = column.form
+        const form = column.form;
         // 从 form 配置中获取 valueType，如果未配置则使用列的 valueType，默认为 'text'
-        const valueType = form?.valueType || column.valueType || 'text'
+        const valueType = form?.valueType || column.valueType || "text";
 
         return (
           <ProFormField
@@ -178,51 +181,41 @@ export default defineComponent({
             disabled={form?.disabled}
             readonly={form?.readonly}
           />
-        ) as VNode
-      })
-    }
-
+        ) as VNode;
+      });
+    };
     // 获取搜索配置
     const getSearchConfig = () => {
-      if (typeof props.search === 'object') {
-        return props.search
+      if (typeof props.search === "object") {
+        return props.search;
       }
-      return {}
-    }
+      return {};
+    };
 
     return () => {
       if (props.search === false) {
-        return null
+        return null;
       }
 
-      const searchConfig = getSearchConfig()
-      const FormComponent = competentName.value === 'LightFilter' ? LightFilter : QueryFilter
+      const searchConfig = getSearchConfig();
+      const FormComponent =
+        competentName.value === "LightFilter" ? LightFilter : QueryFilter;
 
       return (
-        <div
-          class={[
-            't-pro-table-search',
-            {
-              't-pro-table-search-bordered': props.bordered,
-              't-pro-table-search-ghost': props.ghost,
-            },
-          ]}
+        <FormComponent
+          ref={internalFormRef}
+          {...searchConfig}
+          submitButtonProps={{
+            loading: props.loading,
+            ...(searchConfig as any).submitButtonProps,
+          }}
+          onSearch={handleSubmit}
+          onReset={handleReset}
+          // onFinish={handleSubmit}
         >
-          <FormComponent
-            ref={internalFormRef}
-            {...searchConfig}
-            submitButtonProps={{
-              loading: props.loading,
-              ...(searchConfig as any).submitButtonProps,
-            }}
-            onSearch={handleSubmit}
-            onReset={handleReset}
-            onFinish={handleSubmit}
-          >
-            {renderFormItems()}
-          </FormComponent>
-        </div>
-      )
-    }
+          {renderFormItems()}
+        </FormComponent>
+      );
+    };
   },
-})
+});

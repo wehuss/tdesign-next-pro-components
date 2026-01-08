@@ -4,7 +4,7 @@ import {
   RefreshIcon,
   SearchIcon,
 } from "tdesign-icons-vue-next";
-import { Button, Col, FormItem, Row, Space } from "tdesign-vue-next";
+import { Button, FormItem, Space } from "tdesign-vue-next";
 import type { VNode } from "vue";
 import {
   computed,
@@ -15,6 +15,7 @@ import {
   watch,
 } from "vue";
 import { BaseForm } from "../base-form/base-form";
+import "./style.less";
 
 // 配置表单列变化的容器宽度断点
 const BREAKPOINTS = {
@@ -27,16 +28,16 @@ const BREAKPOINTS = {
   default: [
     [513, 1, "vertical"],
     [701, 2, "vertical"],
-    [1062, 3, "horizontal"],
-    [1352, 3, "horizontal"],
-    [Infinity, 4, "horizontal"],
+    [1062, 3, "inline"],
+    [1352, 3, "inline"],
+    [Infinity, 4, "inline"],
   ],
-  horizontal: [
+  inline: [
     [513, 1, "vertical"],
     [701, 2, "vertical"],
-    [1062, 3, "horizontal"],
-    [1352, 3, "horizontal"],
-    [Infinity, 4, "horizontal"],
+    [1062, 3, "inline"],
+    [1352, 3, "inline"],
+    [Infinity, 4, "inline"],
   ],
 };
 
@@ -70,7 +71,7 @@ export interface QueryFilterProps {
   submitButtonProps?: any;
   resetButtonProps?: any;
   // 布局相关
-  layout?: "vertical" | "inline" | "horizontal";
+  layout?: "vertical" | "inline";
   span?: SpanConfig;
   labelWidth?: number | "auto";
   defaultColsNumber?: number;
@@ -98,10 +99,9 @@ const getSpanConfig = (
   span?: SpanConfig
 ): { span: number; layout: string } => {
   if (span && typeof span === "number") {
-    return { span, layout: layout || "horizontal" };
+    return { span, layout: layout || "inline" };
   }
 
-  console.log("layout", layout);
   const spanConfig =
     BREAKPOINTS[(layout as "default" | "vertical") || "default"];
   const breakPoint = spanConfig.find(
@@ -109,7 +109,7 @@ const getSpanConfig = (
   );
 
   if (!breakPoint) {
-    return { span: 8, layout: "horizontal" };
+    return { span: 8, layout: "inline" };
   }
 
   return {
@@ -156,7 +156,7 @@ export const QueryFilter = defineComponent({
     },
     layout: {
       type: String,
-      default: "horizontal",
+      default: "inline",
     },
     span: {
       type: [Number, Object],
@@ -254,13 +254,12 @@ export const QueryFilter = defineComponent({
       emit("collapse", newCollapsed);
     };
 
-    // 处理搜索
-    const handleSearch = async () => {
+    // 处理搜索 - 接收来自表单提交的值
+    const handleSearch = async (values?: any) => {
       try {
-        const values = formRef.value?.getFieldsValue?.() || {};
-        (props.onSearch as any)?.(values);
-        emit("search", values);
-        emit("finish", values);
+        const formValues = values || formRef.value?.getFieldsValue?.() || {};
+        emit("search", formValues);
+        emit("finish", formValues);
       } catch (error) {
         console.error("Query filter search error:", error);
       }
@@ -305,23 +304,57 @@ export const QueryFilter = defineComponent({
       setFieldsValue: (values: any) => formRef.value?.setFieldsValue(values),
     });
 
-    // 内容渲染
-    const contentRender = (items: VNode[], submitter: VNode | null) => {
+    // 内容渲染 - 参照 raw/src/form/layouts/QueryFilter/index.tsx 的逻辑
+    const contentRender = (items: VNode[], _submitter: VNode | null) => {
+      // 扁平化 items 数组 - Vue 的 slot 可能会返回嵌套数组
+      const flatItems = (items || [])
+        .flatMap((item: any) => {
+          // console.log("item", item);
+          // 如果 item 是数组，则展开
+          if (Array.isArray(item)) {
+            return item;
+          }
+          // console.log("item?.type?.toString()", item?.type?.toString());
+          // 如果 item 有 children 且是 Fragment，展开 children
+          if (item?.type?.toString() === "Symbol(v-fgt)" && item?.children) {
+            return Array.isArray(item.children)
+              ? item.children
+              : [item.children];
+          }
+          return [item];
+        })
+        .filter(Boolean);
+
+      // console.log("flatItems", flatItems);
+
       // 处理表单项
       let totalSpan = 0;
       let totalSize = 0;
+      let currentSpan = 0;
+      let firstRowFull = false;
       let hiddenCount = 0;
 
-      const processedItems = (items || []).map((item: any, index: number) => {
+      // 先计算每个item的属性和隐藏状态
+      const processedItems = flatItems.map((item: any, index: number) => {
         const colSize = item?.props?.colSize ?? 1;
         const colSpan = Math.min(spanSize.value.span * colSize, 24);
+
+        // 累计总 span 和 size
         totalSpan += colSpan;
         totalSize += colSize;
 
-        const hidden =
+        // 检查第一行是否被填满
+        if (index === 0) {
+          firstRowFull = colSpan === 24 && !item?.props?.hidden;
+        }
+
+        // 计算是否隐藏：
+        // 1. 如果 item 自己设置了 hidden
+        // 2. 如果处于折叠状态，且 (第一个占满一行 或 超过显示长度) 且不是第一个
+        const hidden: boolean =
           item?.props?.hidden ||
           (internalCollapsed.value &&
-            totalSize > showLength.value &&
+            (firstRowFull || totalSize > showLength.value) &&
             index > 0);
 
         if (hidden) {
@@ -331,37 +364,53 @@ export const QueryFilter = defineComponent({
           }
         }
 
+        // 处理换行：如果当前行剩余空间放不下，折行
+        if (24 - (currentSpan % 24) < colSpan && !hidden) {
+          currentSpan += 24 - (currentSpan % 24);
+        }
+
+        if (!hidden) {
+          currentSpan += colSpan;
+        }
+
         const itemKey = item?.key || item?.props?.name || index;
 
         return (
-          <Col
+          <div
             key={itemKey}
-            span={colSpan}
+            class={[
+              "pro-query-filter-col",
+              `pro-query-filter-col-${colSpan}`,
+              "pro-query-filter-row-split",
+            ]}
             style={{ display: hidden ? "none" : undefined }}
-            class="pro-query-filter-row-split"
           >
             {item}
-          </Col>
+          </div>
         );
       });
 
-      // 计算 offset
-      const currentSpan = totalSpan % 24;
+      // 计算 offset - 使用 currentSpan（已处理换行）
       const submitterSpan = spanSize.value.span;
-      const offsetSpan = currentSpan + submitterSpan;
+      const offsetSpan = (currentSpan % 24) + submitterSpan;
       const offset = offsetSpan > 24 ? 24 - submitterSpan : 24 - offsetSpan;
 
       // 是否需要显示折叠按钮
       const needCollapseRender =
         totalSpan >= 24 || totalSize > showLength.value;
 
-      // 默认操作按钮
+      // 默认操作按钮 - 直接调用 handleSearch 而不是通过 formRef.submit
+      // 这样可以确保正确触发搜索事件
       const defaultActions = [
         <Button
           key="search"
           theme="primary"
           icon={() => <SearchIcon />}
-          onClick={handleSearch}
+          onClick={async () => {
+            // 获取表单值并直接调用搜索处理
+            const values = formRef.value?.getFieldsValue?.() || {};
+            await handleSearch(values);
+          }}
           {...props.submitButtonProps}
         >
           {props.searchText}
@@ -419,17 +468,16 @@ export const QueryFilter = defineComponent({
           : null;
 
       return (
-        <Row
-          gutter={props.searchGutter}
-          justify="start"
-          class="pro-query-filter-row"
-        >
+        <div class="pro-query-filter-row">
           {processedItems}
           {actionsNode && (
-            <Col
+            <div
               key="submitter"
-              span={submitterSpan}
-              offset={offset}
+              class={[
+                "pro-query-filter-col",
+                `pro-query-filter-col-${submitterSpan}`,
+                offset > 0 ? `pro-query-filter-col-offset-${offset}` : "",
+              ]}
               style={{ textAlign: "end" }}
             >
               <FormItem label=" " class="pro-query-filter-actions">
@@ -438,9 +486,9 @@ export const QueryFilter = defineComponent({
                   {collapseButton}
                 </Space>
               </FormItem>
-            </Col>
+            </div>
           )}
-        </Row>
+        </div>
       );
     };
 
@@ -455,15 +503,17 @@ export const QueryFilter = defineComponent({
           layout={spanSize.value.layout as "vertical" | "inline"}
           isKeyPressSubmit
           class="pro-query-filter"
+          onFinish={handleSearch}
           onReset={handleReset}
           contentRender={contentRender}
           submitter={false}
           fieldProps={{
             style: { width: "100%" },
           }}
-        >
-          {slots.default?.()}
-        </BaseForm>
+          v-slots={{
+            default: slots.default,
+          }}
+        />
       </div>
     );
   },
