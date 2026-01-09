@@ -2,18 +2,21 @@ name: Release
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - "v*"
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
+permissions:
+  contents: write
 
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
+      - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -25,18 +28,42 @@ jobs:
         with:
           node-version: 20
           cache: "pnpm"
+          registry-url: "https://registry.npmjs.org"
 
       - name: Install Dependencies
         run: pnpm install
 
-      - name: Create Release Pull Request or Publish
-        id: changesets
-        uses: changesets/action@v1
+      - name: Build
+        run: pnpm run build
+
+      - name: Extract Changelog
+        id: changelog
+        run: |
+          # 提取当前版本的 changelog 内容
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+          # 提取两个版本标题之间的内容
+          CHANGELOG=$(sed -n "/^## \[$VERSION\]/,/^## \[/p" CHANGELOG.md | sed '1d;$d' || sed -n "/^## $VERSION/,/^## /p" CHANGELOG.md | sed '1d;$d')
+
+          if [ -z "$CHANGELOG" ]; then
+            CHANGELOG="Release $VERSION"
+          fi
+
+          # 写入文件以处理多行内容
+          echo "$CHANGELOG" > changelog_body.txt
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          version: pnpm run changeset:version
-          publish: pnpm run release
-          title: "chore: version packages"
-          commit: "chore: version packages"
+          name: v${{ steps.changelog.outputs.version }}
+          body_path: changelog_body.txt
+          draft: false
+          prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

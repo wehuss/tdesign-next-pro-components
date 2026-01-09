@@ -1,13 +1,30 @@
-# tdesign-pro-components
+## 0.0.0 (2026-01-09)
 
-## 0.0.0-alpha-20260109054218
+* build: 加入版本控制工具 ([2ad0b22](https://github.com/wehuss/tdesign-pro-components/commit/2ad0b22))
+* chore: 格式化代码 ([f72ab11](https://github.com/wehuss/tdesign-pro-components/commit/f72ab11))
+* chore: 格式化代码 ([e0e415a](https://github.com/wehuss/tdesign-pro-components/commit/e0e415a))
+* chore(form): 移除addonBefore与addonAfter ([8f8b099](https://github.com/wehuss/tdesign-pro-components/commit/8f8b099))
+* feat: 加入表单 ([ab1f417](https://github.com/wehuss/tdesign-pro-components/commit/ab1f417))
+* feat: 加入分页与请求相关逻辑 ([bd74ac7](https://github.com/wehuss/tdesign-pro-components/commit/bd74ac7))
+* feat: 加入field组件 ([b54bf8d](https://github.com/wehuss/tdesign-pro-components/commit/b54bf8d))
+* feat: 完善form组件 ([959e059](https://github.com/wehuss/tdesign-pro-components/commit/959e059))
+* feat: 完善form组件 ([b7afa0a](https://github.com/wehuss/tdesign-pro-components/commit/b7afa0a))
+* feat: 为field组件加入转发 ([1c78468](https://github.com/wehuss/tdesign-pro-components/commit/1c78468))
+* feat: 优化表格渲染逻辑 ([2385573](https://github.com/wehuss/tdesign-pro-components/commit/2385573))
+* feat: Add a comprehensive suite of ProForm input components and related utilities. ([56e44cb](https://github.com/wehuss/tdesign-pro-components/commit/56e44cb))
+* feat: add ProForm component with new checkbox fields, documentation, and various demo examples. ([06583d8](https://github.com/wehuss/tdesign-pro-components/commit/06583d8))
+* feat: add ProFormItem component for enhanced form field management, including prop filtering, contex ([5679978](https://github.com/wehuss/tdesign-pro-components/commit/5679978))
+* feat: Introduce new ProForm and ProTable components, form utilities, and design specifications. ([a081dcb](https://github.com/wehuss/tdesign-pro-components/commit/a081dcb))
+* feat(field): 加入更多基础组件 ([6230fac](https://github.com/wehuss/tdesign-pro-components/commit/6230fac))
+* feat(pro-form): refactor form components with comprehensive demos and type improvements ([bf5e34d](https://github.com/wehuss/tdesign-pro-components/commit/bf5e34d))
+* feat(table): 加入autoFill属性 ([1a256f4](https://github.com/wehuss/tdesign-pro-components/commit/1a256f4))
+* fix(table): 修复搜索区域spanSize与折叠问题 ([49bd26b](https://github.com/wehuss/tdesign-pro-components/commit/49bd26b))
+* fix(table): 修复搜索无法触发请求问题 ([f29dbb3](https://github.com/wehuss/tdesign-pro-components/commit/f29dbb3))
+* type: 完善ProCloumn的类型 ([a1d6229](https://github.com/wehuss/tdesign-pro-components/commit/a1d6229))
+* first commit ([20ba86a](https://github.com/wehuss/tdesign-pro-components/commit/20ba86a))
 
-### Patch Changes
 
-- chore: add version management toolkit
 
-  - Added Changesets with GitHub changelog generator
-  - Added Conventional Commits support with commitlint
-  - Added Husky git hooks for commit validation
-  - Added GitHub Actions for CI/CD automation
-  - Added release documentation
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.

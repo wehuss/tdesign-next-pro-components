@@ -1,145 +1,172 @@
 # 发布指南
 
-本项目使用 [Changesets](https://github.com/changesets/changesets) 进行版本管理和发布。
+本项目使用 **standard-version** + **GitHub Actions** 进行自动化版本管理和发布。
 
-## 版本管理流程
-
-### 1. 添加 Changeset
-
-当你的 PR 包含需要发布的更改时，请运行：
+## 快速发布
 
 ```bash
-pnpm changeset:add
+# 1. 确保代码已提交，在 main 分支
+git checkout main
+git pull origin main
+
+# 2. 更新版本（自动更新 CHANGELOG + 创建 Git tag）
+pnpm version:patch   # 补丁版本 0.0.1 -> 0.0.2
+# 或 pnpm version:minor  次要版本 0.0.1 -> 0.1.0
+# 或 pnpm version:major  主要版本 0.0.1 -> 1.0.0
+
+# 3. 推送代码和 tag（触发自动发布）
+git push --follow-tags origin main
 ```
 
-这将创建一个新的 changeset 文件，描述你的更改：
+推送 tag 后，GitHub Actions 会自动：
 
-- **patch**: Bug 修复、小改动（0.0.x）
-- **minor**: 新功能、向后兼容的变更（0.x.0）
-- **major**: 破坏性变更（x.0.0）
+1. ✅ 构建项目
+2. ✅ 创建 GitHub Release（附带 CHANGELOG）
+3. ✅ 发布到 npm
 
-### 2. 提交 Changeset
+## 详细流程
 
-将生成的 `.changeset/*.md` 文件提交到你的 PR 中。
+### 本地发布流程
 
-### 3. 版本更新
-
-当 PR 合并到 main 分支后，CI 会自动：
-
-1. 创建一个 "Version Packages" PR，汇总所有 changesets
-2. 合并该 PR 后自动发布到 npm
-
-## 手动发布
-
-如需手动发布，请按以下步骤操作：
-
-```bash
-# 1. 运行发布前检查
-pnpm release:check
-
-# 2. 更新版本号和 CHANGELOG
-pnpm changeset:version
-
-# 3. 提交版本更改
-git add .
-git commit -m "chore: version packages"
-
-# 4. 发布到 npm
-pnpm release
 ```
+┌─────────────────────────────────────┐
+│ 1. pnpm version:patch/minor/major  │
+│    - 更新 package.json 版本号       │
+│    - 生成/更新 CHANGELOG.md         │
+│    - 创建 Git commit                │
+│    - 创建 Git tag (v0.x.x)         │
+└────────────────┬────────────────────┘
+                 ▼
+┌─────────────────────────────────────┐
+│ 2. git push --follow-tags origin   │
+│    推送代码和 tag 到 GitHub         │
+└────────────────┬────────────────────┘
+                 ▼
+┌─────────────────────────────────────┐
+│ 3. GitHub Actions 自动触发          │
+│    - 构建项目                       │
+│    - 创建 GitHub Release            │
+│    - 发布到 npm                     │
+└─────────────────────────────────────┘
+```
+
+### GitHub Actions 工作流
+
+| 工作流  | 触发条件           | 执行内容                            |
+| ------- | ------------------ | ----------------------------------- |
+| CI      | PR 或 push 到 main | Lint, Type Check, Build, Test       |
+| Release | push tag `v*`      | 构建, 创建 GitHub Release, 发布 npm |
+
+## 配置要求
+
+### 1. 配置 NPM_TOKEN
+
+在 GitHub 仓库设置中添加 Secret：
+
+1. 访问 [npm](https://www.npmjs.com/) → Access Tokens → Generate New Token
+2. 选择 **Automation** 类型
+3. 在 GitHub 仓库 → Settings → Secrets and variables → Actions
+4. 添加 `NPM_TOKEN`，值为上一步生成的 token
+
+### 2. GitHub Token
+
+`GITHUB_TOKEN` 由 GitHub Actions 自动提供，无需额外配置。
+
+## 常用命令
+
+| 命令                 | 说明                      |
+| -------------------- | ------------------------- |
+| `pnpm version:patch` | 发布补丁版本 (Bug 修复)   |
+| `pnpm version:minor` | 发布次要版本 (新功能)     |
+| `pnpm version:major` | 发布主要版本 (破坏性变更) |
+| `pnpm version:alpha` | 发布 alpha 预发布版本     |
+| `pnpm version:beta`  | 发布 beta 预发布版本      |
+| `pnpm changelog`     | 仅生成 CHANGELOG          |
+| `pnpm release:dry`   | 预览发布内容              |
 
 ## 预发布版本
 
-### Alpha 版本
-
 ```bash
+# Alpha 版本 (0.1.0 -> 0.1.1-alpha.0)
 pnpm version:alpha
-pnpm publish:alpha
+git push --follow-tags origin main
+
+# Beta 版本 (0.1.0 -> 0.1.1-beta.0)
+pnpm version:beta
+git push --follow-tags origin main
 ```
 
-### Beta 版本
+用户安装预发布版本：
 
 ```bash
-pnpm version:beta
-pnpm publish:beta
+npm install tdesign-pro-components@alpha
+npm install tdesign-pro-components@beta
 ```
 
 ## Commit 规范
 
-本项目使用 [Conventional Commits](https://www.conventionalcommits.org/) 规范。
-
-### 格式
+使用 [Conventional Commits](https://www.conventionalcommits.org/) 规范：
 
 ```
 <type>(<scope>): <subject>
-
-<body>
-
-<footer>
 ```
 
-### 类型
+### 类型说明
 
-| Type     | 说明                   |
-| -------- | ---------------------- |
-| feat     | 新功能                 |
-| fix      | Bug 修复               |
-| docs     | 文档变更               |
-| style    | 代码格式（不影响功能） |
-| refactor | 重构                   |
-| perf     | 性能优化               |
-| test     | 测试相关               |
-| build    | 构建系统变更           |
-| ci       | CI 配置变更            |
-| chore    | 其他变更               |
-| revert   | 回滚                   |
-| release  | 发布                   |
+| Type     | 说明      | 版本影响 |
+| -------- | --------- | -------- |
+| feat     | 新功能    | minor    |
+| fix      | Bug 修复  | patch    |
+| perf     | 性能优化  | patch    |
+| docs     | 文档更新  | -        |
+| style    | 代码格式  | -        |
+| refactor | 重构      | -        |
+| test     | 测试      | -        |
+| chore    | 构建/工具 | -        |
+| ci       | CI 配置   | -        |
+| build    | 构建系统  | -        |
+| revert   | 回滚      | patch    |
 
-### 示例
+### 破坏性变更
 
-```
-feat(ProTable): add autoFill prop for auto-height
-
-fix(ProForm): resolve form validation issue
-
-docs: update README with new examples
-```
-
-## 查看版本状态
-
-查看当前待发布的 changesets：
+在 commit 消息中添加 `BREAKING CHANGE:` 触发 major 版本：
 
 ```bash
-pnpm changeset:status
+git commit -m "feat(ProTable)!: rename onRowClick to onClickRow
+
+BREAKING CHANGE: onRowClick prop has been renamed to onClickRow"
 ```
 
-## 常见问题
+## 手动发布到 npm
 
-### Q: 什么时候需要添加 changeset？
+如果需要手动发布（不通过 GitHub Actions）：
 
-当你的更改会影响到库的使用者时，需要添加 changeset。以下情况通常需要：
+```bash
+# 1. 构建
+pnpm build
 
-- 新增功能
-- 修复 Bug
-- API 变更
-- 性能优化
+# 2. 发布
+npm publish --access public
+```
 
-以下情况通常不需要：
+## 故障排除
 
-- 仅更新文档
-- 仅更新开发工具配置
-- 仅更新测试代码
+### Release workflow 失败
 
-### Q: 如何选择版本类型？
+1. **NPM_TOKEN 未配置**：检查 GitHub Secrets
+2. **包名已存在**：检查 npm 上是否已有同名包
+3. **版本号已存在**：确保版本号未被使用
 
-- **patch**: 向后兼容的 Bug 修复
-- **minor**: 向后兼容的新功能
-- **major**: 破坏性变更（需要用户修改代码才能升级）
+### CHANGELOG 未生成
 
-### Q: commit 被拒绝了怎么办？
+确保 commit message 符合 Conventional Commits 规范。
 
-如果 commit 因为格式不符合规范被拒绝，请检查：
+### Tag 未推送
 
-1. type 是否为允许的类型（feat, fix, docs 等）
-2. 格式是否正确：`type(scope): subject`
-3. subject 是否以小写字母开头
+```bash
+# 推送所有 tag
+git push origin --tags
+
+# 推送特定 tag
+git push origin v0.1.0
+```
