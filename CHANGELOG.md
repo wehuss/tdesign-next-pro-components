@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.1-alpha.1](https://github.com/wehuss/tdesign-pro-components/compare/v0.0.1-alpha.0...v0.0.1-alpha.1) (2026-01-09)
+
+
+### Bug Fixes
+
+* normalize file casing in git index ([bcb92da](https://github.com/wehuss/tdesign-pro-components/commit/bcb92dacd8e9e15932e3c1d88999f388bd7ade85))
+
 ### 0.0.1-alpha.0 (2026-01-09)
 
 
