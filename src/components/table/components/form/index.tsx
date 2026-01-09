@@ -110,6 +110,9 @@ export default defineComponent({
     const internalFormRef = ref();
     const isFirstLoad = ref(true);
 
+    // 表单数据 ref - 用于存储表单值
+    const formData = ref<Record<string, any>>({});
+
     // 监听 formRef
     watch(
       () => internalFormRef.value,
@@ -133,14 +136,29 @@ export default defineComponent({
       genFormItemsFromColumns(props.columns, props.type)
     );
 
+    // 根据 column.form.defaultValue 初始化 formData
+    watch(
+      formItems,
+      (items) => {
+        const defaultData: Record<string, any> = {};
+        items.forEach(({ key, column }) => {
+          const form = column.form;
+          if (form?.defaultValue !== undefined) {
+            defaultData[key] = form.defaultValue;
+          }
+        });
+        // 合并默认值，保留已有值
+        formData.value = { ...defaultData, ...formData.value };
+      },
+      { immediate: true }
+    );
+
     // 处理提交
-    const handleSubmit = (values: Record<string, any>) => {
-      console.log("handleSubmit");
+    const handleSubmit = (_values: Record<string, any>) => {
       const firstLoad = isFirstLoad.value;
       isFirstLoad.value = false;
 
-      emit("submit", values, firstLoad);
-      props.onSubmit?.(values, firstLoad);
+      emit("submit", { ...formData.value }, firstLoad);
     };
 
     // 处理重置
@@ -171,7 +189,7 @@ export default defineComponent({
             key={key}
             name={column.colKey}
             label={column.title as string}
-            valueType={valueType as string}
+            valueType={valueType as "text"}
             valueEnum={form?.valueEnum || column.valueEnum}
             fieldProps={form?.fieldProps}
             formItemProps={form}
@@ -180,6 +198,7 @@ export default defineComponent({
             required={form?.required}
             disabled={form?.disabled}
             readonly={form?.readonly}
+            v-model={formData.value[column.colKey as string]}
           />
         ) as VNode;
       });
@@ -205,6 +224,7 @@ export default defineComponent({
         <FormComponent
           ref={internalFormRef}
           {...searchConfig}
+          data={formData.value}
           submitButtonProps={{
             loading: props.loading,
             ...(searchConfig as any).submitButtonProps,

@@ -15,6 +15,7 @@ import {
   watch,
 } from "vue";
 import { BaseForm } from "../base-form/base-form";
+import { FlexCol, FlexRow } from "../helpers/flex-grid";
 import "./style.less";
 
 // 配置表单列变化的容器宽度断点
@@ -56,6 +57,8 @@ export interface QueryFilterProps {
   // 查询表单特有属性
   defaultCollapsed?: boolean;
   collapsed?: boolean;
+  /** 表单数据 */
+  data?: Record<string, any>;
   collapseRender?:
     | ((
         collapsed: boolean,
@@ -203,6 +206,10 @@ export const QueryFilter = defineComponent({
     },
     onReset: {
       type: Function,
+    },
+    data: {
+      type: Object,
+      default: undefined,
     },
   },
   emits: ["update:collapsed", "collapse", "search", "reset", "finish"],
@@ -376,17 +383,9 @@ export const QueryFilter = defineComponent({
         const itemKey = item?.key || item?.props?.name || index;
 
         return (
-          <div
-            key={itemKey}
-            class={[
-              "pro-query-filter-col",
-              `pro-query-filter-col-${colSpan}`,
-              "pro-query-filter-row-split",
-            ]}
-            style={{ display: hidden ? "none" : undefined }}
-          >
+          <FlexCol key={itemKey} span={colSpan} hidden={hidden}>
             {item}
-          </div>
+          </FlexCol>
         );
       });
 
@@ -468,27 +467,19 @@ export const QueryFilter = defineComponent({
           : null;
 
       return (
-        <div class="pro-query-filter-row">
+        <FlexRow gap={24} class="pro-query-filter-row">
           {processedItems}
           {actionsNode && (
-            <div
-              key="submitter"
-              class={[
-                "pro-query-filter-col",
-                `pro-query-filter-col-${submitterSpan}`,
-                offset > 0 ? `pro-query-filter-col-offset-${offset}` : "",
-              ]}
-              style={{ textAlign: "end" }}
-            >
-              <FormItem label=" " class="pro-query-filter-actions">
+            <FlexCol key="submitter" span={submitterSpan} offset={offset}>
+              <FormItem labelWidth={0} class="pro-query-filter-actions">
                 <Space>
                   {actionsNode}
                   {collapseButton}
                 </Space>
               </FormItem>
-            </div>
+            </FlexCol>
           )}
-        </div>
+        </FlexRow>
       );
     };
 
@@ -503,6 +494,7 @@ export const QueryFilter = defineComponent({
           layout={spanSize.value.layout as "vertical" | "inline"}
           isKeyPressSubmit
           class="pro-query-filter"
+          data={props.data}
           onFinish={handleSearch}
           onReset={handleReset}
           contentRender={contentRender}

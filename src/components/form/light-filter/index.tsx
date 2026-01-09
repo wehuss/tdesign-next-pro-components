@@ -31,6 +31,8 @@ export interface LightFilterProps {
   size?: "small" | "medium" | "large";
   /** 初始值 */
   initialValues?: Record<string, any>;
+  /** 表单数据 */
+  data?: Record<string, any>;
   // 事件回调
   onFinish?: (values: any) => void;
   onReset?: () => void;
@@ -79,6 +81,10 @@ export const LightFilter = defineComponent({
     },
     onValuesChange: {
       type: Function,
+    },
+    data: {
+      type: Object,
+      default: undefined,
     },
   },
   emits: ["finish", "reset", "valuesChange"],
@@ -307,6 +313,7 @@ export const LightFilter = defineComponent({
       <BaseForm
         ref={formRef}
         contentRender={contentRender}
+        data={props.data}
         formItemProps={{
           labelAlign: "left",
         }}

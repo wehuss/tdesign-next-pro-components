@@ -464,9 +464,6 @@ export const BaseForm = defineComponent({
       resetFieldsToInitial: fieldManager.resetFieldsToInitial,
     });
 
-    const test = () => {
-      console.log("test", formRef);
-    };
     return () => {
       const items = slots.default?.();
 
@@ -478,7 +475,6 @@ export const BaseForm = defineComponent({
               {...(typeof props.submitter === "object" ? props.submitter : {})}
               onSubmit={() => {
                 formRef.value?.submit();
-                test();
               }}
               onReset={handleReset}
               submitButtonProps={{

@@ -27,6 +27,7 @@ const generateData = (page: number, pageSize: number) => {
 }
 
 const request = async (params: { current: number; pageSize: number }) => {
+  // console.log('请求参数:', params)
   // 模拟请求延迟
   await new Promise((resolve) => setTimeout(resolve, 300))
 
