@@ -52,13 +52,11 @@ export default defineComponent({
         <Dropdown
           options={densityOptions.map((opt) => ({
             ...opt,
-            // 标记当前选中项
+            // 标记当前选中项 - prefixIcon 需要是渲染函数
             prefixIcon:
-              opt.value === props.tableSize ? (
-                <span style={{ color: 'var(--td-brand-color)' }}>✓</span>
-              ) : (
-                <span style={{ width: '14px', display: 'inline-block' }} />
-              ),
+              opt.value === props.tableSize
+                ? () => <span style={{ color: 'var(--td-brand-color)' }}>✓</span>
+                : () => <span style={{ width: '14px', display: 'inline-block' }} />,
           }))}
           onClick={handleClick}
           trigger="click"

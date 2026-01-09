@@ -139,8 +139,9 @@ const CellRenderToFormItem = defineComponent({
       return props.index ?? 0
     })
 
-    // 计算表单项名称路径（保留用于后续可编辑表格功能）
-    const _formItemName = computed(() => {
+    // 表单项名称路径生成函数（保留用于后续可编辑表格功能）
+    // 当需要时可调用此函数获取 formItemName
+    const _getFormItemName = () => {
       const key = props.recordKey ?? props.index
       const columnKey = props.columnProps?.colKey ?? props.index
 
@@ -150,7 +151,9 @@ const CellRenderToFormItem = defineComponent({
         props.prefixName ? realIndex.value : key,
         columnKey,
       )
-    })
+    }
+    // 预留使用，避免 TS6133 警告
+    void _getFormItemName
 
     // 计算最终的值和类型
     const finalValue = computed(() => {

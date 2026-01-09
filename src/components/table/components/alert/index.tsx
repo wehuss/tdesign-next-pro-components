@@ -164,9 +164,9 @@ export default defineComponent({
         return null
       }
 
-      // 检查 renderInfo 是否返回 false
-      const infoContent = renderInfo.value
-      if (infoContent === false) {
+      // 检查 renderInfo 是否返回 false（自定义渲染函数可能返回 false）
+      const infoContent = renderInfo.value as VNode | VNode[] | string | null | false
+      if (infoContent === false || infoContent === null) {
         return null
       }
 

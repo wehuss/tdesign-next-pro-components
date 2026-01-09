@@ -2,7 +2,7 @@
  * 将 ProColumns 转换为标准 Table Columns 的核心逻辑
  * 移植自 ant-design/pro-components 适配 TDesign Vue Next
  */
-import type { PrimaryTableCol, TableRowData } from 'tdesign-vue-next'
+import type { PrimaryTableCellParams, PrimaryTableCol, TableRowData, TNode } from 'tdesign-vue-next'
 import type { ActionRef, ColumnsState, ProTableColumn } from '../types'
 import { columnRender } from './column-render'
 import { columnSort } from './column-sort'
@@ -224,7 +224,7 @@ export function genProColumnToColumn<T extends TableRowData>(
         // 处理排序
         sorter: sorterConfig,
         // 自定义渲染
-        cell: (_, { row, rowIndex }) => {
+        cell: ((_h, { row, rowIndex }) => {
           // 获取行的唯一 key
           let keyName: string | number | symbol = rowKey as string
           if (typeof rowKey === 'function') {
@@ -270,7 +270,7 @@ export function genProColumnToColumn<T extends TableRowData>(
             subName: uniqueKey ? subNameRecord.get(uniqueKey) : undefined,
             marginSM,
           })
-        },
+        }) as TNode<PrimaryTableCellParams<T>>,
         // 处理子列
         children: children
           ? genProColumnToColumn(

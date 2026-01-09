@@ -170,7 +170,7 @@ export const runFunction = <T, U extends unknown[]>(
  */
 export function columnRender<T extends TableRowData = TableRowData>(
   config: ColumnRenderInterface<T>,
-): unknown {
+): VNode | null {
   const {
     columnProps,
     text,
@@ -265,8 +265,8 @@ export function columnRender<T extends TableRowData = TableRowData>(
     rowData,
     index,
     {
-      ...(actionRef ?? {}),
-      ...(editableUtils ?? {}),
+      ...actionRef,
+      ...editableUtils,
     },
     {
       ...columnProps,

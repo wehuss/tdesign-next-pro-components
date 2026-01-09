@@ -1,5 +1,5 @@
 import { Dialog } from 'tdesign-vue-next'
-import type { VNode } from 'vue'
+import type { PropType, VNode } from 'vue'
 import { cloneVNode, defineComponent, ref, watch } from 'vue'
 import { BaseForm } from '../base-form/base-form'
 import type { SubmitterProps } from '../base-form/submitter'
@@ -76,22 +76,22 @@ export const ModalForm = defineComponent({
       default: () => ({}),
     },
     onOpenChange: {
-      type: Function as () => (open: boolean) => void,
+      type: Function as PropType<(open: boolean) => void>,
     },
     onVisibleChange: {
-      type: Function as () => (visible: boolean) => void,
+      type: Function as PropType<(visible: boolean) => void>,
     },
     onCancel: {
-      type: Function as () => () => void,
+      type: Function as PropType<() => void>,
     },
     onOk: {
-      type: Function as () => () => void,
+      type: Function as PropType<() => void>,
     },
     onFinish: {
-      type: Function as () => (values: any) => Promise<any>,
+      type: Function as PropType<(values: any) => Promise<any>>,
     },
     submitter: {
-      type: [Object, Boolean] as () => SubmitterProps | false,
+      type: [Object, Boolean] as PropType<SubmitterProps | false>,
       default: undefined,
     },
   },
@@ -105,7 +105,9 @@ export const ModalForm = defineComponent({
     'finish',
     'finishFailed',
   ],
-  setup(props, { slots, emit, expose }) {
+  setup(_props, { slots, emit, expose }) {
+    // 类型断言以解决 TypeScript 无法从展开的 props 推断类型的问题
+    const props = _props as unknown as ModalFormProps
     const formRef = ref()
     const footerRef = ref<HTMLDivElement | null>(null)
     // 支持 open 和 visible 两种属性
@@ -286,15 +288,17 @@ export const ModalForm = defineComponent({
           onClose={handleCancel}
           onClosed={handleAfterClose}
           footer={
-            props.submitter !== false ? (
-              <div
-                ref={footerRef}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'flex-end',
-                }}
-              />
-            ) : null
+            props.submitter !== false
+              ? () => (
+                  <div
+                    ref={footerRef}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                    }}
+                  />
+                )
+              : false
           }
         >
           <BaseForm
