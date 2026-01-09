@@ -169,6 +169,11 @@ const ProTable = defineComponent({
       type: String,
       default: "-",
     },
+    // 自动填充剩余高度
+    autoFill: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   emits: [
@@ -546,6 +551,7 @@ const ProTable = defineComponent({
         <EnhancedTable
           {...attrs}
           {...listeners}
+          height={props.autoFill ? "100%" : undefined}
           bordered
           data={action._refs.dataSource.value}
           columns={tableColumns.value}
@@ -583,7 +589,13 @@ const ProTable = defineComponent({
       // 卡片包装
       if (ghost) {
         return (
-          <div class="t-pro-table t-pro-table-ghost">
+          <div
+            class={[
+              "t-pro-table",
+              "t-pro-table-ghost",
+              props.autoFill ? "t-pro-table-autofill" : "",
+            ]}
+          >
             {searchNode}
             {toolbarNode}
             {alertNode}
@@ -593,7 +605,9 @@ const ProTable = defineComponent({
       }
 
       return (
-        <div class="t-pro-table">
+        <div
+          class={["t-pro-table", props.autoFill ? "t-pro-table-autofill" : ""]}
+        >
           {searchNode && (
             <Card bordered={cardBordered} class="t-pro-table-search">
               {searchNode}

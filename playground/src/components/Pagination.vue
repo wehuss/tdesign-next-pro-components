@@ -43,6 +43,7 @@ const request = async (params: { current: number; pageSize: number }) => {
 
 <template>
   <ProTable
+  auto-fill
     :columns="columns"
     :request="request"
     row-key="id"

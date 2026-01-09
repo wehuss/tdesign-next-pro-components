@@ -16,7 +16,9 @@ export default defineComponent({
         <p>This is a development playground for testing components.</p>
         <Divider>基础组件测试</Divider>
         <FieldMoney modelValue={123} mode="edit" />
-        <Pagination />
+        <div style="height:1000px">
+          <Pagination />
+        </div>
       </div>
     );
   },
