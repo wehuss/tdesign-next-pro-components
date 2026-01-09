@@ -3,8 +3,8 @@ import type { ProTableColumn } from '@/components/table'
 import ProTable from '@/components/table'
 
 const columns: ProTableColumn[] = [
-  { title: '姓名', colKey: 'name', width: 120,form:{valueType:'text'} },
-  { title: '年龄', colKey: 'age', width: 80,form:{valueType:'text'} },
+  { title: '姓名', colKey: 'name', width: 120, form: { valueType: 'text' } },
+  { title: '年龄', colKey: 'age', width: 80, form: { valueType: 'text' } },
   { title: '邮箱', colKey: 'email', width: 200 },
   { title: '地址', colKey: 'address' },
 ]
@@ -43,7 +43,7 @@ const request = async (params: { current: number; pageSize: number }) => {
 
 <template>
   <ProTable
-  auto-fill
+    auto-fill
     :columns="columns"
     :request="request"
     row-key="id"

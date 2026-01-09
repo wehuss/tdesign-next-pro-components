@@ -3,82 +3,69 @@ import type {
   PaginationProps,
   PrimaryTableCol,
   TableRowData,
-} from "tdesign-vue-next";
-import type { Ref, VNode } from "vue";
-import type { ProFieldValueEnumType, ProFieldValueType } from "../field/types";
-import type { ProFormItemProps } from "../form/components";
+} from 'tdesign-vue-next'
+import type { Ref, VNode } from 'vue'
+import type { ProFieldValueEnumType, ProFieldValueType } from '../field/types'
+import type { ProFormItemProps } from '../form/components'
 
-export type ProNode = string | ((...args: unknown[]) => VNode);
+export type ProNode = string | ((...args: unknown[]) => VNode)
 
 // 基础数据类型
 export interface RequestData<T = Record<string, unknown>> {
-  data: T[];
-  success?: boolean;
-  total?: number;
-  errorMessage?: string;
-  [key: string]: unknown;
+  data: T[]
+  success?: boolean
+  total?: number
+  errorMessage?: string
+  [key: string]: unknown
 }
 
 export interface PaginationParams {
-  current: number;
-  pageSize: number;
-  total?: number;
+  current: number
+  pageSize: number
+  total?: number
 }
 
 export interface RequestParams extends PaginationParams {
-  [key: string]: unknown;
+  [key: string]: unknown
 }
 
 // 排序信息
 export interface SortInfo {
-  [key: string]: "asc" | "desc" | null;
+  [key: string]: 'asc' | 'desc' | null
 }
 
 // 筛选信息
 export interface FilterInfo {
-  [key: string]: (string | number)[] | null;
-}
-
-export interface ProTableColumnFormItem extends ProFormItemProps {
-  valueEnum?: ProFieldValueEnumType;
-  render?: VNode;
-  fieldProps?: Record<string, unknown>;
-  defaultValue?: unknown | (() => unknown);
-  order?: number;
+  [key: string]: (string | number)[] | null
 }
 
 // 列配置类型
-export interface ProTableColumn<T extends TableRowData = TableRowData>
-  extends Omit<PrimaryTableCol<T>, "render"> {
+export interface ProTableColumn<T extends TableRowData = TableRowData> extends Omit<
+  PrimaryTableCol<T>,
+  'render'
+> {
   // ProTable 扩展属性
-  valueType?:
-    | ProFieldValueType
-    | ((record?: T, type?: string) => ProFieldValueType);
-  valueEnum?: ProFieldValueEnumType;
+  valueType?: ProFieldValueType | ((record?: T, type?: string) => ProFieldValueType)
+  valueEnum?: ProFieldValueEnumType
 
   // 显示控制
-  hideInTable?: boolean;
+  hideInTable?: boolean
   // hideInForm?: boolean
   // hideInSearch?: boolean
   form?: ProTableColumnFormItem & {
-    searchForm?: false | ProTableColumnFormItem;
-    updateForm?: false | ProTableColumnFormItem;
-    createForm?: false | ProTableColumnFormItem;
-  };
+    searchForm?: false | ProTableColumnFormItem
+    updateForm?: false | ProTableColumnFormItem
+    createForm?: false | ProTableColumnFormItem
+  }
 
   // 编辑相关
-  editable?: boolean | ((text: unknown, record: T, index: number) => boolean);
+  editable?: boolean | ((text: unknown, record: T, index: number) => boolean)
 
   // 复制功能
-  copyable?: boolean;
+  copyable?: boolean
 
   // 文本渲染处理
-  renderText?: (
-    text: unknown,
-    record: T,
-    index: number,
-    action?: unknown
-  ) => unknown;
+  renderText?: (text: unknown, record: T, index: number, action?: unknown) => unknown
 
   // 自定义渲染 - 重新定义与 PrimaryTableCol 不同的签名
   render?: (
@@ -86,25 +73,25 @@ export interface ProTableColumn<T extends TableRowData = TableRowData>
     record: T,
     index: number,
     action?: unknown,
-    schema?: unknown
-  ) => VNode | null;
+    schema?: unknown,
+  ) => VNode | null
 
   // 表单项渲染
   formItemRender?: (
     schema: unknown,
     config: {
-      defaultRender: () => VNode;
-      type: string;
-      recordKey?: string | number;
-      record?: T;
-      isEditable?: boolean;
+      defaultRender: () => VNode
+      type: string
+      recordKey?: string | number
+      record?: T
+      isEditable?: boolean
     },
     form?: unknown,
-    editableUtils?: unknown
-  ) => VNode | false | null;
+    editableUtils?: unknown,
+  ) => VNode | false | null
 
   // 索引标识
-  index?: number;
+  index?: number
 
   // 搜索相关
   // search?: boolean | SearchColumnConfig
@@ -114,120 +101,128 @@ export interface ProTableColumn<T extends TableRowData = TableRowData>
   // fieldProps?: Record<string, unknown>
 }
 
+export interface ProTableColumnFormItem extends ProFormItemProps {
+  valueEnum?: ProFieldValueEnumType
+  render?: VNode
+  fieldProps?: Record<string, unknown>
+  defaultValue?: unknown | (() => unknown)
+  order?: number
+}
+
 // 列状态配置
 export interface ColumnsState {
-  show?: boolean;
-  fixed?: "left" | "right";
-  order?: number;
-  disable?: boolean;
+  show?: boolean
+  fixed?: 'left' | 'right'
+  order?: number
+  disable?: boolean
 }
 
 // 搜索配置
 export interface SearchConfig {
-  labelWidth?: number | "auto";
-  span?: number;
-  collapsed?: boolean;
-  defaultCollapsed?: boolean;
-  collapseRender?: boolean | ((collapsed: boolean) => VNode);
-  searchText?: string;
-  resetText?: string;
-  submitText?: string;
-  showHiddenNum?: boolean;
+  labelWidth?: number | 'auto'
+  span?: number
+  collapsed?: boolean
+  defaultCollapsed?: boolean
+  collapseRender?: boolean | ((collapsed: boolean) => VNode)
+  searchText?: string
+  resetText?: string
+  submitText?: string
+  showHiddenNum?: boolean
+  /** 过滤器类型：query=查询过滤器, light=轻量过滤器 */
+  filterType?: 'query' | 'light'
   optionRender?:
     | boolean
-    | ((
-        searchConfig: SearchConfig,
-        formProps: unknown,
-        dom: VNode[]
-      ) => VNode[]);
-  onCollapse?: (collapsed: boolean) => void;
+    | ((searchConfig: SearchConfig, formProps: unknown, dom: VNode[]) => VNode[])
+  onCollapse?: (collapsed: boolean) => void
 }
 
 // 工具栏配置
 export interface ToolbarConfig {
-  title?: string;
-  subTitle?: string;
-  tooltip?: string;
-  search?: boolean | SearchProps;
-  actions?: VNode[];
-  settings?: ToolbarSetting[];
-  filter?: VNode;
-  multipleLine?: boolean;
+  title?: string
+  subTitle?: string
+  tooltip?: string
+  search?: boolean | SearchProps
+  actions?: VNode[]
+  settings?: ToolbarSetting[]
+  filter?: VNode
+  multipleLine?: boolean
 }
 
 export interface SearchProps {
-  placeholder?: string;
-  onSearch?: (value: string) => void;
+  placeholder?: string
+  onSearch?: (value: string) => void
 }
 
 export interface ToolbarSetting {
-  icon?: VNode;
-  tooltip?: string;
-  key?: string;
-  onClick?: (key?: string) => void;
+  icon?: VNode
+  tooltip?: string
+  key?: string
+  onClick?: (key?: string) => void
 }
 
 // 操作引用类型
 export interface ActionRef {
-  reload: (resetPageIndex?: boolean) => Promise<void>;
-  reloadAndReset: () => Promise<void>;
-  reset: () => void;
-  clearSelected?: () => void;
-  setPageInfo: (pageInfo: Partial<PaginationParams>) => void;
-  setSortInfo?: (sortInfo: SortInfo) => void;
-  setFilterInfo?: (filterInfo: FilterInfo) => void;
+  reload: (resetPageIndex?: boolean) => Promise<void>
+  reloadAndReset: () => Promise<void>
+  reset: () => void
+  clearSelected?: () => void
+  setPageInfo: (pageInfo: Partial<PaginationParams>) => void
+  setSortInfo?: (sortInfo: SortInfo) => void
+  setFilterInfo?: (filterInfo: FilterInfo) => void
 }
 
 // ProTable 主要属性类型
-export interface ProTableProps<T extends TableRowData = TableRowData>
-  extends Omit<EnhancedTableProps, "columns" | "pagination"> {
+export interface ProTableProps<T extends TableRowData = TableRowData> extends Omit<
+  EnhancedTableProps,
+  'columns' | 'pagination'
+> {
   // 数据相关
   request?: (
     params: T & RequestParams,
     sort?: SortInfo,
-    filter?: FilterInfo
-  ) => Promise<RequestData<T>>;
-  dataSource?: T[];
-  params?: Partial<T>;
-  postData?: (data: T[]) => T[];
-  defaultData?: T[];
+    filter?: FilterInfo,
+  ) => Promise<RequestData<T>>
+  dataSource?: T[]
+  params?: Partial<T>
+  postData?: (data: T[]) => T[]
+  defaultData?: T[]
 
   // 回调函数
-  onLoad?: (dataSource: T[], extra: unknown) => void;
-  onRequestError?: (error: Error) => void;
-  onDataSourceChange?: (dataSource: T[]) => void;
+  onLoad?: (dataSource: T[], extra: unknown) => void
+  onRequestError?: (error: Error) => void
+  onDataSourceChange?: (dataSource: T[]) => void
 
   // 请求控制
-  manual?: boolean;
-  manualRequest?: boolean;
-  debounceTime?: number;
-  polling?: number | boolean;
-  revalidateOnFocus?: boolean;
+  manual?: boolean
+  manualRequest?: boolean
+  debounceTime?: number
+  polling?: number | boolean
+  revalidateOnFocus?: boolean
 
   // 列配置
-  columns: ProTableColumn<T>[];
+  columns: ProTableColumn<T>[]
 
   // 搜索表单
-  search?: boolean | SearchConfig;
+  search?: boolean | SearchConfig
 
   // 工具栏
-  toolbar?: boolean | ToolbarConfig;
-  toolbarRender?: (actionRef: Ref<ActionRef>) => VNode;
+  toolbar?: boolean | ToolbarConfig
+  toolbarRender?: (actionRef: Ref<ActionRef>) => VNode
 
   // 卡片配置
-  cardBordered?: boolean;
-  ghost?: boolean;
+  cardBordered?: boolean
+  ghost?: boolean
 
   // 标题相关
-  headerTitle?: string;
-  tooltip?: string;
+  headerTitle?: string
+  tooltip?: string
 
   // 分页
-  pagination?: boolean | PaginationProps;
+  pagination?: boolean | PaginationProps
 
   // 其他属性
-  loading?: boolean;
-  rowKey: string;
+  loading?: boolean
+  rowKey: string
   // 继承 Table 的其他属性
-  [key: string]: unknown;
+  [key: string]: unknown
 }

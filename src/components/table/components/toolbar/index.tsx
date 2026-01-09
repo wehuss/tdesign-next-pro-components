@@ -8,14 +8,14 @@ import {
   FullscreenExitIcon,
   FullscreenIcon,
   RefreshIcon,
-  SettingIcon,
   ViewListIcon,
 } from 'tdesign-icons-vue-next'
 import { Button, Dropdown, Input, Space, Tooltip, type DropdownOption } from 'tdesign-vue-next'
 import type { PropType, VNode } from 'vue'
-import { computed, defineComponent, ref, useModel } from 'vue'
-import type { ActionRef, ProTableColumn, ToolbarConfig } from '../../types'
+import { computed, defineComponent, ref } from 'vue'
+import type { ActionRef, ColumnsState, ProTableColumn, ToolbarConfig } from '../../types'
 import { renderProNode } from '../../utils/node'
+import ColumnSetting from '../column-setting'
 import './style.less'
 
 // 设置项类型
@@ -110,20 +110,23 @@ export default defineComponent({
       type: String as PropType<DensityType>,
       default: 'medium',
     },
+    // 列状态映射
+    columnsMap: {
+      type: Object as PropType<Record<string, ColumnsState>>,
+      default: () => ({}),
+    },
+    // 列状态变化回调
+    onColumnsMapChange: {
+      type: Function as PropType<(map: Record<string, ColumnsState>) => void>,
+    },
   },
 
   emits: ['update:columnControllerVisible', 'update:density'],
 
   setup(props, { emit }) {
-    const columnControllerVisible = useModel(props, 'columnControllerVisible')
     const currentDensity = ref<DensityType>(props.density)
     const isFullScreen = ref(false)
     const searchValue = ref('')
-
-    // 切换列控制器可见性
-    const toggleColumnControllerVisible = () => {
-      columnControllerVisible.value = !columnControllerVisible.value
-    }
 
     // 处理刷新
     const handleReload = () => {
@@ -252,14 +255,12 @@ export default defineComponent({
       // 列设置按钮
       if (options.setting !== false) {
         settings.push(
-          <Tooltip content="列设置" key="setting">
-            <Button
-              variant="text"
-              shape="square"
-              icon={() => <SettingIcon />}
-              onClick={toggleColumnControllerVisible}
-            />
-          </Tooltip>,
+          <ColumnSetting
+            key="setting"
+            columns={props.columns || []}
+            columnsMap={props.columnsMap}
+            onColumnsMapChange={props.onColumnsMapChange}
+          />,
         )
       }
 

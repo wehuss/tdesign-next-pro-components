@@ -20,6 +20,7 @@
     "type": "git",
     "url": "https://github.com/wehuss/tdesign-pro-components.git"
   },
+  "style": "dist/tdesign-pro-components.css",
   "files": [
     "dist",
     "package.json",
@@ -28,7 +29,6 @@
   "type": "module",
   "main": "dist/index.cjs.js",
   "module": "dist/index.es.js",
-  "style": "dist/tdesign-pro-components.css",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {

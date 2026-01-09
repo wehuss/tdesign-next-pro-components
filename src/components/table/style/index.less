@@ -28,7 +28,7 @@
   }
 
   .t-pro-table-content {
-    &>.t-card__body {
+    & > .t-card__body {
       display: flex;
       flex-direction: column;
       gap: var(--td-comp-paddingTB-l);
@@ -111,14 +111,14 @@
     flex-direction: column;
     min-height: 0;
 
-    >.t-card__body {
+    > .t-card__body {
       height: 100%;
       flex: 1;
       display: flex;
       flex-direction: column;
       min-height: 0;
 
-      >.t-table {
+      > .t-table {
         flex: 1;
         display: flex;
         flex-direction: column;
@@ -130,7 +130,6 @@
 
 // Ghost 模式样式
 .t-pro-table-ghost {
-
   .t-pro-table-search,
   .t-pro-table-content {
     background: transparent;

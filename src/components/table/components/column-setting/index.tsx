@@ -8,7 +8,7 @@ import { ChevronDownIcon, ChevronUpIcon, LockOnIcon, SettingIcon } from 'tdesign
 import {
   Button,
   Checkbox,
-  Popover,
+  Popup,
   Space,
   Tooltip,
   Tree,
@@ -126,12 +126,19 @@ export default defineComponent({
     }
 
     // 处理列显示/隐藏
-    const handleColumnCheck = (checkedKeys: TreeNodeValue[], context: { node: TreeNodeModel }) => {
+    const handleColumnChange = (
+      value: TreeNodeValue[],
+      context: {
+        node: TreeNodeModel
+        e?: any
+        trigger: 'node-click' | 'setItem'
+      },
+    ) => {
       const key = context.node.value as string
       const newMap = { ...localColumnsMap.value }
       newMap[key] = {
         ...newMap[key],
-        show: checkedKeys.includes(key),
+        show: value.includes(key),
       }
       updateColumnsMap(newMap)
     }
@@ -327,13 +334,14 @@ export default defineComponent({
         <div class="t-pro-table-column-setting-list">
           {showTitle && <div class="t-pro-table-column-setting-list-title">{title}</div>}
           <Tree
+            // @ts-expect-error
             data={renderTreeData(list)}
             checkable={props.checkable}
             draggable={props.draggable && list.length > 1}
             value={checkedKeys.value}
             expandAll
             hover
-            onCheck={handleColumnCheck}
+            onChange={handleColumnChange}
             onDrop={handleDrop}
             style={{ maxHeight: `${props.listsHeight}px`, overflow: 'auto' }}
             v-slots={{
@@ -400,7 +408,7 @@ export default defineComponent({
       )
 
       return (
-        <Popover
+        <Popup
           v-model:visible={visible.value}
           trigger="click"
           placement="bottom-right"
@@ -414,7 +422,7 @@ export default defineComponent({
           )}
         >
           {trigger}
-        </Popover>
+        </Popup>
       )
     }
   },

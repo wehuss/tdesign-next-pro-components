@@ -4,37 +4,37 @@
  * Uses gap for spacing and inline styles for span/offset
  */
 
-import type { CSSProperties, PropType } from "vue";
-import { computed, defineComponent } from "vue";
-import "./flex-grid.less";
+import type { CSSProperties, PropType } from 'vue'
+import { computed, defineComponent } from 'vue'
+import './flex-grid.less'
 
 export interface FlexRowProps {
   /** Gap between columns in pixels */
-  gap?: number;
+  gap?: number
   /** Total number of columns (default: 24) */
-  columns?: number;
+  columns?: number
   /** Whether to wrap items */
-  wrap?: boolean;
+  wrap?: boolean
   /** Align items */
-  align?: "start" | "center" | "end" | "stretch";
+  align?: 'start' | 'center' | 'end' | 'stretch'
   /** Justify content */
-  justify?: "start" | "center" | "end" | "between" | "around";
+  justify?: 'start' | 'center' | 'end' | 'between' | 'around'
 }
 
 export interface FlexColProps {
   /** Number of columns to span (1-24) */
-  span?: number;
+  span?: number
   /** Number of columns to offset */
-  offset?: number;
+  offset?: number
   /** Whether this column is hidden */
-  hidden?: boolean;
+  hidden?: boolean
 }
 
 /**
  * FlexRow - Flex container for grid layout
  */
 export const FlexRow = defineComponent({
-  name: "FlexRow",
+  name: 'FlexRow',
   props: {
     gap: {
       type: Number,
@@ -49,56 +49,52 @@ export const FlexRow = defineComponent({
       default: true,
     },
     align: {
-      type: String as PropType<FlexRowProps["align"]>,
-      default: "stretch",
+      type: String as PropType<FlexRowProps['align']>,
+      default: 'stretch',
     },
     justify: {
-      type: String as PropType<FlexRowProps["justify"]>,
-      default: "start",
+      type: String as PropType<FlexRowProps['justify']>,
+      default: 'start',
     },
   },
   setup(props, { slots }) {
     const justifyMap = {
-      start: "flex-start",
-      center: "center",
-      end: "flex-end",
-      between: "space-between",
-      around: "space-around",
-    };
+      start: 'flex-start',
+      center: 'center',
+      end: 'flex-end',
+      between: 'space-between',
+      around: 'space-around',
+    }
 
     const alignMap = {
-      start: "flex-start",
-      center: "center",
-      end: "flex-end",
-      stretch: "stretch",
-    };
+      start: 'flex-start',
+      center: 'center',
+      end: 'flex-end',
+      stretch: 'stretch',
+    }
 
     const rowStyle = computed<CSSProperties>(() => ({
-      display: "flex",
-      flexWrap: props.wrap ? "wrap" : "nowrap",
+      display: 'flex',
+      flexWrap: props.wrap ? 'wrap' : 'nowrap',
       gap: `${props.gap}px`,
-      alignItems: alignMap[props.align || "stretch"],
-      justifyContent: justifyMap[props.justify || "start"],
-      width: "100%",
-    }));
+      alignItems: alignMap[props.align || 'stretch'],
+      justifyContent: justifyMap[props.justify || 'start'],
+      width: '100%',
+    }))
 
     return () => (
-      <div
-        class="pro-flex-row"
-        style={rowStyle.value}
-        data-columns={props.columns}
-      >
+      <div class="pro-flex-row" style={rowStyle.value} data-columns={props.columns}>
         {slots.default?.()}
       </div>
-    );
+    )
   },
-});
+})
 
 /**
  * FlexCol - Flex item for grid layout
  */
 export const FlexCol = defineComponent({
-  name: "FlexCol",
+  name: 'FlexCol',
   props: {
     span: {
       type: Number,
@@ -118,11 +114,11 @@ export const FlexCol = defineComponent({
     // Using CSS calc with custom property for flexibility
     const colStyle = computed<CSSProperties>(() => {
       if (props.hidden) {
-        return { display: "none" };
+        return { display: 'none' }
       }
 
-      const columns = 24; // Default to 24 columns
-      const spanPercent = (props.span / columns) * 100;
+      const columns = 24 // Default to 24 columns
+      const spanPercent = (props.span / columns) * 100
 
       // Calculate width considering gap
       // Since we're using gap, we need to subtract gap space from width
@@ -137,26 +133,26 @@ export const FlexCol = defineComponent({
         flexGrow: 0,
         flexShrink: 0,
         maxWidth: `${spanPercent}%`,
-        boxSizing: "border-box",
-      };
+        boxSizing: 'border-box',
+      }
 
       // Handle offset using margin-left
       if (props.offset > 0) {
-        const offsetPercent = (props.offset / columns) * 100;
+        const offsetPercent = (props.offset / columns) * 100
         style.marginLeft = `calc(${offsetPercent}% + var(--flex-row-gap, 24px) * ${
           props.offset / columns
-        })`;
+        })`
       }
 
-      return style;
-    });
+      return style
+    })
 
     return () => (
       <div class="pro-flex-col" style={colStyle.value}>
         {slots.default?.()}
       </div>
-    );
+    )
   },
-});
+})
 
-export default { FlexRow, FlexCol };
+export default { FlexRow, FlexCol }
