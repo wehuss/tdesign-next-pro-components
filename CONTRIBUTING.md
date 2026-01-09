@@ -15,7 +15,7 @@ We welcome contributions to TDesign Pro Components! This guide will help you get
 
 ```bash
 git clone https://github.com/your-username/tdesign-pro-components.git
-cd tdesign-pro-components
+cd tdesign-next-pro-components
 ```
 
 2. Install dependencies
@@ -74,11 +74,11 @@ tdesign-pro-components/
 
 ```typescript
 // src/components/ExampleComponent/index.ts
-import ExampleComponent from './ExampleComponent.vue'
+import ExampleComponent from "./ExampleComponent.vue";
 
-export { ExampleComponent }
-export default ExampleComponent
-export * from './ExampleComponent.types'
+export { ExampleComponent };
+export default ExampleComponent;
+export * from "./ExampleComponent.types";
 ```
 
 ## Code Style

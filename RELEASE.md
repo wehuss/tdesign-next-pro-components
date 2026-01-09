@@ -99,8 +99,8 @@ git push --follow-tags origin main
 用户安装预发布版本：
 
 ```bash
-npm install tdesign-pro-components@alpha
-npm install tdesign-pro-components@beta
+npm install tdesign-next-pro-components@alpha
+npm install tdesign-next-pro-components@beta
 ```
 
 ## Commit 规范

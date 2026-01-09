@@ -1,5 +1,5 @@
 {
-  "name": "tdesign-pro-components",
+  "name": "tdesign-next-pro-components",
   "version": "0.0.1-alpha.1",
   "description": "Enhanced components based on TDesign Vue Next",
   "keywords": [
@@ -20,7 +20,7 @@
     "type": "git",
     "url": "https://github.com/wehuss/tdesign-pro-components.git"
   },
-  "style": "dist/tdesign-pro-components.css",
+  "style": "dist/tdesign-next-pro-components.css",
   "files": [
     "dist",
     "package.json",
@@ -36,7 +36,7 @@
       "import": "./dist/index.es.js",
       "require": "./dist/index.cjs.js"
     },
-    "./style.css": "./dist/tdesign-pro-components.css",
+    "./style.css": "./dist/tdesign-next-pro-components.css",
     "./dist/*": "./dist/*"
   },
   "scripts": {

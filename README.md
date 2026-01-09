@@ -21,25 +21,25 @@ Enhanced components based on TDesign Vue Next for enterprise applications.
 
 ```bash
 # Using pnpm (recommended)
-pnpm add tdesign-pro-components
+pnpm add tdesign-next-pro-components
 
 # Using npm
-npm install tdesign-pro-components
+npm install tdesign-next-pro-components
 
 # Using yarn
-yarn add tdesign-pro-components
+yarn add tdesign-next-pro-components
 ```
 
 ## Quick Start
 
 ```typescript
-import { createApp } from 'vue'
-import TDesignProComponents from 'tdesign-pro-components'
-import 'tdesign-vue-next/es/style/index.css'
+import { createApp } from "vue";
+import TDesignProComponents from "tdesign-next-pro-components";
+import "tdesign-vue-next/es/style/index.css";
 
-const app = createApp(App)
-app.use(TDesignProComponents)
-app.mount('#app')
+const app = createApp(App);
+app.use(TDesignProComponents);
+app.mount("#app");
 ```
 
 ## Documentation

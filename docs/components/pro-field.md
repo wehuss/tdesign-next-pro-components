@@ -14,14 +14,14 @@ ProField 会根据 `valueType` 自动渲染对应的组件：
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
-import { ProField } from 'tdesign-pro-components'
+  import { ref } from "vue";
+  import { ProField } from "tdesign-next-pro-components";
 
-const textValue = ref('Hello World')
-const moneyValue = ref(12345.67)
-const dateValue = ref('2024-01-15')
-const percentValue = ref(0.85)
-const digitValue = ref(100)
+  const textValue = ref("Hello World");
+  const moneyValue = ref(12345.67);
+  const dateValue = ref("2024-01-15");
+  const percentValue = ref(0.85);
+  const digitValue = ref(100);
 </script>
 
 <template>
@@ -107,11 +107,11 @@ ProField 支持丰富的字段类型，以下是所有类型的展示：
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
-import { ProField } from 'tdesign-pro-components'
+  import { ref } from "vue";
+  import { ProField } from "tdesign-next-pro-components";
 
-const value = ref('示例文本')
-const mode = ref<'read' | 'edit'>('read')
+  const value = ref("示例文本");
+  const mode = ref<"read" | "edit">("read");
 </script>
 
 <template>
@@ -140,20 +140,25 @@ const mode = ref<'read' | 'edit'>('read')
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
-import { ProField } from 'tdesign-pro-components'
+  import { ref } from "vue";
+  import { ProField } from "tdesign-next-pro-components";
 
-const status = ref('active')
+  const status = ref("active");
 
-const valueEnum = {
-  active: { text: '启用', status: 'success' },
-  inactive: { text: '禁用', status: 'error' },
-  pending: { text: '待审核', status: 'warning' },
-}
+  const valueEnum = {
+    active: { text: "启用", status: "success" },
+    inactive: { text: "禁用", status: "error" },
+    pending: { text: "待审核", status: "warning" },
+  };
 </script>
 
 <template>
-  <ProField v-model="status" valueType="select" :valueEnum="valueEnum" mode="read" />
+  <ProField
+    v-model="status"
+    valueType="select"
+    :valueEnum="valueEnum"
+    mode="read"
+  />
 </template>
 ```
 
@@ -171,10 +176,10 @@ const valueEnum = {
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
-import { ProField } from 'tdesign-pro-components'
+  import { ref } from "vue";
+  import { ProField } from "tdesign-next-pro-components";
 
-const amount = ref(1234567.89)
+  const amount = ref(1234567.89);
 </script>
 
 <template>
@@ -183,10 +188,20 @@ const amount = ref(1234567.89)
     <ProField :value="amount" valueType="money" mode="read" />
 
     <!-- 美元 -->
-    <ProField :value="amount" valueType="money" mode="read" :fieldProps="{ currency: '$' }" />
+    <ProField
+      :value="amount"
+      valueType="money"
+      mode="read"
+      :fieldProps="{ currency: '$' }"
+    />
 
     <!-- 欧元 -->
-    <ProField :value="amount" valueType="money" mode="read" :fieldProps="{ currency: '€' }" />
+    <ProField
+      :value="amount"
+      valueType="money"
+      mode="read"
+      :fieldProps="{ currency: '€' }"
+    />
   </t-space>
 </template>
 ```
@@ -205,10 +220,10 @@ const amount = ref(1234567.89)
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
-import { ProField } from 'tdesign-pro-components'
+  import { ref } from "vue";
+  import { ProField } from "tdesign-next-pro-components";
 
-const date = ref('2024-01-15 14:30:00')
+  const date = ref("2024-01-15 14:30:00");
 </script>
 
 <template>
@@ -247,8 +262,8 @@ const date = ref('2024-01-15 14:30:00')
 
 ```ts
 interface ValueEnumItem {
-  text: string
-  status?: 'success' | 'error' | 'warning' | 'default' | 'processing'
-  disabled?: boolean
+  text: string;
+  status?: "success" | "error" | "warning" | "default" | "processing";
+  disabled?: boolean;
 }
 ```

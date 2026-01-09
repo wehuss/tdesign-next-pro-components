@@ -6,20 +6,20 @@ QueryFilter 是一个专门用于查询筛选的表单组件，支持展开收�
 
 ```vue
 <script setup lang="ts">
-import {
-  QueryFilter,
-  ProFormText,
-  ProFormSelect,
-  ProFormDateRangePicker,
-} from 'tdesign-pro-components'
+  import {
+    QueryFilter,
+    ProFormText,
+    ProFormSelect,
+    ProFormDateRangePicker,
+  } from "tdesign-next-pro-components";
 
-const handleSearch = (values: any) => {
-  console.log('搜索条件:', values)
-}
+  const handleSearch = (values: any) => {
+    console.log("搜索条件:", values);
+  };
 
-const handleReset = () => {
-  console.log('重置')
-}
+  const handleReset = () => {
+    console.log("重置");
+  };
 </script>
 
 <template>
@@ -45,11 +45,16 @@ const handleReset = () => {
 
 ```vue
 <script setup lang="ts">
-import { QueryFilter, ProFormText, ProFormSelect, ProFormDatePicker } from 'tdesign-pro-components'
+  import {
+    QueryFilter,
+    ProFormText,
+    ProFormSelect,
+    ProFormDatePicker,
+  } from "tdesign-next-pro-components";
 
-const handleSearch = (values: any) => {
-  console.log('搜索条件:', values)
-}
+  const handleSearch = (values: any) => {
+    console.log("搜索条件:", values);
+  };
 </script>
 
 <template>
@@ -99,38 +104,43 @@ QueryFilter 通常与 ProTable 配合使用：
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
-import { ProTable, QueryFilter, ProFormText, ProFormSelect } from 'tdesign-pro-components'
+  import { ref } from "vue";
+  import {
+    ProTable,
+    QueryFilter,
+    ProFormText,
+    ProFormSelect,
+  } from "tdesign-next-pro-components";
 
-const tableRef = ref()
-const searchParams = ref({})
+  const tableRef = ref();
+  const searchParams = ref({});
 
-const columns = [
-  { title: '姓名', colKey: 'name' },
-  { title: '状态', colKey: 'status' },
-  { title: '创建时间', colKey: 'createdAt' },
-]
+  const columns = [
+    { title: "姓名", colKey: "name" },
+    { title: "状态", colKey: "status" },
+    { title: "创建时间", colKey: "createdAt" },
+  ];
 
-const request = async (params: any) => {
-  // 合并搜索参数
-  const mergedParams = { ...params, ...searchParams.value }
-  const response = await fetch('/api/users', {
-    method: 'POST',
-    body: JSON.stringify(mergedParams),
-  })
-  const data = await response.json()
-  return { data: data.list, total: data.total, success: true }
-}
+  const request = async (params: any) => {
+    // 合并搜索参数
+    const mergedParams = { ...params, ...searchParams.value };
+    const response = await fetch("/api/users", {
+      method: "POST",
+      body: JSON.stringify(mergedParams),
+    });
+    const data = await response.json();
+    return { data: data.list, total: data.total, success: true };
+  };
 
-const handleSearch = (values: any) => {
-  searchParams.value = values
-  tableRef.value?.reload()
-}
+  const handleSearch = (values: any) => {
+    searchParams.value = values;
+    tableRef.value?.reload();
+  };
 
-const handleReset = () => {
-  searchParams.value = {}
-  tableRef.value?.reload()
-}
+  const handleReset = () => {
+    searchParams.value = {};
+    tableRef.value?.reload();
+  };
 </script>
 
 <template>
@@ -147,7 +157,13 @@ const handleReset = () => {
       />
     </QueryFilter>
 
-    <ProTable ref="tableRef" :columns="columns" :request="request" row-key="id" :search="false" />
+    <ProTable
+      ref="tableRef"
+      :columns="columns"
+      :request="request"
+      row-key="id"
+      :search="false"
+    />
   </div>
 </template>
 ```
@@ -156,15 +172,15 @@ const handleReset = () => {
 
 ```vue
 <script setup lang="ts">
-import { QueryFilter, ProFormText } from 'tdesign-pro-components'
-import { Button } from 'tdesign-vue-next'
+  import { QueryFilter, ProFormText } from "tdesign-next-pro-components";
+  import { Button } from "tdesign-vue-next";
 
-const formRef = ref()
+  const formRef = ref();
 
-const handleExport = () => {
-  const values = formRef.value?.getFieldsValue()
-  console.log('导出数据:', values)
-}
+  const handleExport = () => {
+    const values = formRef.value?.getFieldsValue();
+    console.log("导出数据:", values);
+  };
 </script>
 
 <template>

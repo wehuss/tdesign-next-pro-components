@@ -13,66 +13,69 @@ npm install tdesign-pro-components tdesign-vue-next
 ```
 
 ```bash [yarn]
-yarn add tdesign-pro-components tdesign-vue-next
+yarn add tdesign-next-pro-components tdesign-vue-next
 ```
 
 :::
 
-## 引入样式
+## 完整引入
 
-TDesign Pro Components 依赖 TDesign Vue Next 的样式，需要同时引入两者的样式文件：
+在 `main.ts` 中引入全部组件：
 
-```ts
-// main.ts
-import 'tdesign-vue-next/es/style/index.css'
-import 'tdesign-pro-components/style'
-```
+```typescript
+import { createApp } from "vue";
+import TDesign from "tdesign-vue-next";
+// 引入组件库
+import TDesignProComponents from "tdesign-next-pro-components";
+// 引入样式
+import "tdesign-vue-next/es/style/index.css";
+import "tdesign-next-pro-components/style";
+import App from "./App.vue";
 
-## 全局注册
+const app = createApp(App);
 
-如果你希望全局使用所有组件，可以在入口文件中进行全局注册：
-
-```ts
-// main.ts
-import { createApp } from 'vue'
-import TDesign from 'tdesign-vue-next'
-import TDesignProComponents from 'tdesign-pro-components'
-
-import 'tdesign-vue-next/es/style/index.css'
-import 'tdesign-pro-components/style'
-
-import App from './App.vue'
-
-const app = createApp(App)
-
-app.use(TDesign)
-app.use(TDesignProComponents)
-app.mount('#app')
+app.use(TDesign);
+app.use(TDesignProComponents);
+app.mount("#app");
 ```
 
 ## 按需引入
 
-推荐使用按需引入的方式，可以减少打包体积：
+如果你只需要使用部分组件，可以采用按需引入的方式。
 
-```vue
-<script setup lang="ts">
-import { ProTable, ProField, ProForm } from 'tdesign-pro-components'
-</script>
+```typescript
+import { createApp } from "vue";
+import TDesign from "tdesign-vue-next";
+import { ProTable, ProField, ProForm } from "tdesign-next-pro-components";
+// 引入样式
+import "tdesign-vue-next/es/style/index.css";
+import "tdesign-next-pro-components/style"; // 按需引入时也需要引入全量样式
+import App from "./App.vue";
+
+const app = createApp(App);
+
+app.use(TDesign);
+app.use(ProTable);
+app.use(ProField);
+app.use(ProForm);
+app.mount("#app");
 ```
 
-## TypeScript 支持
+## Volar 支持
 
-TDesign Pro Components 使用 TypeScript 编写，提供完整的类型定义。
-
-在 `tsconfig.json` 中确保包含以下配置：
+如果你使用 Volar，请在 `tsconfig.json` 中配置 `types`：
 
 ```json
 {
   "compilerOptions": {
-    "types": ["tdesign-pro-components/dist/index.d.ts"]
+    "types": ["tdesign-next-pro-components/dist/index.d.ts"]
   }
 }
 ```
+
+## 浏览器引入
+
+目前暂不推荐通过浏览器直接引入使用，建议使用打包工具集成。
 
 ## 浏览器兼容性
 
@@ -83,16 +86,15 @@ TDesign Pro Components 使用 TypeScript 编写，提供完整的类型定义。
 | Safari  | >= 14 |
 | Edge    | >= 88 |
 
-## 常见问题
+## 注意事项
 
-### 样式未生效
-
-确保正确引入了样式文件：
-
-```ts
-import 'tdesign-vue-next/es/style/index.css'
-import 'tdesign-pro-components/style'
-```
+1. 确保已正确安装并引入 `tdesign-vue-next` 及其样式。
+2. `tdesign-next-pro-components` 依赖 TDesign 基础组件库，请确保版本兼容。
+3. 如果出现样式丢失，请检查是否正确引入了 CSS 文件：
+   ```typescript
+   // 引入组件库样式
+   import "tdesign-next-pro-components/style";
+   ```
 
 ### TypeScript 类型报错
 

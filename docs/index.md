@@ -33,29 +33,41 @@ features:
 
 ## 快速体验
 
+### 1. 安装
+
 ```bash
 # 安装
-pnpm add tdesign-pro-components
+::: code-tabs
+::: tab pnpm
+pnpm add tdesign-next-pro-components
+:::
 
-# 或使用 npm
-npm install tdesign-pro-components
+::: tab npm
+npm install tdesign-next-pro-components
+:::
+
+::: tab yarn
+yarn add tdesign-next-pro-components
+:::
 ```
+
+### 2. 引入组件
 
 ```vue
 <script setup lang="ts">
-import { ProTable } from 'tdesign-pro-components'
-import 'tdesign-pro-components/style'
+  import { ProTable } from "tdesign-next-pro-components";
+  import "tdesign-next-pro-components/style";
 
-const columns = [
-  { title: '姓名', colKey: 'name', valueType: 'text' },
-  { title: '状态', colKey: 'status', valueType: 'select' },
-  { title: '创建时间', colKey: 'createdAt', valueType: 'dateTime' },
-]
+  const columns = [
+    { title: "姓名", colKey: "name", valueType: "text" },
+    { title: "状态", colKey: "status", valueType: "select" },
+    { title: "创建时间", colKey: "createdAt", valueType: "dateTime" },
+  ];
 
-const request = async (params) => {
-  const data = await fetchData(params)
-  return { data: data.list, total: data.total, success: true }
-}
+  const request = async (params) => {
+    const data = await fetchData(params);
+    return { data: data.list, total: data.total, success: true };
+  };
 </script>
 
 <template>

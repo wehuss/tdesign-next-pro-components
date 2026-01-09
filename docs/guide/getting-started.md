@@ -20,111 +20,125 @@ TDesign Pro Components 是一套基于 TDesign Vue Next 的高级业务组件库
 ::: code-group
 
 ```bash [pnpm]
-pnpm add tdesign-pro-components tdesign-vue-next
+pnpm add tdesign-next-pro-components tdesign-vue-next
 ```
 
 ```bash [npm]
-npm install tdesign-pro-components tdesign-vue-next
+npm install tdesign-next-pro-components tdesign-vue-next
 ```
 
 ```bash [yarn]
-yarn add tdesign-pro-components tdesign-vue-next
+yarn add tdesign-next-pro-components tdesign-vue-next
 ```
 
 :::
 
-## 基础使用
+## 2. 引入组件
 
-### 全局注册
+### 完整引入
 
-```ts
-// main.ts
-import { createApp } from 'vue'
-import TDesign from 'tdesign-vue-next'
-import TDesignProComponents from 'tdesign-pro-components'
+```typescript
+import { createApp } from "vue";
+import TDesign from "tdesign-vue-next";
+import TDesignProComponents from "tdesign-next-pro-components";
 
-import 'tdesign-vue-next/es/style/index.css'
-import 'tdesign-pro-components/style'
+// 引入样式
+import "tdesign-vue-next/es/style/index.css";
+import "tdesign-next-pro-components/style";
 
-import App from './App.vue'
+import App from "./App.vue";
 
-const app = createApp(App)
+const app = createApp(App);
 
-app.use(TDesign)
-app.use(TDesignProComponents)
-app.mount('#app')
+app.use(TDesign);
+app.use(TDesignProComponents);
+app.mount("#app");
 ```
 
 ### 按需引入
 
-```vue
-<script setup lang="ts">
-import { ProTable, ProField } from 'tdesign-pro-components'
-import 'tdesign-pro-components/style'
-</script>
+```typescript
+import { createApp } from "vue";
+import TDesign from "tdesign-vue-next";
+// 引入组件
+import { ProTable, ProField } from "tdesign-next-pro-components";
+// 引入样式
+import "tdesign-vue-next/es/style/index.css";
+import "tdesign-next-pro-components/style";
 
-<template>
-  <ProTable :columns="columns" :request="request" />
-</template>
+import App from "./App.vue";
+
+const app = createApp(App);
+
+app.use(TDesign);
+// 注册组件
+app.use(ProTable);
+app.use(ProField);
+app.mount("#app");
 ```
 
-## 第一个示例
+## 3. 使用组件
 
-下面是一个简单的 ProTable 示例：
+现在你可以在 Vue 组件中使用 TDesign Pro Components 了。例如，使用 ProTable 组件：
 
 ```vue
 <script setup lang="ts">
-import { ProTable } from 'tdesign-pro-components'
-import type { ProTableColumn } from 'tdesign-pro-components'
+  import { ProTable } from "tdesign-next-pro-components";
+  import type { ProTableColumn } from "tdesign-next-pro-components";
 
-// 定义列配置
-const columns: ProTableColumn[] = [
-  {
-    title: '序号',
-    colKey: 'index',
-    valueType: 'indexBorder',
-    width: 80,
-  },
-  {
-    title: '用户名',
-    colKey: 'username',
-    valueType: 'text',
-  },
-  {
-    title: '状态',
-    colKey: 'status',
-    valueType: 'select',
-    valueEnum: {
-      active: { text: '启用', status: 'success' },
-      inactive: { text: '禁用', status: 'error' },
+  // 定义列配置
+  const columns: ProTableColumn[] = [
+    {
+      title: "序号",
+      colKey: "index",
+      valueType: "indexBorder",
+      width: 80,
     },
-  },
-  {
-    title: '创建时间',
-    colKey: 'createdAt',
-    valueType: 'dateTime',
-  },
-]
+    {
+      title: "用户名",
+      colKey: "username",
+      valueType: "text",
+    },
+    {
+      title: "状态",
+      colKey: "status",
+      valueType: "select",
+      valueEnum: {
+        active: { text: "启用", status: "success" },
+        inactive: { text: "禁用", status: "error" },
+      },
+    },
+    {
+      title: "创建时间",
+      colKey: "createdAt",
+      valueType: "dateTime",
+    },
+  ];
 
-// 数据请求函数
-const request = async (params: any) => {
-  // 模拟 API 请求
-  const response = await fetch('/api/users', {
-    method: 'POST',
-    body: JSON.stringify(params),
-  })
-  const result = await response.json()
+  // 数据请求函数
+  const request = async (params: any) => {
+    // 模拟 API 请求
+    const response = await fetch("/api/users", {
+      method: "POST",
+      body: JSON.stringify(params),
+    });
+    const result = await response.json();
 
-  return {
-    data: result.list,
-    total: result.total,
-    success: true,
-  }
-}
+    return {
+      data: result.list,
+      total: result.total,
+      success: true,
+    };
+  };
 </script>
 
 <template>
-  <ProTable :columns="columns" :request="request" row-key="id" header-title="用户列表" />
+  <ProTable
+    :columns="columns"
+    :request="request"
+    row-key="id"
+    header-title="用户列表"
+  />
 </template>
 ```
 
