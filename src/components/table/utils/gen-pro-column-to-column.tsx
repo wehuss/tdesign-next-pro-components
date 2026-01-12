@@ -18,18 +18,8 @@ export interface ColumnToColumnParams<T extends TableRowData> {
   type: 'table' | 'form'
   rowKey?: string | ((record: T, index: number) => string | number)
   childrenColumnName?: string
-  /** 可编辑工具类 */
-  editableUtils?: {
-    isEditable: (params: { index: number } & T) => {
-      isEditable: boolean
-      recordKey: string | number
-    }
-    actionRender?: (record: T & { index: number }) => any[]
-  }
   /** 操作引用 */
   actionRef?: ActionRef
-  /** 边距 */
-  marginSM?: number
 }
 
 /**
@@ -149,20 +139,7 @@ export function genProColumnToColumn<T extends TableRowData>(
   params: ColumnToColumnParams<T>,
   parents?: ProTableColumn<T>,
 ): ColumnToColumnReturnType<T> {
-  const {
-    columns,
-    columnsMap,
-    columnEmptyText = '-',
-    type,
-    rowKey = 'id',
-    childrenColumnName = 'children',
-    editableUtils,
-    actionRef,
-    marginSM = 8,
-  } = params
-
-  // 用于记录子行的名称路径
-  const subNameRecord = new Map<string | number, string[]>()
+  const { columns, columnsMap, columnEmptyText = '-', actionRef } = params
 
   return columns
     ?.map((columnProps, columnsIndex) => {
@@ -210,8 +187,8 @@ export function genProColumnToColumn<T extends TableRowData>(
         }
       }
 
-      // 从 columnProps 中排除 render 属性，因为 ProTableColumn 的 render 签名与 PrimaryTableCol 不同
-      const { render: _render, ...restColumnProps } = columnProps
+      // 从 columnProps 中排除 cell 属性，因为我们会重新定义它
+      const { cell: _cell, ...restColumnProps } = columnProps
 
       const tempColumns: PrimaryTableCol<T> & { index?: number } = {
         index: columnsIndex,
@@ -223,52 +200,17 @@ export function genProColumnToColumn<T extends TableRowData>(
         width: columnProps.width || (columnProps.fixed ? 200 : undefined),
         // 处理排序
         sorter: sorterConfig,
-        // 自定义渲染
-        cell: ((_h, { row, rowIndex }) => {
-          // 获取行的唯一 key
-          let keyName: string | number | symbol = rowKey as string
-          if (typeof rowKey === 'function') {
-            keyName = rowKey(row, rowIndex)
-          }
-
-          let uniqueKey: string | number | undefined
-          if (
-            typeof row === 'object' &&
-            row !== null &&
-            Reflect.has(row as object, keyName as string)
-          ) {
-            uniqueKey = (row as Record<string, unknown>)[keyName as string] as string | number
-            const parentInfo = subNameRecord.get(uniqueKey) || []
-
-            // 记录子行的路径
-            const childrenData = (row as Record<string, unknown>)[childrenColumnName] as
-              | T[]
-              | undefined
-            childrenData?.forEach((item: T) => {
-              const itemUniqueKey = (item as Record<string, unknown>)[keyName as string] as
-                | string
-                | number
-              if (!subNameRecord.has(itemUniqueKey)) {
-                subNameRecord.set(
-                  itemUniqueKey,
-                  parentInfo.concat([String(rowIndex), childrenColumnName]),
-                )
-              }
-            })
-          }
-
+        // 自定义渲染 - 使用 TDesign 原生 cell 参数格式
+        cell: ((_h, { row, rowIndex, col, colIndex }) => {
           return columnRender<T>({
             columnProps,
             text: row[colKey as keyof T],
             rowData: row,
             index: rowIndex,
+            col,
+            colIndex,
             columnEmptyText,
-            type,
-            mode: 'read',
             actionRef,
-            editableUtils,
-            subName: uniqueKey ? subNameRecord.get(uniqueKey) : undefined,
-            marginSM,
           })
         }) as TNode<PrimaryTableCellParams<T>>,
         // 处理子列

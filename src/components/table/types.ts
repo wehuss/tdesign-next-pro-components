@@ -3,6 +3,7 @@ import type {
   PaginationProps,
   PrimaryTableCol,
   TableRowData,
+  TNode,
 } from "tdesign-vue-next";
 import type { Ref, VNode } from "vue";
 import type { ProFieldValueEnumType, ProFieldValueType } from "../field/types";
@@ -41,7 +42,7 @@ export interface FilterInfo {
 
 // 列配置类型
 export interface ProTableColumn<T extends TableRowData = TableRowData>
-  extends Omit<PrimaryTableCol<T>, "render"> {
+  extends Omit<PrimaryTableCol<T>, "cell"> {
   // ProTable 扩展属性
   valueType?:
     | ProFieldValueType
@@ -57,7 +58,16 @@ export interface ProTableColumn<T extends TableRowData = TableRowData>
     updateForm?: false | ProTableColumnFormItem;
     createForm?: false | ProTableColumnFormItem;
   };
-
+  cell?:
+    | string
+    | TNode<{
+        row: T;
+        rowIndex: number;
+        col: PrimaryTableCol<T>;
+        colIndex: number;
+        dom: VNode;
+        actionRef?: ActionRef;
+      }>;
   // 编辑相关
   editable?: boolean | ((text: unknown, record: T, index: number) => boolean);
 
@@ -71,15 +81,6 @@ export interface ProTableColumn<T extends TableRowData = TableRowData>
     index: number,
     action?: unknown
   ) => unknown;
-
-  // 自定义渲染 - 重新定义与 PrimaryTableCol 不同的签名
-  render?: (
-    dom: VNode,
-    record: T,
-    index: number,
-    action?: unknown,
-    schema?: unknown
-  ) => VNode | null;
 
   // 表单项渲染
   formItemRender?: (

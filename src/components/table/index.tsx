@@ -6,6 +6,9 @@
 
 import useListeners from '@/hooks/listeners'
 import { Card, EnhancedTable, type PaginationProps } from 'tdesign-vue-next'
+import baseTableProps from 'tdesign-vue-next/es/table/base-table-props'
+import enhancedTableProps from 'tdesign-vue-next/es/table/enhanced-table-props'
+import primaryTableProps from 'tdesign-vue-next/es/table/primary-table-props'
 import type { App, PropType, Ref, VNode } from 'vue'
 import { computed, defineComponent, onBeforeUnmount, provide, ref, useModel, watch } from 'vue'
 import TableAlert from './components/alert'
@@ -45,6 +48,9 @@ import type { AlertRenderType } from './components/alert'
 const ProTable = defineComponent({
   name: 'ProTable',
   props: {
+    ...baseTableProps,
+    ...primaryTableProps,
+    ...enhancedTableProps,
     // 数据相关
     request: Function as PropType<
       (
@@ -534,9 +540,9 @@ const ProTable = defineComponent({
         <EnhancedTable
           {...attrs}
           {...listeners}
+          {...props}
           size={tableSize.value}
           height={props.autoFill ? '100%' : undefined}
-          bordered
           data={action._refs.dataSource.value}
           columns={tableColumns.value}
           loading={action._refs.loading.value}

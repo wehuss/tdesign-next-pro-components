@@ -1,8 +1,9 @@
 /**
  * 列渲染工具函数
  * 移植自 ant-design/pro-components 适配 TDesign Vue Next
+ * 重构：使用 TDesign 原生 cell API，移除编辑模式逻辑
  */
-import type { TableRowData } from 'tdesign-vue-next'
+import type { PrimaryTableCol, TableRowData } from 'tdesign-vue-next'
 import type { VNode } from 'vue'
 import { h } from 'vue'
 import { isNil } from '../../../utils'
@@ -16,30 +17,10 @@ export interface ColumnRenderInterface<T extends TableRowData = TableRowData> {
   text: unknown
   rowData: T
   index: number
+  col: PrimaryTableCol<T>
+  colIndex: number
   columnEmptyText?: string
-  type: 'table' | 'form'
-  mode?: 'read' | 'edit'
   actionRef?: ActionRef
-  /** 可编辑工具类 */
-  editableUtils?: {
-    isEditable: (params: { index: number } & T) => {
-      isEditable: boolean
-      recordKey: string | number
-    }
-    actionRender?: (record: T & { index: number }) => VNode[]
-    /** 获取真实索引 */
-    getRealIndex?: (record: T) => number
-  }
-  /** 计数器，用于性能优化 */
-  counter?: {
-    action?: ActionRef
-    rootDomRef?: unknown
-    prefixName?: string
-  }
-  /** 子表名称，用于嵌套表格 */
-  subName?: string[]
-  /** 样式间距 */
-  marginSM?: number
 }
 
 /**
@@ -79,19 +60,6 @@ export const renderColumnsTitle = (item: ProTableColumn<TableRowData>): string |
   }
 
   return title as string
-}
-
-/** 判断是否为不可编辑的单元格 */
-export function isNotEditableCell<T extends TableRowData>(
-  text: unknown,
-  rowData: T,
-  index: number,
-  editable?: boolean | ((text: unknown, record: T, index: number) => boolean),
-): boolean {
-  if (typeof editable === 'boolean') {
-    return editable === false
-  }
-  return editable?.(text, rowData, index) === false
 }
 
 /**
@@ -166,6 +134,7 @@ export const runFunction = <T, U extends unknown[]>(
 
 /**
  * 这个组件负责单元格的具体渲染
+ * 使用 TDesign 原生 cell API 参数格式
  * @param config 渲染配置
  */
 export function columnRender<T extends TableRowData = TableRowData>(
@@ -176,35 +145,17 @@ export function columnRender<T extends TableRowData = TableRowData>(
     text,
     rowData,
     index,
+    col,
+    colIndex,
     columnEmptyText = '-',
-    type = 'table',
     actionRef,
-    editableUtils,
-    counter,
-    subName = [],
-    marginSM = 8,
   } = config
-
-  // 获取 prefixName（用于可编辑表格）
-  const prefixName = counter?.prefixName
 
   // 获取 renderText 函数的结果
   const { renderText = (val: unknown) => val } = columnProps
   const renderTextStr = renderText(text, rowData, index, actionRef)
 
-  // 判断是否为可编辑状态
-  const editableResult = editableUtils?.isEditable?.({ ...rowData, index })
-  const isEditable = editableResult?.isEditable ?? false
-  const recordKey = editableResult?.recordKey
-
-  const editable = columnProps?.editable as
-    | boolean
-    | ((text: unknown, record: T, index: number) => boolean)
-    | undefined
-
-  const mode = isEditable && !isNotEditableCell(text, rowData, index, editable) ? 'edit' : 'read'
-
-  // 使用 cellRenderToFormItem 来处理字段渲染
+  // 使用 cellRenderToFormItem 来处理字段渲染（只读模式）
   const textDom = cellRenderToFormItem<T>({
     text: renderTextStr as string | number | (string | number)[],
     valueType: (columnProps.valueType as ProFieldValueType) || 'text',
@@ -216,85 +167,51 @@ export function columnRender<T extends TableRowData = TableRowData>(
       // 兼容性处理 - 同时支持 entry 和 entity
       entity: rowData,
     },
-    type,
-    recordKey,
-    mode,
-    prefixName,
-    subName,
   })
 
-  // 生成可复制的 DOM（只读模式下）
-  const dom: VNode = mode === 'edit' ? textDom : genCopyable(textDom, columnProps, renderTextStr)
+  // 生成可复制的 DOM
+  const dom: VNode = genCopyable(textDom, columnProps, renderTextStr)
 
-  /** 如果是编辑模式，并且有自定义的 formItemRender，直接使用 */
-  if (mode === 'edit') {
-    // 处理操作列
-    if (columnProps.valueType === 'option') {
+  // 如果定义了 cell 渲染函数，使用它
+  // cell 参数格式: cell(h, { row, rowIndex, col, colIndex })
+  if (columnProps.cell && typeof columnProps.cell === 'function') {
+    const cellRenderDom = columnProps.cell(h, {
+      row: rowData,
+      rowIndex: index,
+      col,
+      colIndex,
+      // 扩展参数：传入默认渲染的 dom 和 actionRef
+      dom,
+      actionRef,
+    })
+
+    // 如果是合并单元格的，直接返回对象
+    if (isMergeCell(cellRenderDom)) {
+      return cellRenderDom as VNode
+    }
+
+    // 处理操作列的数组渲染
+    if (cellRenderDom && columnProps.valueType === 'option' && Array.isArray(cellRenderDom)) {
       return h(
         'div',
         {
           style: {
             display: 'flex',
             alignItems: 'center',
-            gap: `${marginSM}px`,
-            justifyContent: columnProps.align === 'center' ? 'center' : 'flex-start',
+            justifyContent: 'flex-start',
+            gap: '8px',
           },
         },
-        [
-          editableUtils?.actionRender?.({
-            ...rowData,
-            index: columnProps.index ?? index,
-          }),
-        ],
+        cellRenderDom,
       )
     }
-    return dom
+
+    return cellRenderDom as VNode
   }
 
   // 如果没有自定义渲染函数，直接返回处理后的 DOM
-  if (!columnProps.render) {
-    const isVueNode = dom && typeof dom === 'object' && 'type' in dom && dom.type
-    const isSimpleValue = ['string', 'number'].includes(typeof dom)
+  const isVueNode = dom && typeof dom === 'object' && 'type' in dom && dom.type
+  const isSimpleValue = ['string', 'number'].includes(typeof dom)
 
-    return !isNil(dom) && (isVueNode || isSimpleValue) ? dom : null
-  }
-
-  // 使用自定义渲染函数
-  const renderDom = columnProps.render(
-    dom,
-    rowData,
-    index,
-    {
-      ...actionRef,
-      ...editableUtils,
-    },
-    {
-      ...columnProps,
-      isEditable,
-      type: 'table',
-    },
-  )
-
-  // 如果是合并单元格的，直接返回对象
-  if (isMergeCell(renderDom)) {
-    return renderDom
-  }
-
-  // 处理操作列的数组渲染
-  if (renderDom && columnProps.valueType === 'option' && Array.isArray(renderDom)) {
-    return h(
-      'div',
-      {
-        style: {
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          gap: '8px',
-        },
-      },
-      renderDom,
-    )
-  }
-
-  return renderDom as VNode
+  return !isNil(dom) && (isVueNode || isSimpleValue) ? dom : null
 }
