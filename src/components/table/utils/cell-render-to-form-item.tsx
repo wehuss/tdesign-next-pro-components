@@ -92,7 +92,7 @@ const CellRenderToFormItem = defineComponent({
           : props.valueType
 
       if (currentValueType === 'index' || currentValueType === 'indexBorder') {
-        return props.index
+        return (props.index as number) + 1
       }
       return props.text
     })

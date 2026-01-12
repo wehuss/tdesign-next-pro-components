@@ -1,4 +1,5 @@
 import { FormItem, type FormItemProps } from 'tdesign-vue-next'
+import formItemProps from 'tdesign-vue-next/es/form/form-item-props'
 import {
   cloneVNode,
   computed,
@@ -175,6 +176,7 @@ export const ProFormItem = defineComponent({
   name: 'ProFormItem',
   inheritAttrs: false,
   props: {
+    ...formItemProps,
     name: [String, Array] as PropType<string | string[]>,
     /** 标签 - 与 TDesign FormItem label 类型兼容 */
     label: [String, Function] as PropType<FormItemProps['label']>,
@@ -365,6 +367,20 @@ export const ProFormItem = defineComponent({
     // 过滤后的 attrs，移除不应传递给 TDesign FormItem 的属性
     const filteredAttrs = computed(() => filterAttrs(attrs as Record<string, any>))
 
+    // 从 props 中提取所有原版 FormItem 的 props
+    const nativeFormItemPropsKeys = Object.keys(formItemProps)
+    const getNativeFormItemProps = computed(() => {
+      const result: Record<string, any> = {}
+      for (const key of nativeFormItemPropsKeys) {
+        // 跳过我们需要特殊处理的属性
+        if (['name', 'label', 'rules', 'help'].includes(key)) continue
+        if ((props as any)[key] !== undefined) {
+          result[key] = (props as any)[key]
+        }
+      }
+      return result
+    })
+
     // 计算最终的 rules（处理 required 属性）
     const finalRules = computed(() => {
       const rules = props.rules ? [...props.rules] : []
@@ -390,6 +406,7 @@ export const ProFormItem = defineComponent({
       if (typeof children?.[0] === 'function') {
         return (
           <FormItem
+            {...getNativeFormItemProps.value}
             name={Array.isArray(props.name) ? props.name.join('.') : props.name}
             label={props.label as string}
             rules={finalRules.value}
@@ -416,6 +433,7 @@ export const ProFormItem = defineComponent({
 
       return (
         <FormItem
+          {...getNativeFormItemProps.value}
           name={formItemName.value}
           label={props.label}
           rules={finalRules.value}

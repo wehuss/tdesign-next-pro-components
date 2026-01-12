@@ -66,7 +66,7 @@ const ProTable = defineComponent({
 
     // 列配置
     columns: {
-      type: Array as PropType<ProTableColumn[]>,
+      type: Array as PropType<ProTableColumn<any>[]>,
       required: true,
     },
 
@@ -232,7 +232,7 @@ const ProTable = defineComponent({
 
       return async (pageParams?: { pageSize: number; current: number }) => {
         const actionParams = {
-          ...(pageParams || {}),
+          ...pageParams,
           ...formSearch.value,
           ...props.params,
         }

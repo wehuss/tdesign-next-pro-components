@@ -1,5 +1,6 @@
 import type { FormInstanceFunctions, SubmitContext } from 'tdesign-vue-next'
 import { Form, FormItem, Loading } from 'tdesign-vue-next'
+import formProps from 'tdesign-vue-next/es/form/props'
 import type { PropType, Ref } from 'vue'
 import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import {
@@ -71,6 +72,7 @@ export const BaseForm = defineComponent({
   name: 'BaseForm',
   inheritAttrs: false,
   props: {
+    ...formProps,
     // 基础表单属性
     layout: {
       type: String as PropType<'vertical' | 'inline'>,
@@ -445,6 +447,20 @@ export const BaseForm = defineComponent({
       resetFieldsToInitial: fieldManager.resetFieldsToInitial,
     })
 
+    // 从 props 中提取所有原版 Form 的 props
+    const nativeFormPropsKeys = Object.keys(formProps)
+    const getNativeFormProps = computed(() => {
+      const result: Record<string, any> = {}
+      for (const key of nativeFormPropsKeys) {
+        // 跳过我们需要特殊处理的属性
+        if (['data', 'layout', 'onSubmit', 'onReset'].includes(key)) continue
+        if ((props as any)[key] !== undefined) {
+          result[key] = (props as any)[key]
+        }
+      }
+      return result
+    })
+
     return () => {
       const items = slots.default?.()
 
@@ -497,6 +513,7 @@ export const BaseForm = defineComponent({
 
       return (
         <Form
+          {...getNativeFormProps.value}
           ref={formRef}
           layout={props.layout}
           data={props.data}
