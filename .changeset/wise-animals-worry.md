@@ -1,5 +1,5 @@
 ---
-"tdesign-pro-components": patch
+"tdesign-next-pro-components": patch
 ---
 
 test

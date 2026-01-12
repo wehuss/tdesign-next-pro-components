@@ -2,13 +2,13 @@
 
 ## 📋 项目概述
 
-**项目名称**: tdesign-pro-components  
+**项目名称**: tdesign-next-pro-components  
 **项目目标**: 将 [Ant Design Pro Components](https://github.com/ant-design/pro-components) 迁移到基于 TDesign Vue Next 的 Vue 3 版本实现。
 
 ### 技术栈
 
 - **框架**: Vue 3.x + TypeScript
-- **UI组件库**: TDesign Vue Next `^1.15.2`
+- **UI 组件库**: TDesign Vue Next `^1.15.2`
 - **图标库**: tdesign-icons-vue-next `^0.3.6`
 - **构建工具**: Vite 8.x
 - **包管理器**: pnpm
@@ -242,14 +242,17 @@ tdesign-pro-table/
 ### API 差异注意事项
 
 1. **表单校验**
+
    - Ant Design: `form.validateFields()`
    - TDesign: `form.validate()`
 
 2. **双向绑定**
+
    - Ant Design: `value` + `onChange`
    - TDesign: `v-model` / `modelValue` + `onUpdate:modelValue`
 
 3. **插槽语法**
+
    - Ant Design React: `renderXxx` prop
    - TDesign Vue: `#slotName` / `slots.xxx`
 
@@ -386,19 +389,23 @@ pnpm test
 ### 迁移新组件的步骤
 
 1. **分析原始组件**
+
    - 阅读 `raw/src/<component>/` 目录下的所有文件
    - 理解组件的 Props、State、事件和渲染逻辑
 
 2. **创建 Vue 组件结构**
+
    - 在 `src/components/<component>/` 创建目录
    - 创建 `index.tsx`（主组件）、`types.ts`（类型）
 
 3. **转换 React 语法到 Vue 3**
+
    - 使用 `defineComponent` + TSX
    - 使用 Composition API
    - 适配 TDesign 组件
 
 4. **实现核心功能**
+
    - Props 定义
    - 状态管理
    - 事件处理

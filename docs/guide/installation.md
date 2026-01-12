@@ -5,11 +5,11 @@
 ::: code-group
 
 ```bash [pnpm]
-pnpm add tdesign-pro-components tdesign-vue-next
+pnpm add tdesign-next-pro-components tdesign-vue-next
 ```
 
 ```bash [npm]
-npm install tdesign-pro-components tdesign-vue-next
+npm install tdesign-next-pro-components tdesign-vue-next
 ```
 
 ```bash [yarn]

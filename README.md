@@ -44,7 +44,7 @@ app.mount("#app");
 
 ## Documentation
 
-Visit our [documentation site](https://wehuss.github.io/tdesign-pro-components) for detailed usage instructions and examples.
+Visit our [documentation site](https://wehuss.github.io/tdesign-next-pro-components) for detailed usage instructions and examples.
 
 ## Development
 
@@ -57,8 +57,8 @@ Visit our [documentation site](https://wehuss.github.io/tdesign-pro-components) 
 
 ```bash
 # Clone the repository
-git clone https://github.com/wehuss/tdesign-pro-components.git
-cd tdesign-pro-components
+git clone https://github.com/wehuss/tdesign-next-pro-components.git
+cd tdesign-next-pro-components
 
 # Install dependencies
 pnpm install
@@ -92,7 +92,7 @@ We welcome contributions! Please read our [Contributing Guide](./CONTRIBUTING.md
 
 ## Changelog
 
-Detailed changes for each release are documented in the [release notes](https://github.com/wehuss/tdesign-pro-components/releases).
+Detailed changes for each release are documented in the [release notes](https://github.com/wehuss/tdesign-next-pro-components/releases).
 
 ## License
 

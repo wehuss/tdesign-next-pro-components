@@ -59,5 +59,5 @@
 
 1. WHEN a demo component is created THEN the system SHALL place it in `docs/.vitepress/demos/pro-form/` directory
 2. WHEN a demo component is created THEN the system SHALL use the `<script setup>` syntax for Vue 3 composition API
-3. WHEN a demo component is created THEN the system SHALL import components from `tdesign-pro-components`
+3. WHEN a demo component is created THEN the system SHALL import components from `tdesign-next-pro-components`
 4. WHEN the documentation references a demo THEN the system SHALL use the `<DemoContainer>` component to display it

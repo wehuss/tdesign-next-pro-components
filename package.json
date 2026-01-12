@@ -10,15 +10,15 @@
     "vue",
     "vue3"
   ],
-  "homepage": "https://github.com/wehuss/tdesign-pro-components#readme",
+  "homepage": "https://github.com/wehuss/tdesign-next-pro-components#readme",
   "bugs": {
-    "url": "https://github.com/wehuss/tdesign-pro-components/issues"
+    "url": "https://github.com/wehuss/tdesign-next-pro-components/issues"
   },
   "license": "MIT",
   "author": "TDesign Pro Components Team",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wehuss/tdesign-pro-components.git"
+    "url": "https://github.com/wehuss/tdesign-next-pro-components.git"
   },
   "style": "dist/tdesign-next-pro-components.css",
   "files": [

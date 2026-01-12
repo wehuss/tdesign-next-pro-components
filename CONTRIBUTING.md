@@ -14,7 +14,7 @@ We welcome contributions to TDesign Pro Components! This guide will help you get
 1. Fork and clone the repository
 
 ```bash
-git clone https://github.com/your-username/tdesign-pro-components.git
+git clone https://github.com/your-username/tdesign-next-pro-components.git
 cd tdesign-next-pro-components
 ```
 
@@ -37,7 +37,7 @@ pnpm dev:docs
 ## Project Structure
 
 ```
-tdesign-pro-components/
+tdesign-next-pro-components/
 ├── src/                    # Source code
 │   ├── components/         # Component source files
 │   ├── types/             # TypeScript type definitions
@@ -178,8 +178,8 @@ pnpm changeset
 
 ## Getting Help
 
-- Check existing [GitHub Issues](https://github.com/wehuss/tdesign-pro-components/issues)
-- Join [GitHub Discussions](https://github.com/wehuss/tdesign-pro-components/discussions)
+- Check existing [GitHub Issues](https://github.com/wehuss/tdesign-next-pro-components/issues)
+- Join [GitHub Discussions](https://github.com/wehuss/tdesign-next-pro-components/discussions)
 - Read the [TDesign Vue Next documentation](https://tdesign.tencent.com/vue-next/overview)
 
 ## Code of Conduct
