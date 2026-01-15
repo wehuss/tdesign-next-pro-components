@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.1-alpha.4](https://github.com/wehuss/tdesign-pro-components/compare/v0.0.1-alpha.3...v0.0.1-alpha.4) (2026-01-15)
+
+
+### Bug Fixes
+
+* **field:** 修复带valueEnum的text无法被渲染为select问题 ([e71b21e](https://github.com/wehuss/tdesign-pro-components/commit/e71b21e715eef3cfe9de094f298c4a0041b23c21))
+
 ### [0.0.1-alpha.3](https://github.com/wehuss/tdesign-pro-components/compare/v0.0.1-alpha.2...v0.0.1-alpha.3) (2026-01-12)
 
 
