@@ -29,11 +29,19 @@ export const defaultRenderText = (
     }
   }
 
+  // 判断是否需要使用 select 组件
+  // 当 valueType 为 'text' 且存在 valueEnum 时，应该使用 select 组件渲染
+  const hasValueEnum =
+    props.valueEnum &&
+    ((props.valueEnum instanceof Map && props.valueEnum.size > 0) ||
+      (typeof props.valueEnum === 'object' && Object.keys(props.valueEnum).length > 0))
+  const actualValueType = valueType === 'text' && hasValueEnum ? 'select' : valueType
+
   // 获取对应的组件配置
-  const componentConfig = valueTypeToComponentMap[valueType]
+  const componentConfig = valueTypeToComponentMap[actualValueType]
 
   if (!componentConfig) {
-    console.warn(`未找到 valueType "${valueType}" 对应的组件配置`)
+    console.warn(`未找到 valueType "${actualValueType}" 对应的组件配置`)
     return <>{String(modelValue)}</>
   }
 
@@ -53,7 +61,7 @@ export const defaultRenderText = (
  * 只使用 modelValue 实现标准的 v-model 双向绑定
  */
 export const ProField = defineComponent({
-  name: 'TProField',
+  name: 'ProField',
   props: {
     modelValue: {
       type: [

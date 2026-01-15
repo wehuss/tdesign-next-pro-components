@@ -3,10 +3,28 @@ import type { ProTableColumn } from '@/components/table'
 import ProTable from '@/components/table'
 
 const columns: ProTableColumn[] = [
+  {
+    title:'index',
+    valueType:'indexBorder'
+  },
   { title: '姓名', colKey: 'name', width: 120, form: { valueType: 'text' } },
   { title: '年龄', colKey: 'age', width: 80, form: { valueType: 'text' } },
   { title: '邮箱', colKey: 'email', width: 200 },
   { title: '地址', colKey: 'address' },
+  {
+    title:'性别',
+    colKey:'gender',
+    valueEnum:{
+      0:{
+        text:'男',
+        theme:'success'
+      },
+      1:{
+        text:'女',
+        theme:'danger'
+      }
+    }
+  },
 ]
 
 // 模拟生成数据
@@ -21,6 +39,7 @@ const generateData = (page: number, pageSize: number) => {
       age: 20 + (index % 30),
       email: `user${index}@example.com`,
       address: `地址${index}`,
+      gender: index % 2,
     })
   }
   return data
