@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.1-alpha.5](https://github.com/wehuss/tdesign-pro-components/compare/v0.0.1-alpha.4...v0.0.1-alpha.5) (2026-01-23)
+
+
+### Features
+
+* **form:** 加入colSize属性 ([18594e4](https://github.com/wehuss/tdesign-pro-components/commit/18594e4842f1994d82d848a7e42247058fee1419))
+
 ### [0.0.1-alpha.4](https://github.com/wehuss/tdesign-pro-components/compare/v0.0.1-alpha.3...v0.0.1-alpha.4) (2026-01-15)
 
 
