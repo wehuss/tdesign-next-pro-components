@@ -121,6 +121,8 @@ export interface ProFormItemProps {
   label?: FormItemProps['label']
   /** 校验规则 */
   rules?: any[]
+  /** 在 QueryFilter 中占用的列数，默认为 1 */
+  colSize?: number
   /** 是否必填 */
   required?: boolean
   /** 帮助信息 - 与 TDesign FormItem help 类型兼容 */
@@ -235,6 +237,10 @@ export const ProFormItem = defineComponent({
     isListField: {
       type: Boolean,
       default: false,
+    },
+    colSize: {
+      type: Number,
+      default: 1,
     },
   },
   setup(props, { attrs }) {

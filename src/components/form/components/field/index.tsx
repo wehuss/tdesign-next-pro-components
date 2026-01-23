@@ -90,6 +90,11 @@ export const ProFormField = defineComponent({
     secondary: Boolean,
     colProps: Object,
     lightProps: Object,
+    /** 在 QueryFilter 中占用的列数，默认为 1 */
+    colSize: {
+      type: Number,
+      default: 1,
+    },
 
     // v-model
     modelValue: null,
@@ -177,6 +182,7 @@ export const ProFormField = defineComponent({
             lightProps={props.lightProps}
             secondary={props.secondary}
             colProps={props.colProps}
+            colSize={props.colSize}
             {...mergedFormItemProps.value}
           >
             {children}
@@ -224,6 +230,7 @@ export const ProFormField = defineComponent({
           lightProps={props.lightProps}
           secondary={props.secondary}
           colProps={props.colProps}
+          colSize={props.colSize}
           {...mergedFormItemProps.value}
         >
           {fieldNode}

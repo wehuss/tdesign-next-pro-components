@@ -189,6 +189,7 @@ export default defineComponent({
             required={form?.required}
             disabled={form?.disabled}
             readonly={form?.readonly}
+            colSize={form?.colSize}
             v-model={formData.value[column.colKey as string]}
           />
         ) as VNode

@@ -7,8 +7,8 @@ const columns: ProTableColumn[] = [
     title:'index',
     valueType:'indexBorder'
   },
-  { title: '姓名', colKey: 'name', width: 120, form: { valueType: 'text' } },
-  { title: '年龄', colKey: 'age', width: 80, form: { valueType: 'text' } },
+  { title: '姓名', colKey: 'name', width: 120, form: { valueType: 'text',colSize:2.5 } },
+  { title: '年龄', colKey: 'age', width: 80, form: { valueType: 'text',colSize:2.5 } },
   { title: '邮箱', colKey: 'email', width: 200 },
   { title: '地址', colKey: 'address' },
   {
