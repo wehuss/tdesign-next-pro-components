@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.1-alpha.7](https://github.com/wehuss/tdesign-pro-components/compare/v0.0.1-alpha.6...v0.0.1-alpha.7) (2026-02-02)
+
+
+### Bug Fixes
+
+* **table:** 修复onSelectChange函数调用失败问题 ([1ea2da1](https://github.com/wehuss/tdesign-pro-components/commit/1ea2da105014779f296a250ce6c7520b3baa0815))
+
 ### [0.0.1-alpha.6](https://github.com/wehuss/tdesign-pro-components/compare/v0.0.1-alpha.5...v0.0.1-alpha.6) (2026-02-02)
 
 
