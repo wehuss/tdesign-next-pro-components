@@ -110,6 +110,15 @@ export const valueTypeToComponentMap: Record<string, ProRenderFieldPropsType> = 
     ),
   },
 
+  dateTimeRange: {
+    render: (modelValue, props) => (
+      <FieldDateRange v-model={modelValue} {...props} enableTimePicker />
+    ),
+    formItemRender: (modelValue, props) => (
+      <FieldDateRange v-model={modelValue} mode="edit" {...props} enableTimePicker />
+    ),
+  },
+
   time: {
     render: (modelValue, props) => <FieldTime v-model={modelValue} {...props} />,
     formItemRender: (modelValue, props) => (

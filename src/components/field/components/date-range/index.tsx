@@ -45,6 +45,10 @@ export const FieldDateRange = defineComponent({
       type: Boolean,
       default: false,
     },
+    enableTimePicker: {
+      type: Boolean,
+      default: false,
+    },
   },
   emits: ['update:modelValue', 'change'],
   setup(props, { expose }) {
@@ -116,6 +120,7 @@ export const FieldDateRange = defineComponent({
           }
           disabled={props.disabled}
           separator={props.separator}
+          enableTimePicker={props.enableTimePicker}
           {...props.fieldProps}
         />
       )
