@@ -46,13 +46,6 @@ export interface OptionConfig {
 // 密度类型
 export type DensityType = 'large' | 'medium' | 'small'
 
-// 密度选项
-const densityOptions: DropdownOption[] = [
-  { content: '默认', value: 'medium' },
-  { content: '宽松', value: 'large' },
-  { content: '紧凑', value: 'small' },
-]
-
 export default defineComponent({
   name: 'TableToolBar',
   props: {
@@ -132,6 +125,20 @@ export default defineComponent({
     const handleReload = () => {
       props.actionRef?.value?.reload()
     }
+
+    // 密度选项
+    const densityOptions: DropdownOption[] = [
+      { content: '默认', value: 'medium' },
+      { content: '宽松', value: 'large' },
+      { content: '紧凑', value: 'small' },
+    ].map((option) => ({
+      ...option,
+      content: () => (
+        <span style={{ color: option.value === props.density ? 'var(--td-brand-color)' : '' }}>
+          {option.content}
+        </span>
+      ),
+    }))
 
     // 处理密度变化
     const handleDensityChange = (data: { value: string | number }) => {
