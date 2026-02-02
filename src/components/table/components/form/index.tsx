@@ -144,6 +144,7 @@ export default defineComponent({
         // 如果是首次加载且有值，通知父组件同步 formSearch
         if (isFirstLoad.value) {
           emit('submit', { ...formData.value }, true)
+          isFirstLoad.value = false
         }
       },
       { immediate: true },
@@ -162,7 +163,7 @@ export default defineComponent({
       formData,
       (newData) => {
         const searchTrigger = getSearchTrigger()
-        console.log('searchTrigger', searchTrigger)
+        console.log('searchTrigger', searchTrigger, isFirstLoad.value)
         if (searchTrigger !== 'onSearch' && !isFirstLoad.value) {
           // onChange 模式下，表单值变化时自动触发搜索
           emit('submit', { ...newData }, false)
