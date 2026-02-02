@@ -419,8 +419,12 @@ const ProTable = defineComponent({
     }))
 
     // 搜索表单提交
-    const onFormSearchSubmit = (values: Record<string, any>) => {
+    const onFormSearchSubmit = (values: Record<string, any>, firstLoad?: boolean) => {
       formSearch.value = values
+      // 如果是首次加载（来自 defaultValue 初始化），只更新参数不触发 reload
+      // 因为 Table 初始化时会自动触发一次 request
+      if (firstLoad) return
+
       action.setPageInfo({
         current: 1,
       })

@@ -140,6 +140,11 @@ export default defineComponent({
         })
         // 合并默认值，保留已有值
         formData.value = { ...defaultData, ...formData.value }
+
+        // 如果是首次加载且有值，通知父组件同步 formSearch
+        if (isFirstLoad.value) {
+          emit('submit', { ...formData.value }, true)
+        }
       },
       { immediate: true },
     )
@@ -149,7 +154,7 @@ export default defineComponent({
       if (typeof props.search === 'object' && props.search.searchTrigger) {
         return props.search.searchTrigger
       }
-      return 'onSearch' // 默认使用点击搜索按钮触发
+      return 'onChange'
     }
 
     // 监听 formData 变化，当 searchTrigger 为 'onChange' 时自动触发搜索
@@ -157,6 +162,7 @@ export default defineComponent({
       formData,
       (newData) => {
         const searchTrigger = getSearchTrigger()
+        console.log('searchTrigger', searchTrigger)
         if (searchTrigger !== 'onSearch' && !isFirstLoad.value) {
           // onChange 模式下，表单值变化时自动触发搜索
           emit('submit', { ...newData }, false)
