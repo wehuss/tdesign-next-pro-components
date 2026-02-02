@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.1-alpha.6](https://github.com/wehuss/tdesign-pro-components/compare/v0.0.1-alpha.5...v0.0.1-alpha.6) (2026-02-02)
+
+
+### Features
+
+* **table:** 修改搜索行为为表单变化时搜索并修复row-select相关逻辑错误问题 ([3d9bb6e](https://github.com/wehuss/tdesign-pro-components/commit/3d9bb6ecb4c509402586fede6c31b3ce0b997843))
+
 ### [0.0.1-alpha.5](https://github.com/wehuss/tdesign-pro-components/compare/v0.0.1-alpha.4...v0.0.1-alpha.5) (2026-01-23)
 
 
