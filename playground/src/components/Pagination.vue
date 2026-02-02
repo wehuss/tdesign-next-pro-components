@@ -64,6 +64,9 @@ const request = async (params: { current: number; pageSize: number }) => {
     success: true,
   }
 }
+const onSelectChange = (keys: (string | number)[], context: { selectedRowData: any[] }) => {
+  console.log('选择变化:', keys, context)
+}
 </script>
 
 <template>
@@ -74,5 +77,6 @@ const request = async (params: { current: number; pageSize: number }) => {
     row-key="id"
     header-title="分页示例"
     v-model:selected-row-keys="selectedRowKeys"
+    @select-change="onSelectChange"
   />
 </template>

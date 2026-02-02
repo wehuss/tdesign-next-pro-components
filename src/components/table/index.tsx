@@ -5,7 +5,16 @@
  */
 
 import useListeners from '@/hooks/listeners'
-import { Card, EnhancedTable, type PaginationProps } from 'tdesign-vue-next'
+import {
+  Card,
+  EnhancedTable,
+  type FilterValue,
+  type PaginationProps,
+  type SortOptions,
+  type TableFilterChangeContext,
+  type TableRowData,
+  type TableSort,
+} from 'tdesign-vue-next'
 import baseTableProps from 'tdesign-vue-next/es/table/base-table-props'
 import enhancedTableProps from 'tdesign-vue-next/es/table/enhanced-table-props'
 import primaryTableProps from 'tdesign-vue-next/es/table/primary-table-props'
@@ -173,12 +182,7 @@ const ProTable = defineComponent({
     },
   },
 
-  emits: [
-    'update:columnControllerVisible',
-    'update:dataSource',
-    'update:selectedRowKeys',
-    'selectionChange',
-  ],
+  emits: ['update:columnControllerVisible', 'update:dataSource', 'update:selectedRowKeys'],
 
   setup(props, { slots, attrs, expose, emit }) {
     const { listeners } = useListeners()
@@ -213,7 +217,11 @@ const ProTable = defineComponent({
       internalSelectedRowKeys.value = keys
       selectedRows.value = context.selectedRowData || []
       emit('update:selectedRowKeys', keys)
-      emit('selectionChange', keys, context)
+      // 调用用户传入的 onSelectChange 回调
+      if (typeof props.onSelectChange === 'function') {
+        // @ts-expect-error
+        props.onSelectChange(keys, context)
+      }
     }
 
     // 清空选择
@@ -428,16 +436,57 @@ const ProTable = defineComponent({
       })
     }
 
+    // 将 TDesign 的 TableSort 转换为内部 SortInfo 格式
+    const convertTableSortToSortInfo = (sort: TableSort | undefined): SortInfo => {
+      if (!sort) return {}
+      const sortInfo: SortInfo = {}
+      if (Array.isArray(sort)) {
+        // 多列排序
+        for (const s of sort) {
+          if (s.sortBy) {
+            sortInfo[s.sortBy] = s.descending ? 'desc' : 'asc'
+          }
+        }
+      } else {
+        // 单列排序
+        if (sort.sortBy) {
+          sortInfo[sort.sortBy] = sort.descending ? 'desc' : 'asc'
+        }
+      }
+      return sortInfo
+    }
+
     // 排序变化处理
-    const onSortChange = (sortConfig: SortInfo | undefined) => {
-      if (JSON.stringify(sortConfig) === JSON.stringify(proSort.value)) return
-      proSort.value = sortConfig || {}
+    const handleSortChange = (sort: TableSort, options: SortOptions<TableRowData>) => {
+      const sortInfo = convertTableSortToSortInfo(sort)
+      if (JSON.stringify(sortInfo) === JSON.stringify(proSort.value)) return
+      proSort.value = sortInfo
+      // 调用用户传入的 onSortChange 回调
+      if (typeof props.onSortChange === 'function') {
+        props.onSortChange(sort, options)
+      }
     }
 
     // 筛选变化处理
-    const onFilterChange = (filterConfig: FilterInfo) => {
-      if (JSON.stringify(filterConfig) === JSON.stringify(proFilter.value)) return
-      proFilter.value = filterConfig || {}
+    const handleFilterChange = (
+      filterValue: FilterValue,
+      context: TableFilterChangeContext<TableRowData>,
+    ) => {
+      // 将 FilterValue 转换为内部 FilterInfo 格式
+      const filterInfo: FilterInfo = {}
+      if (filterValue) {
+        for (const [key, value] of Object.entries(filterValue)) {
+          if (value !== undefined && value !== null) {
+            filterInfo[key] = Array.isArray(value) ? value : [value]
+          }
+        }
+      }
+      if (JSON.stringify(filterInfo) === JSON.stringify(proFilter.value)) return
+      proFilter.value = filterInfo
+      // 调用用户传入的 onFilterChange 回调
+      if (typeof props.onFilterChange === 'function') {
+        props.onFilterChange(filterValue, context)
+      }
     }
 
     // 提供上下文
@@ -524,12 +573,24 @@ const ProTable = defineComponent({
           />
         ) : null
 
+      // 过滤掉 onSelectChange，避免与内部处理器冲突
+      const filteredListeners = Object.fromEntries(
+        Object.entries(listeners.value).filter(([key]) => key !== 'onSelectChange'),
+      )
+
+      // 过滤掉 props 中的事件处理器，避免与内部处理器冲突
+      const filteredProps = Object.fromEntries(
+        Object.entries(props).filter(
+          ([key]) => !['onSelectChange', 'onSortChange', 'onFilterChange'].includes(key),
+        ),
+      )
+
       // 表格节点 - 使用转换后的列配置
       const tableNode = (
         <EnhancedTable
           {...attrs}
-          {...listeners}
-          {...props}
+          {...filteredListeners}
+          {...filteredProps}
           size={tableSize.value}
           height={props.autoFill ? '100%' : undefined}
           data={action._refs.dataSource.value}
@@ -539,22 +600,17 @@ const ProTable = defineComponent({
           pagination={paginationConfig.value || undefined}
           selectedRowKeys={selectedRowKeys.value}
           v-model:columnControllerVisible={columnControllerVisible.value}
-          onSelectChange={(keys: (string | number)[], context: { selectedRowData: any[] }) => {
+          onSelectChange={(keys, context) => {
             handleSelectionChange(keys, context)
           }}
-          onSortChange={(sort: any) => {
-            if (sort) {
-              const sortInfo: SortInfo = {}
-              if (sort.sortBy) {
-                sortInfo[sort.sortBy] = sort.descending ? 'desc' : 'asc'
-              }
-              onSortChange(sortInfo)
-            } else {
-              onSortChange(undefined)
-            }
+          onSortChange={(sort: TableSort, options: SortOptions<TableRowData>) => {
+            handleSortChange(sort, options)
           }}
-          onFilterChange={(filters: any) => {
-            onFilterChange(filters || {})
+          onFilterChange={(
+            filterValue: FilterValue,
+            context: TableFilterChangeContext<TableRowData>,
+          ) => {
+            handleFilterChange(filterValue, context)
           }}
           v-slots={slots}
         />
