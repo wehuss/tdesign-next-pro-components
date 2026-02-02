@@ -193,7 +193,7 @@ const ProTable = defineComponent({
     >({})
 
     // 表格密度状态
-    const tableSize = ref<'small' | 'medium' | 'large'>('medium')
+    const tableSize = ref<'small' | 'medium' | 'large'>(props.size || 'medium')
 
     // 排序和筛选状态
     const proSort = ref<SortInfo>({})
