@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.1-alpha.9](https://github.com/wehuss/tdesign-pro-components/compare/v0.0.1-alpha.8...v0.0.1-alpha.9) (2026-02-02)
+
+
+### Bug Fixes
+
+* **form:** 修复col组件宽度溢出问题 ([0834bfb](https://github.com/wehuss/tdesign-pro-components/commit/0834bfb0f112005dd3aac46aaee1afd02979b248))
+* **table:** 修复没有携带搜索默认值问题 ([ebe80b7](https://github.com/wehuss/tdesign-pro-components/commit/ebe80b70ed4727643110102cb8ab84e5b7743c07))
+
 ### [0.0.1-alpha.8](https://github.com/wehuss/tdesign-pro-components/compare/v0.0.1-alpha.7...v0.0.1-alpha.8) (2026-02-02)
 
 
