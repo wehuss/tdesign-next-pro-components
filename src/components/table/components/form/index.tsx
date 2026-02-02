@@ -182,6 +182,7 @@ export default defineComponent({
 
     // 处理重置
     const handleReset = (values: Record<string, any>) => {
+      formData.value = { ...values }
       emit('reset', values)
       props.onReset?.(values)
     }
