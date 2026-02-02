@@ -38,7 +38,7 @@ const genFormItemsFromColumns = (
       return true
     })
     .map((column, index) => ({
-      key: column.colKey || String(index),
+      key: (column.form?.name as string) || (column.colKey as string) || String(index),
       column,
     }))
 }
@@ -199,7 +199,7 @@ export default defineComponent({
         return (
           <ProFormField
             key={key}
-            name={column.colKey}
+            name={form?.name || column.colKey}
             label={column.title as string}
             valueType={valueType as 'text'}
             valueEnum={form?.valueEnum || column.valueEnum}
