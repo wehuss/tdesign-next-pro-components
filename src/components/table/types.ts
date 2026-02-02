@@ -41,8 +41,9 @@ export interface FilterInfo {
 }
 
 // 列配置类型
-export interface ProTableColumn<T extends TableRowData = TableRowData>
-  extends Omit<PrimaryTableCol<T>, "cell"> {
+export interface ProTableColumn<
+  T extends TableRowData = TableRowData,
+> extends Omit<PrimaryTableCol<T>, "cell"> {
   // ProTable 扩展属性
   valueType?:
     | ProFieldValueType
@@ -79,7 +80,7 @@ export interface ProTableColumn<T extends TableRowData = TableRowData>
     text: unknown,
     record: T,
     index: number,
-    action?: unknown
+    action?: unknown,
   ) => unknown;
 
   // 表单项渲染
@@ -93,7 +94,7 @@ export interface ProTableColumn<T extends TableRowData = TableRowData>
       isEditable?: boolean;
     },
     form?: unknown,
-    editableUtils?: unknown
+    editableUtils?: unknown,
   ) => VNode | false | null;
 
   // 索引标识
@@ -136,12 +137,14 @@ export interface SearchConfig {
   showHiddenNum?: boolean;
   /** 过滤器类型：query=查询过滤器, light=轻量过滤器 */
   filterType?: "query" | "light";
+  /** 搜索触发模式：onSearch=点击搜索按钮触发, onChange=输入时即时触发 */
+  searchTrigger?: "onSearch" | "onChange";
   optionRender?:
     | boolean
     | ((
         searchConfig: SearchConfig,
         formProps: unknown,
-        dom: VNode[]
+        dom: VNode[],
       ) => VNode[]);
   onCollapse?: (collapsed: boolean) => void;
 }
@@ -182,13 +185,14 @@ export interface ActionRef {
 }
 
 // ProTable 主要属性类型
-export interface ProTableProps<T extends TableRowData = TableRowData>
-  extends Omit<EnhancedTableProps, "columns" | "pagination"> {
+export interface ProTableProps<
+  T extends TableRowData = TableRowData,
+> extends Omit<EnhancedTableProps, "columns" | "pagination"> {
   // 数据相关
   request?: (
     params: T & RequestParams,
     sort?: SortInfo,
-    filter?: FilterInfo
+    filter?: FilterInfo,
   ) => Promise<RequestData<T>>;
   dataSource?: T[];
   params?: Partial<T>;

@@ -99,7 +99,8 @@ const ProTable = defineComponent({
 
     // 分页
     pagination: {
-      type: [Boolean, Object] as PropType<false | PaginationProps>,
+      type: [Boolean, Object] as PropType<boolean | PaginationProps>,
+      default: true,
     },
 
     // 列配置控制
@@ -256,8 +257,8 @@ const ProTable = defineComponent({
 
       return {
         defaultCurrent: 1,
-        defaultPageSize: 20,
-        pageSize: 20,
+        defaultPageSize: 30,
+        pageSize: 30,
         current: 1,
         ...paginationConfig,
       }
@@ -523,18 +524,6 @@ const ProTable = defineComponent({
           />
         ) : null
 
-      // 行选择配置
-      const rowSelectionConfig = computed(() => {
-        if (props.rowSelection === false || props.rowSelection === undefined) {
-          return undefined
-        }
-        const config = typeof props.rowSelection === 'object' ? props.rowSelection : {}
-        return {
-          ...config,
-          selectedRowKeys: selectedRowKeys.value,
-        }
-      })
-
       // 表格节点 - 使用转换后的列配置
       const tableNode = (
         <EnhancedTable
@@ -548,7 +537,7 @@ const ProTable = defineComponent({
           loading={action._refs.loading.value}
           rowKey={props.rowKey}
           pagination={paginationConfig.value || undefined}
-          selectedRowKeys={rowSelectionConfig.value ? selectedRowKeys.value : undefined}
+          selectedRowKeys={selectedRowKeys.value}
           v-model:columnControllerVisible={columnControllerVisible.value}
           onSelectChange={(keys: (string | number)[], context: { selectedRowData: any[] }) => {
             handleSelectionChange(keys, context)

@@ -1,8 +1,14 @@
 <script setup lang="ts">
 import type { ProTableColumn } from '@/components/table'
 import ProTable from '@/components/table'
+import { ref } from 'vue'
 
+const selectedRowKeys = ref([])
 const columns: ProTableColumn[] = [
+  {
+        colKey: 'row-select',
+    type: 'multiple',
+  },
   {
     title:'index',
     valueType:'indexBorder'
@@ -67,10 +73,6 @@ const request = async (params: { current: number; pageSize: number }) => {
     :request="request"
     row-key="id"
     header-title="分页示例"
-    :pagination="{
-      pageSize: 10,
-      pageSizeOptions: [5, 10, 20, 50],
-      showJumper: true,
-    }"
+    v-model:selected-row-keys="selectedRowKeys"
   />
 </template>

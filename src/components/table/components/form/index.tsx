@@ -144,6 +144,27 @@ export default defineComponent({
       { immediate: true },
     )
 
+    // 获取搜索触发模式
+    const getSearchTrigger = (): 'onSearch' | 'onChange' => {
+      if (typeof props.search === 'object' && props.search.searchTrigger) {
+        return props.search.searchTrigger
+      }
+      return 'onSearch' // 默认使用点击搜索按钮触发
+    }
+
+    // 监听 formData 变化，当 searchTrigger 为 'onChange' 时自动触发搜索
+    watch(
+      formData,
+      (newData) => {
+        const searchTrigger = getSearchTrigger()
+        if (searchTrigger !== 'onSearch' && !isFirstLoad.value) {
+          // onChange 模式下，表单值变化时自动触发搜索
+          emit('submit', { ...newData }, false)
+        }
+      },
+      { deep: true },
+    )
+
     // 处理提交
     const handleSubmit = (_values: Record<string, any>) => {
       const firstLoad = isFirstLoad.value
