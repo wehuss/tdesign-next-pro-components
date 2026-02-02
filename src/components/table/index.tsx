@@ -118,16 +118,15 @@ const ProTable = defineComponent({
       default: false,
     },
 
-    // 行选择相关
-    rowSelection: {
-      type: [Boolean, Object] as PropType<boolean | Record<string, any>>,
-      default: undefined,
-    },
     selectedRowKeys: {
       type: Array as PropType<(string | number)[]>,
       default: undefined,
     },
 
+    tableAlert: {
+      type: Boolean,
+      default: false,
+    },
     // Alert 相关
     tableAlertRender: {
       type: [Function, Boolean] as PropType<AlertRenderType<any>>,
@@ -562,16 +561,15 @@ const ProTable = defineComponent({
         ) : null
 
       // 批量操作提示
-      const alertNode =
-        props.rowSelection !== false ? (
-          <TableAlert
-            selectedRowKeys={selectedRowKeys.value}
-            selectedRows={selectedRows.value}
-            onCleanSelected={clearSelected}
-            alertInfoRender={props.tableAlertRender}
-            alertOptionRender={props.tableAlertOptionRender}
-          />
-        ) : null
+      const alertNode = props.tableAlert ? (
+        <TableAlert
+          selectedRowKeys={selectedRowKeys.value}
+          selectedRows={selectedRows.value}
+          onCleanSelected={clearSelected}
+          alertInfoRender={props.tableAlertRender}
+          alertOptionRender={props.tableAlertOptionRender}
+        />
+      ) : null
 
       // 过滤掉 onSelectChange，避免与内部处理器冲突
       const filteredListeners = Object.fromEntries(
