@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.1-alpha.10](https://github.com/wehuss/tdesign-pro-components/compare/v0.0.1-alpha.9...v0.0.1-alpha.10) (2026-02-02)
+
+
+### Features
+
+* **table:** 为表格尺寸选择器加入选中效果 ([0bb1c16](https://github.com/wehuss/tdesign-pro-components/commit/0bb1c16c235b50d5a4ad83fe9646af00fd0b8a75))
+
+
+### Bug Fixes
+
+* **table:** 修复重置功能无效问题 ([68f9f5d](https://github.com/wehuss/tdesign-pro-components/commit/68f9f5d77893e3bbe63a8a438ea665ec82985f4a))
+* **table:** 修复form中isFirstLoad一直为true问题 ([2c3aaa2](https://github.com/wehuss/tdesign-pro-components/commit/2c3aaa2c36ad29e8d722904273951656816d0be1))
+
 ### [0.0.1-alpha.9](https://github.com/wehuss/tdesign-pro-components/compare/v0.0.1-alpha.8...v0.0.1-alpha.9) (2026-02-02)
 
 
