@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.1-alpha.8](https://github.com/wehuss/tdesign-pro-components/compare/v0.0.1-alpha.7...v0.0.1-alpha.8) (2026-02-02)
+
+
+### Features
+
+* **field:** 加入dateTimeRange ([b06055f](https://github.com/wehuss/tdesign-pro-components/commit/b06055f67f35517f20d3f000ade9b45f7fbdd688))
+* **table:** 支持自定义form name ([f953aa9](https://github.com/wehuss/tdesign-pro-components/commit/f953aa973b4f3d0dc229337f7c3af9f4bbd5bef2))
+
+
+### Bug Fixes
+
+* **table:** 修复size属性不生效问题 ([4d9ff99](https://github.com/wehuss/tdesign-pro-components/commit/4d9ff998502711c4f8447b66021cd6a80d56db86))
+
 ### [0.0.1-alpha.7](https://github.com/wehuss/tdesign-pro-components/compare/v0.0.1-alpha.6...v0.0.1-alpha.7) (2026-02-02)
 
 
