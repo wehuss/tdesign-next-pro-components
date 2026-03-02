@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.1-alpha.11](https://github.com/wehuss/tdesign-pro-components/compare/v0.0.1-alpha.10...v0.0.1-alpha.11) (2026-03-02)
+
+
+### Bug Fixes
+
+* **table:** 修复因重新创建formData对象导致的无限请求问题 ([911d6c0](https://github.com/wehuss/tdesign-pro-components/commit/911d6c061e35b9efb980a7c64eb4761a50e226c0))
+
 ### [0.0.1-alpha.10](https://github.com/wehuss/tdesign-pro-components/compare/v0.0.1-alpha.9...v0.0.1-alpha.10) (2026-02-02)
 
 
