@@ -108,6 +108,9 @@ export default defineComponent({
     // 表单数据 ref - 用于存储表单值
     const formData = ref<Record<string, any>>({})
 
+    // 标记是否为内部静默更新 formData，用于避免触发 onChange 搜索
+    let isSilentlyUpdating = false
+
     // 监听 formRef
     watch(
       () => internalFormRef.value,
@@ -131,17 +134,25 @@ export default defineComponent({
     watch(
       formItems,
       (items) => {
-        const defaultData: Record<string, any> = {}
+        let hasChanges = false
+        const newData = { ...formData.value }
+
         items.forEach(({ key, column }) => {
           const form = column.form
-          if (form?.defaultValue !== undefined) {
-            defaultData[key] = form.defaultValue
+          // 仅当 formData 中没有该字段时，才应用 defaultValue
+          if (form?.defaultValue !== undefined && newData[key] === undefined) {
+            newData[key] = form.defaultValue
+            hasChanges = true
           }
         })
-        // 合并默认值，保留已有值
-        formData.value = { ...defaultData, ...formData.value }
 
-        // 如果是首次加载且有值，通知父组件同步 formSearch
+        // 只有在真正需要初始化新字段的默认值时，才更新 formData
+        if (hasChanges) {
+          isSilentlyUpdating = true
+          formData.value = newData
+        }
+
+        // 如果是首次加载，通知父组件同步 formSearch（不触发额外 reload）
         if (isFirstLoad.value) {
           emit('submit', { ...formData.value }, true)
           isFirstLoad.value = false
@@ -162,8 +173,13 @@ export default defineComponent({
     watch(
       formData,
       (newData) => {
+        if (isSilentlyUpdating) {
+          isSilentlyUpdating = false
+          return
+        }
+
         const searchTrigger = getSearchTrigger()
-        console.log('searchTrigger', searchTrigger, isFirstLoad.value)
+        // console.log('searchTrigger', searchTrigger, isFirstLoad.value)
         if (searchTrigger !== 'onSearch' && !isFirstLoad.value) {
           // onChange 模式下，表单值变化时自动触发搜索
           emit('submit', { ...newData }, false)
